@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#666666">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_32">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_100"
+                android:layout_gravity="center"
+                android:text="@string/app_display_name"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline3"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite"
+                android:textAllCaps="true" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:layout_marginTop="@dimen/spacing_16"
+                android:paddingStart="@dimen/spacing_16"
+                android:paddingEnd="@dimen/spacing_16"
+                android:background="@drawable/background_input_field"
+                android:hint="@string/enter_username"
+                android:textColorHint="@color/colorWhite" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:layout_marginTop="@dimen/spacing_16"
+                android:paddingStart="@dimen/spacing_16"
+                android:paddingEnd="@dimen/spacing_16"
+                android:background="@drawable/background_input_field"
+                android:hint="@string/enter_password"
+                android:textColorHint="@color/colorWhite" />
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginTop="@dimen/spacing_24"
+                app:cornerRadius="24dp"
+                android:text="@string/login"
+                android:textAllCaps="false"
+                android:textSize="@dimen/text_22"
+                android:textStyle="bold"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/remember_me"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorWhite" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/forgot_password"
+                    android:textSize="@dimen/text_18"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorWhite" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

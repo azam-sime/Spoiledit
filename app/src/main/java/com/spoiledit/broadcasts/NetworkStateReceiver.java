@@ -25,7 +25,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
             boolean online = connectivityManager.getActiveNetworkInfo() != null
                     && connectivityManager.getActiveNetworkInfo().isConnected();
 
-            LogUtils.d(TAG, "onReceive: " + connectivityManager.getActiveNetworkInfo());
+            LogUtils.logInfo(TAG, "onReceive: " + connectivityManager.getActiveNetworkInfo());
 
             if (onNetworkStateChangeListener != null)
                 onNetworkStateChangeListener.onNetworkStateChanged(online);

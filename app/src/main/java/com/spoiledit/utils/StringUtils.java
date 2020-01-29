@@ -200,7 +200,7 @@ public final class StringUtils {
     }
 
     public static String asString(int i) {
-        return String.format(Locale.getDefault(), "%d", i);
+        return String.format(Locale.getDefault(), "%logInfo", i);
     }
 
     public static String asStringWithHeader(String header, int i) {
@@ -212,7 +212,7 @@ public final class StringUtils {
     }
 
     public static String asString(long l) {
-        return String.format(Locale.getDefault(), "%d", l);
+        return String.format(Locale.getDefault(), "%logInfo", l);
     }
 
     public static String asStringWithHeader(String header, long l) {
@@ -283,10 +283,10 @@ public final class StringUtils {
 
     public static void setCountInTab(TabLayout tabLayout, int index, String title, int count, int total) {
         if (count != 0 && total != 0) {
-            tabLayout.getTabAt(index).setText(String.format(Locale.getDefault(), "%s(%d/%d)",
+            tabLayout.getTabAt(index).setText(String.format(Locale.getDefault(), "%s(%logInfo/%logInfo)",
                     title, count, total));
         } else {
-            tabLayout.getTabAt(index).setText(String.format(Locale.getDefault(), "%s(%d)",
+            tabLayout.getTabAt(index).setText(String.format(Locale.getDefault(), "%s(%logInfo)",
                     title, total));
         }
     }
