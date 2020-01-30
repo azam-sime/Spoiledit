@@ -14,4 +14,13 @@
     <dimen name="text_18">18sp</dimen>
     <dimen name="text_22">22sp</dimen>
     <dimen name="spacing_100">100dp</dimen>
+
+    <dimen name="padding_y_inner_parent">12dp</dimen>
+    <dimen name="padding_x_inner_parent">24dp</dimen>
+    <dimen name="margin_top_between_children">12dp</dimen>
+
+    <dimen name="height_edittext">48dp</dimen>
+    <dimen name="height_button">56dp</dimen>
+
+    <dimen name="padding_x_input">12dp</dimen>
 </resources>

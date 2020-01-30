@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#D81B60</color>
+    <color name="colorPrimary">#FF0024</color>
     <color name="colorPrimaryDark">@android:color/white</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccent">#FF0024</color>
 
     <color name="colorWhite">@android:color/white</color>
     <color name="colorBlack">@android:color/black</color>
+
+    <color name="colorButton">#FF0024</color>
+    <color name="colorEditText">#33253E</color>
+    <color name="colorEditTextIconS">#00DBB6</color>
+    <color name="colorEditTextIconF">#FF0167</color>
+    <color name="colorCheckBox">#FF0045</color>
 </resources>

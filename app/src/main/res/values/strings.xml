@@ -10,16 +10,17 @@
     <string name="forgot_password">Forgot Password?</string>
     <string name="remember_me">Remember Me</string>
     <string name="login">Login</string>
-    <string name="name">Name</string>
-    <string name="phone_number">Phone Number</string>
+    <string name="hint_name">* Name</string>
+    <string name="hint_phone_number">* Phone Number</string>
     <string name="mandatory_mark">*</string>
     <string name="content_description">Content Description</string>
-    <string name="confirm_password">Confirm Password</string>
-    <string name="password">Password</string>
-    <string name="email">Email</string>
+    <string name="hint_confirm_password">* Confirm Password</string>
+    <string name="hint_password">* Password</string>
+    <string name="hint_email">* Email</string>
     <string name="tandc_prompt">By continuing, you agree to our</string>
     <string name="terms_and_policy"><![CDATA[Terms & Policy]]></string>
     <string name="sign_in">Sign In</string>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="signup_prompt">Please fill up the required details below</string>
+    <string name="submit">Submit</string>
 </resources>

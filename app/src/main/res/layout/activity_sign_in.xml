@@ -4,7 +4,7 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#666666">
+    android:background="@drawable/background_login">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -15,18 +15,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="@dimen/spacing_32">
+            android:paddingTop="@dimen/padding_y_inner_parent"
+            android:paddingStart="@dimen/padding_x_inner_parent"
+            android:paddingEnd="@dimen/padding_x_inner_parent"
+            android:paddingBottom="@dimen/padding_y_inner_parent" >
 
-            <TextView
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_100"
-                android:layout_gravity="center"
-                android:text="@string/app_display_name"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline3"
-                android:textStyle="bold"
-                android:textColor="@color/colorWhite"
-                android:textAllCaps="true" />
+                android:src="@drawable/app_label_logo"
+                android:contentDescription="@string/content_description" />
 
             <Space
                 android:layout_width="match_parent"
@@ -35,33 +33,36 @@
 
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"
-                android:layout_marginTop="@dimen/spacing_16"
-                android:paddingStart="@dimen/spacing_16"
-                android:paddingEnd="@dimen/spacing_16"
-                android:background="@drawable/background_input_field"
+                android:layout_height="@dimen/height_edittext"
+                android:layout_marginTop="@dimen/margin_top_between_children"
+                android:paddingStart="@dimen/padding_x_input"
+                android:paddingEnd="@dimen/padding_x_input"
+                android:background="@drawable/background_signin_input"
                 android:hint="@string/enter_username"
+                android:textSize="@dimen/text_14"
                 android:textColorHint="@color/colorWhite" />
 
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"
-                android:layout_marginTop="@dimen/spacing_16"
-                android:paddingStart="@dimen/spacing_16"
-                android:paddingEnd="@dimen/spacing_16"
-                android:background="@drawable/background_input_field"
+                android:layout_height="@dimen/height_edittext"
+                android:layout_marginTop="@dimen/margin_top_between_children"
+                android:paddingStart="@dimen/padding_x_input"
+                android:paddingEnd="@dimen/padding_x_input"
+                android:background="@drawable/background_signin_input"
                 android:hint="@string/enter_password"
+                android:textSize="@dimen/text_14"
                 android:textColorHint="@color/colorWhite" />
 
             <com.google.android.material.button.MaterialButton
                 android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:layout_marginTop="@dimen/spacing_24"
+                android:layout_height="@dimen/height_button"
+                android:layout_marginTop="@dimen/margin_top_between_children"
                 app:cornerRadius="24dp"
                 android:text="@string/login"
                 android:textAllCaps="false"
-                android:textSize="@dimen/text_22"
-                android:textStyle="bold"/>
+                android:textSize="@dimen/text_16"
+                android:textStyle="bold"
+                android:id="@+id/btn_login"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -72,8 +73,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/remember_me"
+                    android:textSize="@dimen/text_12"
                     android:textStyle="bold"
-                    android:textColor="@color/colorWhite" />
+                    android:textColor="@color/colorWhite"
+                    app:buttonTint="@color/colorCheckBox"
+                    android:checked="true"/>
 
                 <Space
                     android:layout_width="0dp"
@@ -84,7 +88,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/forgot_password"
-                    android:textSize="@dimen/text_18"
+                    android:textSize="@dimen/text_14"
                     android:textStyle="bold"
                     android:textColor="@color/colorWhite" />
             </LinearLayout>

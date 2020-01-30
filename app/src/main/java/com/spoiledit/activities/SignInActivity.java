@@ -1,5 +1,6 @@
 package com.spoiledit.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -27,7 +28,9 @@ public class SignInActivity extends RootActivity {
 
     @Override
     public void initialiseListener() {
-
+        findViewById(R.id.btn_login).setOnClickListener(
+                v -> startActivity(new Intent(this, HomeActivity.class))
+        );
     }
 
     @Override
