@@ -16,4 +16,8 @@ public final class AppUtils {
     public static int getColor(Context context, int resId) {
         return context.getResources().getColor(resId);
     }
+
+    public static Context context() {
+        return null;
+    }
 }

@@ -10,6 +10,9 @@ public final class PreferenceUtils {
 
     private static final String PREF_NAME = BuildConfig.APPLICATION_ID;
 
+    public static final String KEY_USERNAME = PREF_NAME + ".username";
+    public static final String KEY_PASSWORD = PREF_NAME + ".password";
+
     private PreferenceUtils() {
     }
 

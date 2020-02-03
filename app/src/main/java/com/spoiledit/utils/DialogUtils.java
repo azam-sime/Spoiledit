@@ -1,5 +1,6 @@
 package com.spoiledit.utils;
 
+import android.app.Activity;
 import android.content.Context;
 
 public final class DialogUtils {
@@ -9,19 +10,23 @@ public final class DialogUtils {
 
     }
 
-    public static void showFailure(Context context, String message) {
+    public static void showFailure(Activity activity, int stringResId) {
+        showFailure(activity, AppUtils.getString(activity, stringResId));
+    }
+
+    public static void showFailure(Activity activity, String message) {
 
     }
 
-    public static void showSuccess(Context context, String message) {
+    public static void showSuccess(Activity activity, String message) {
 
     }
 
-    public static void showWarning(Context context, String message) {
+    public static void showWarning(Activity activity, String message) {
 
     }
 
-    public static void showConfirm(Context context, String message) {
+    public static void showConfirm(Activity activity, String message) {
 
     }
 }

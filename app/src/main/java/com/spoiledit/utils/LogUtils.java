@@ -2,6 +2,8 @@ package com.spoiledit.utils;
 
 import android.util.Log;
 
+import com.android.volley.VolleyError;
+
 public final class LogUtils {
     private static final String TAG = LogUtils.class.getCanonicalName();
     private static final boolean SHOULD_LOG = true;
@@ -10,9 +12,10 @@ public final class LogUtils {
 
     }
 
+
+
     public static void logInfo(String message) {
-        if (SHOULD_LOG)
-            Log.d(TAG, "logInfo: " + message);
+        logInfo(TAG, message);
     }
 
     public static void logInfo(String TAG, String message) {
@@ -20,9 +23,10 @@ public final class LogUtils {
             Log.d(TAG, "logInfo: " + message);
     }
 
+
+
     public static void logRequest(String message) {
-        if (SHOULD_LOG)
-            Log.i(TAG, "logRequest: " + message);
+        logRequest(TAG, message);
     }
 
     public static void logRequest(String TAG, String message) {
@@ -30,9 +34,10 @@ public final class LogUtils {
             Log.i(TAG, "logRequest: " + message);
     }
 
+
+
     public static void logResponse(String message) {
-        if (SHOULD_LOG)
-            Log.i(TAG, "logResponse: " + message);
+        logResponse(TAG, message);
     }
 
     public static void logResponse(String TAG, String message) {
@@ -40,23 +45,33 @@ public final class LogUtils {
             Log.i(TAG, "logResponse: " + message);
     }
 
+
+
     public static void logError(String message) {
-        if (SHOULD_LOG)
-            Log.e(TAG, "logError: " + message);
+        logError(TAG, message);
     }
 
-    public static void logError(String TAG, String message) {
-        if (SHOULD_LOG)
-            Log.e(TAG, "logError: " + message);
+    public static void logError(VolleyError volleyError) {
+        logError(TAG, volleyError);
     }
+
+    public static void logError(String tag, VolleyError volleyError) {
+        logError(tag, volleyError.getLocalizedMessage());
+    }
+
+    public static void logError(String tag, String message) {
+        if (SHOULD_LOG)
+            Log.e(tag, "logError: " + message);
+    }
+
+
 
     public static void println(String message) {
-        if (SHOULD_LOG)
-            System.out.println(TAG + "println: " + message);
+        println(TAG, message);
     }
 
-    public static void println(String TAG, String message) {
+    public static void println(String tag, String message) {
         if (SHOULD_LOG)
-            System.out.println(TAG + "println: " + message);
+            System.out.println(tag + "println: " + message);
     }
 }
