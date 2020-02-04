@@ -3,6 +3,8 @@ package com.spoiledit.activities;
 import android.content.IntentFilter;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -55,7 +57,20 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onClick(View v) {
+        if (v.getId() == R.id.iv_back)
+            onBackPressed();
+        else if (v.getId() == R.id.iv_popcorn)
+            showInterrupt("Will be soon implmented...", true);
+    }
 
+    public void setupToolBar(String title) {
+        TextView tvToolbar = findViewById(R.id.tv_toolbar);
+        tvToolbar.setText(title);
+
+        ImageView ivBack = findViewById(R.id.iv_back);
+        ivBack.setOnClickListener(this);
+        ImageView ivPopcorn = findViewById(R.id.iv_popcorn);
+        ivPopcorn.setOnClickListener(this);
     }
 
     @Override

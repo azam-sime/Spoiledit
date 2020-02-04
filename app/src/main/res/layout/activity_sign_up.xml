@@ -33,6 +33,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/signup_prompt"
+                android:fontFamily="@font/montserrat_bold"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                 android:textStyle="bold"
                 android:textColor="@color/colorBlack" />
@@ -52,7 +53,8 @@
                     android:inputType="textCapWords"
                     android:background="@android:color/transparent"
                     android:hint="@string/hint_name"
-                    android:textSize="@dimen/text_14"/>
+                    android:textSize="@dimen/text_14"
+                    android:id="@+id/et_name"/>
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -72,10 +74,11 @@
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="?actionBarSize"
-                    android:inputType="textCapWords"
+                    android:inputType="phone"
                     android:background="@android:color/transparent"
                     android:hint="@string/hint_phone_number"
-                    android:textSize="@dimen/text_14" />
+                    android:textSize="@dimen/text_14"
+                    android:id="@+id/et_phone"/>
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -95,10 +98,11 @@
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="?actionBarSize"
-                    android:inputType="textCapWords"
+                    android:inputType="textEmailAddress"
                     android:background="@android:color/transparent"
                     android:hint="@string/hint_email"
-                    android:textSize="@dimen/text_14" />
+                    android:textSize="@dimen/text_14"
+                    android:id="@+id/et_email"/>
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -118,10 +122,11 @@
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="?actionBarSize"
-                    android:inputType="textCapWords"
+                    android:inputType="textPassword"
                     android:background="@android:color/transparent"
                     android:hint="@string/hint_password"
-                    android:textSize="@dimen/text_14" />
+                    android:textSize="@dimen/text_14"
+                    android:id="@+id/et_password"/>
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -141,10 +146,11 @@
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="?actionBarSize"
-                    android:inputType="textCapWords"
+                    android:inputType="textPassword"
                     android:background="@android:color/transparent"
                     android:hint="@string/hint_confirm_password"
-                    android:textSize="@dimen/text_14" />
+                    android:textSize="@dimen/text_14"
+                    android:id="@+id/et_confirm_password"/>
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -164,15 +170,19 @@
                     android:layout_height="wrap_content"
                     android:text="@string/tandc_prompt"
                     android:textSize="@dimen/text_12"
-                    app:buttonTint="@color/colorCheckBox"/>
+                    app:buttonTint="@color/colorCheckBox"
+                    android:id="@+id/cb_t_and_c"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/spacing_8"
+                    android:background="?attr/selectableItemBackground"
                     android:text="@string/terms_and_policy"
+                    android:fontFamily="@font/montserrat_semi_bold"
                     android:textSize="@dimen/text_12"
-                    android:textColor="@color/colorCheckBox" />
+                    android:textColor="@color/colorCheckBox"
+                    android:id="@+id/tv_t_and_c"/>
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
@@ -181,6 +191,7 @@
                 android:layout_marginTop="@dimen/margin_top_between_children"
                 app:cornerRadius="24dp"
                 android:text="@string/submit"
+                android:fontFamily="@font/montserrat_bold"
                 android:textAllCaps="false"
                 android:textSize="@dimen/text_16"
                 android:id="@+id/btn_sign_up"/>
@@ -203,7 +214,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/spacing_4"
+                    android:background="?attr/selectableItemBackground"
                     android:text="@string/sign_in"
+                    android:fontFamily="@font/montserrat_semi_bold"
                     android:textSize="@dimen/text_14"
                     android:id="@+id/tv_sign_in"/>
             </LinearLayout>

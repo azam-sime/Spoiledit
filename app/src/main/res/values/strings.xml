@@ -23,4 +23,9 @@
     <string name="already_have_an_account">Already have an account?</string>
     <string name="signup_prompt">Please fill up the required details below</string>
     <string name="submit">Submit</string>
+	<string name="otp_prompt">A 6 digit confirmation code has been sent to XXXXXXXXXXX via SMS</string>
+    <string name="otp_prompt2">please enter it below</string>
+	<string name="create_new_password">Create New Password</string>
+    <string name="resend">Resend</string>
+    <string name="confirmation_code">confirmation code</string>
 </resources>

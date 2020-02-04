@@ -23,4 +23,5 @@
     <dimen name="height_button">56dp</dimen>
 
     <dimen name="padding_x_input">12dp</dimen>
+	<dimen name="spacing_20">20dp</dimen>
 </resources>
