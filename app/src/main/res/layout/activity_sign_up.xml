@@ -169,7 +169,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/tandc_prompt"
-                    android:textSize="@dimen/text_12"
+                    android:textSize="@dimen/text_10"
                     app:buttonTint="@color/colorCheckBox"
                     android:id="@+id/cb_t_and_c"/>
 
@@ -179,7 +179,7 @@
                     android:padding="@dimen/spacing_8"
                     android:background="?attr/selectableItemBackground"
                     android:text="@string/terms_and_policy"
-                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:fontFamily="@font/montserrat_medium"
                     android:textSize="@dimen/text_12"
                     android:textColor="@color/colorCheckBox"
                     android:id="@+id/tv_t_and_c"/>

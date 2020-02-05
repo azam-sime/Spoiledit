@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/spacing_8"
+    android:orientation="horizontal">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/spacing_4"
+        app:cardBackgroundColor="@color/colorWhite"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="6dp">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="132dp"
+            android:contentDescription="@string/content_description"
+            android:src="@drawable/popcorn"/>
+    </com.google.android.material.card.MaterialCardView>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/spacing_8"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_4"
+            android:text="The Aftermath"
+            android:textSize="@dimen/text_18"
+            android:fontFamily="@font/montserrat_bold"
+            android:textColor="@color/colorBlack"
+            android:id="@+id/tv_movie_name"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_4"
+            android:layout_marginBottom="@dimen/spacing_4"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/size_rating_star"
+                android:layout_height="@dimen/size_rating_star"
+                android:layout_margin="@dimen/spacing_4"
+                android:contentDescription="@string/content_description"
+                android:src="@drawable/star_yellow"/>
+
+            <ImageView
+                android:layout_width="@dimen/size_rating_star"
+                android:layout_height="@dimen/size_rating_star"
+                android:layout_margin="@dimen/spacing_4"
+                android:contentDescription="@string/content_description"
+                android:src="@drawable/star_yellow"/>
+
+            <ImageView
+                android:layout_width="@dimen/size_rating_star"
+                android:layout_height="@dimen/size_rating_star"
+                android:layout_margin="@dimen/spacing_4"
+                android:contentDescription="@string/content_description"
+                android:src="@drawable/star_yellow"/>
+
+            <ImageView
+                android:layout_width="@dimen/size_rating_star"
+                android:layout_height="@dimen/size_rating_star"
+                android:layout_margin="@dimen/spacing_4"
+                android:contentDescription="@string/content_description"
+                android:src="@drawable/star_grey"/>
+
+            <ImageView
+                android:layout_width="@dimen/size_rating_star"
+                android:layout_height="@dimen/size_rating_star"
+                android:layout_margin="@dimen/spacing_4"
+                android:contentDescription="@string/content_description"
+                android:src="@drawable/star_grey"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_4"
+            android:text="The surviving Resistance faces the First Order once again as the jurney."
+            android:maxLines="2"
+            android:fontFamily="@font/montserrat_medium"
+            android:id="@+id/tv_movie_summary"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="start|center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/spacing_8"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:text="@string/view_details"
+                android:fontFamily="@font/montserrat_semi_bold"
+                android:textSize="@dimen/text_14"
+                android:textColor="@color/colorBlack"
+                android:id="@+id/tv_view_details"/>
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/arrow_circle_right"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -36,8 +36,10 @@ public class VolleyProvider {
 
     private static VolleyProvider volleyProvider;
     private RequestQueue requestQueue;
+    private Context context;
 
     private VolleyProvider(Context context) {
+        this.context = context;
         requestQueue = new RequestQueue(new DiskBasedCache(context.getCacheDir(),
                 NetworkUtils.CACHE_SIZE_MAX), new BasicNetwork(new HurlStack()));
         requestQueue.start();
@@ -84,7 +86,7 @@ public class VolleyProvider {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
 
-                NetworkUtils.addHeaders(headers, hasAuth);
+                NetworkUtils.addHeaders(context, headers, hasAuth);
 
                 return headers;
             }
@@ -131,7 +133,7 @@ public class VolleyProvider {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
 
-                NetworkUtils.addHeaders(headers, hasAuth);
+                NetworkUtils.addHeaders(context, headers, hasAuth);
 
                 return headers;
             }
@@ -177,7 +179,7 @@ public class VolleyProvider {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
 
-                NetworkUtils.addHeaders(headers, hasAuth);
+                NetworkUtils.addHeaders(context, headers, hasAuth);
 
                 return headers;
             }
@@ -225,7 +227,7 @@ public class VolleyProvider {
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
 
-                NetworkUtils.addHeaders(headers, hasAuth);
+                NetworkUtils.addHeaders(context, headers, hasAuth);
 
                 return headers;
             }

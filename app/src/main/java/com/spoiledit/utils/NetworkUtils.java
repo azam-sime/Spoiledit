@@ -33,33 +33,30 @@ public final class NetworkUtils {
     public static RetryPolicy RETRY_POLICY
             = new DefaultRetryPolicy(RETRY_TIMEOUT, RETRY_NO_MAX, RETRY_BACKOFF);
 
+    private static boolean networkAvailable;
+
     private NetworkUtils() {
 
     }
 
     public static boolean isNetworkAvailable() {
-        boolean status = false;
-        ConnectivityManager connectivityManager = (ConnectivityManager) AppUtils.context().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        if (activeNetworkInfo != null)
-            status = activeNetworkInfo.isAvailable();
-        return status;
+        return networkAvailable;
+    }
 
+    public static void setNetworkAvailable(boolean networkAvailable) {
+        NetworkUtils.networkAvailable = networkAvailable;
     }
 
     public static boolean isNetworkAvailable(Activity activity, boolean showDialog) {
-        boolean isNetworkAvailable = isNetworkAvailable();
-
-        if (!isNetworkAvailable && showDialog) {
+        if (!networkAvailable && showDialog)
             DialogUtils.showFailure(activity, R.string.no_internet_connection);
-        }
 
-        return isNetworkAvailable;
+        return networkAvailable;
     }
 
-    public static void addAuthorization(Map<String, String> headers) {
-        String username = PreferenceUtils.getString(AppUtils.context(), PreferenceUtils.KEY_USERNAME);
-        String password = PreferenceUtils.getString(AppUtils.context(), PreferenceUtils.KEY_PASSWORD);
+    public static void addAuthorization(Context context, Map<String, String> headers) {
+        String username = PreferenceUtils.getString(context, PreferenceUtils.KEY_USERNAME);
+        String password = PreferenceUtils.getString(context, PreferenceUtils.KEY_PASSWORD);
         String credentials = String.format("%s:%s", username, password);
 
         String auth = "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.DEFAULT);
@@ -67,13 +64,13 @@ public final class NetworkUtils {
         headers.put("Authorization", auth);
     }
 
-    public static void addHeaders(Map<String, String> headers, boolean addAuth) {
+    public static void addHeaders(Context context, Map<String, String> headers, boolean addAuth) {
         headers.put("decode", "2");
         headers.put("g_zip", "2");
         headers.put("is_mobile", "1");
 
         if (addAuth)
-            addAuthorization(headers);
+            addAuthorization(context, headers);
     }
 
     public static Response<JSONArray> parseArray(NetworkResponse networkResponse) {

@@ -256,7 +256,7 @@ public final class StringUtils {
     }
 
     public static String getError(VolleyError error) {
-        if (error == null)
+        if (error == null || error.getMessage() == null)
             return "Unknown error occured!";
 
         String[] errors = error.getMessage().split("\\.");

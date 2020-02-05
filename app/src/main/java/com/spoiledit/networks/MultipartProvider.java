@@ -98,7 +98,7 @@ public class MultipartProvider extends Request<String> {
         if (addAuthHeaders) {
             Map<String, String> headers = new HashMap<>();
 
-            NetworkUtils.addAuthorization(headers);
+            NetworkUtils.addAuthorization(null, headers);
 
             return headers;
         } else

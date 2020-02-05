@@ -24,4 +24,6 @@
 
     <dimen name="padding_x_input">12dp</dimen>
 	<dimen name="spacing_20">20dp</dimen>
+    <dimen name="text_10">10sp</dimen>
+    <dimen name="size_rating_star">24dp</dimen>
 </resources>

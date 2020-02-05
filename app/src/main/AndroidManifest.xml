@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.SplashActivity">
+        <activity android:name=".activities.SplashActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -20,10 +21,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.SignInActivity" />
-        <activity android:name=".activities.SignUpActivity" />
-        <activity android:name=".activities.HomeActivity" />
-        <activity android:name=".activities.VerifyPhoneActivity" />
+        <activity android:name=".activities.SignInActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <activity android:name=".activities.SignUpActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity android:name=".activities.DashboardActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity android:name=".activities.VerifyPhoneActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
     </application>
 
 </manifest>

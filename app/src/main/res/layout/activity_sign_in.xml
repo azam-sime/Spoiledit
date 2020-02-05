@@ -42,6 +42,7 @@
                 android:inputType="textEmailAddress"
                 android:textSize="@dimen/text_14"
                 android:textColorHint="@color/colorWhite"
+                android:textColor="@color/colorWhite"
                 android:id="@+id/et_username"/>
 
             <EditText
@@ -55,6 +56,7 @@
                 android:inputType="textPassword"
                 android:textSize="@dimen/text_14"
                 android:textColorHint="@color/colorWhite"
+                android:textColor="@color/colorWhite"
                 android:id="@+id/et_password"/>
 
             <com.google.android.material.button.MaterialButton

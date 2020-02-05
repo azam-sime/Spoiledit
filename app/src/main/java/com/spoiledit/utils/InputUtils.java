@@ -33,4 +33,8 @@ public final class InputUtils {
     public static InputFilter getNoInputFilter() {
         return (charSequence, i, i1, spanned, i2, i3) -> "";
     }
+
+    public static InputFilter[] getLengthFilters(int length) {
+        return new InputFilter[]{new InputFilter.LengthFilter(length)};
+    }
 }

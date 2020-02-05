@@ -6,18 +6,22 @@ import android.view.View;
 import android.widget.EditText;
 
 import androidx.annotation.Nullable;
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.spoiledit.R;
+import com.spoiledit.utils.AppUtils;
 import com.spoiledit.utils.ExecutorUtils;
 import com.spoiledit.utils.InputUtils;
 import com.spoiledit.utils.NetworkUtils;
+import com.spoiledit.utils.StringUtils;
 
 public abstract class RootFragment extends Fragment implements View.OnClickListener {
 
+    private ContentLoadingProgressBar progressBar;
+    private Snackbar snackbar;
     private boolean fragmentVisibleToUser = false;
-    protected boolean isNetworkAvailable;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -27,8 +31,10 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
         initialiseListener(view);
         setData(view);
 
-        setUpRecycler();
-        setUpViewPager();
+        setUpRecycler(view);
+        setUpViewPager(view);
+
+        addObservers();
     }
 
     public abstract void initUi(View view);
@@ -37,16 +43,35 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
 
     public abstract void setData(View view);
 
-    public void setUpRecycler(){}
-
-    public void setUpViewPager(){}
-
-    public void toggleClickViews(boolean enable) {
+    public void setUpRecycler(View view) {
 
     }
 
+    public void setUpViewPager(View view) {
+
+    }
+
+    public void addObservers() {
+
+    }
+
+    public boolean isRequestValid() {
+        return true;
+    }
+
+    public void toggleViews(boolean enable) {
+
+    }
+
+    public void showLoader(String message) {
+        if (StringUtils.isInvalid(message))
+            showInterrupt(message, false);
+
+        progressBar.show();
+    }
+
     public void showKeyboard(EditText editText) {
-        InputUtils.showKeyboard(getActivity(), editText);
+        InputUtils.showKeyboard(getContext(), editText);
     }
 
     public void hideKeyboard() {
@@ -57,30 +82,54 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
         ExecutorUtils.getInstance().executeOnMainDelayed(runnable, delayMillis);
     }
 
-    private void showInterrupt(String message, boolean definite) {
-        Snackbar.make(getView().findViewById(R.id.root), message,
-                definite ? Snackbar.LENGTH_LONG : Snackbar.LENGTH_INDEFINITE).show();
+    public void showInterrupt(String message, boolean definite) {
+        showInterrupt(message, definite, null, null);
     }
 
-    private void showFailure(String message) {
+    public void showInterrupt(String message, boolean definite, String actionText, Runnable action) {
+        if (snackbar == null) {
+            snackbar = Snackbar.make(getView().findViewById(R.id.root), message,
+                    definite ? Snackbar.LENGTH_LONG : Snackbar.LENGTH_INDEFINITE);
+        } else {
+            snackbar.setText(message);
+            snackbar.setDuration(definite ? Snackbar.LENGTH_LONG : Snackbar.LENGTH_INDEFINITE);
+        }
+        if (action != null) {
+            snackbar.setAction(actionText, v -> action.run());
+        }
+        snackbar.show();
+    }
+
+    public void showFailure(String message) {
+        showInterrupt(message, true);
+    }
+
+    public void showWarning(String message) {
+        showInterrupt(message, true);
+    }
+
+    public void showSuccess(String message, Runnable positive) {
+        showInterrupt(message, true, "Proceed", positive);
+    }
+
+    public void hideLoader() {
+        if (snackbar != null && snackbar.isShown())
+            snackbar.dismiss();
+
+        if (progressBar != null && progressBar.isShown())
+            progressBar.hide();
+    }
+
+    public void gotoNextScreen() {
 
     }
 
-    private void showSuccess(String message) {
-
-    }
-
-    public void onNetworkStateChanged(boolean networkAvailable) {
-        isNetworkAvailable = networkAvailable;
+    public String getResString(int resId) {
+        return AppUtils.getString(getContext(), resId);
     }
 
     public boolean isNetworkAvailable() {
-        return isNetworkAvailable;
-    }
-
-    @Override
-    public void onClick(View v) {
-
+        return NetworkUtils.isNetworkAvailable();
     }
 
     @Override

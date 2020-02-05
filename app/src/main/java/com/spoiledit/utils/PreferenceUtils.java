@@ -3,15 +3,25 @@ package com.spoiledit.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.spoiledit.BuildConfig;
+import com.spoiledit.activities.SplashActivity;
+import com.spoiledit.models.UserModel;
+
+import java.lang.reflect.Type;
 
 public final class PreferenceUtils {
     public static final String TAG = PreferenceUtils.class.getCanonicalName();
 
     private static final String PREF_NAME = BuildConfig.APPLICATION_ID;
 
+    public static final String KEY_LOGIN_STATUS = PREF_NAME + ".login_status";
+
     public static final String KEY_USERNAME = PREF_NAME + ".username";
     public static final String KEY_PASSWORD = PREF_NAME + ".password";
+
+    public static final String KEY_USER_MODEL = PREF_NAME + ".user_model";
 
     private PreferenceUtils() {
     }
@@ -50,5 +60,32 @@ public final class PreferenceUtils {
 
     public static void clearPreferences(Context context) {
         getSharedPreferences(context).edit().clear().apply();
+    }
+
+    public static void saveCredentials(Context context, String[] credentials) {
+        saveString(context, KEY_USERNAME, credentials[0]);
+        saveString(context, KEY_PASSWORD, credentials[1]);
+    }
+
+    public static String[] credentials(Context context) {
+        return new String[] {
+            getString(context, KEY_USERNAME), getString(context, KEY_PASSWORD)
+        };
+    }
+
+    public static void saveLoginStatus(Context context, int loginStatus) {
+        saveInt(context, KEY_LOGIN_STATUS, loginStatus);
+    }
+
+    public static int loginStatus(Context context) {
+        return getInt(context, KEY_LOGIN_STATUS);
+    }
+
+    public static UserModel getUserModel(Context context) {
+        return new Gson().fromJson(getString(context, KEY_USER_MODEL), UserModel.class);
+    }
+
+    public static void saveUserModel(Context context, UserModel userModel) {
+        saveString(context, KEY_USER_MODEL, new Gson().toJson(userModel, UserModel.class));
     }
 }

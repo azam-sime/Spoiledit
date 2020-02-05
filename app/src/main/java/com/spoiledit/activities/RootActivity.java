@@ -1,27 +1,59 @@
 package com.spoiledit.activities;
 
-import android.content.IntentFilter;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.ContentLoadingProgressBar;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.spoiledit.R;
-import com.spoiledit.broadcasts.NetworkStateReceiver;
-import com.spoiledit.constants.Constants;
-import com.spoiledit.listeners.OnNetworkStateChangeListener;
+import com.spoiledit.utils.AppUtils;
+import com.spoiledit.utils.DialogUtils;
 import com.spoiledit.utils.ExecutorUtils;
 import com.spoiledit.utils.InputUtils;
+import com.spoiledit.utils.NetworkUtils;
+import com.spoiledit.utils.StringUtils;
 
-abstract public class RootActivity extends AppCompatActivity implements View.OnClickListener,
-        OnNetworkStateChangeListener {
+abstract public class RootActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private NetworkStateReceiver networkStateReceiver;
+    private ConnectivityManager connectivityManager;
+    private ContentLoadingProgressBar progressBar;
+    private Snackbar snackbar;
 
-    private boolean isNetworkAvailable = false;
+    private ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
+        @Override
+        public void onAvailable(@NonNull Network network) {
+            super.onAvailable(network);
+
+            NetworkUtils.setNetworkAvailable(true);
+        }
+
+        @Override
+        public void onUnavailable() {
+            super.onUnavailable();
+
+            NetworkUtils.setNetworkAvailable(false);
+        }
+    };
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        progressBar = new ContentLoadingProgressBar(this);
+    }
 
     @Override
     public void setContentView(int layoutResID) {
@@ -35,8 +67,7 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
         setUpRecycler();
         setUpViewPager();
 
-        networkStateReceiver = new NetworkStateReceiver(this);
-        onNetworkStateChanged(isNetworkAvailable());
+        addObservers();
     }
 
     public abstract void setUpToolBar();
@@ -52,6 +83,10 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
     }
 
     public void setUpViewPager() {
+
+    }
+
+    public void addObservers() {
 
     }
 
@@ -76,11 +111,27 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onStart() {
         super.onStart();
-        registerReceiver(networkStateReceiver, new IntentFilter(Constants.Broadcast.NETWORK_STATE_CHANGE));
+
+        connectivityManager.registerNetworkCallback(
+                new NetworkRequest.Builder()
+                        .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                        .build(), networkCallback
+        );
     }
 
-    public void toggleClickViews(boolean enable) {
+    public boolean isRequestValid() {
+        return true;
+    }
 
+    public void toggleViews(boolean enable) {
+
+    }
+
+    public void showLoader(String message) {
+        if (StringUtils.isInvalid(message))
+            showInterrupt(message, false);
+
+        progressBar.show();
     }
 
     public void showKeyboard(EditText editText) {
@@ -95,26 +146,54 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
         ExecutorUtils.getInstance().executeOnMainDelayed(runnable, delayMillis);
     }
 
-    private void showInterrupt(String message, boolean definite) {
-        Snackbar.make(findViewById(R.id.root), message,
-                definite ? Snackbar.LENGTH_LONG : Snackbar.LENGTH_INDEFINITE).show();
+    public void showInterrupt(String message, boolean definite) {
+        showInterrupt(message, definite, null, null);
     }
 
-    private void showFailure(String message) {
-
+    public void showInterrupt(String message, boolean definite, String actionText, Runnable action) {
+        if (snackbar == null) {
+            snackbar = Snackbar.make(findViewById(R.id.root), message,
+                    definite ? Snackbar.LENGTH_LONG : Snackbar.LENGTH_INDEFINITE);
+        } else {
+            snackbar.setText(message);
+            snackbar.setDuration(definite ? Snackbar.LENGTH_LONG : Snackbar.LENGTH_INDEFINITE);
+        }
+        if (action != null) {
+            snackbar.setAction(actionText, v -> action.run());
+        }
+        snackbar.show();
     }
 
-    private void showSuccess(String message) {
-
+    public void showFailure(String message) {
+        showInterrupt(message, true);
     }
 
-    @Override
-    public void onNetworkStateChanged(boolean networkAvailable) {
-        isNetworkAvailable = networkAvailable;
+    public void showWarning(String message) {
+        showInterrupt(message, true);
+    }
+
+    public void showSuccess(String message, Runnable positive) {
+        showInterrupt(message, true, "Proceed", positive);
+    }
+
+    public void hideLoader() {
+        if (snackbar != null && snackbar.isShown())
+            snackbar.dismiss();
+
+        if (progressBar != null && progressBar.isShown())
+            progressBar.hide();
+    }
+
+    public void gotoNextScreen() {
+
     }
 
     public boolean isNetworkAvailable() {
-        return isNetworkAvailable;
+        return NetworkUtils.isNetworkAvailable();
+    }
+
+    public String getResString(int resId) {
+        return AppUtils.getString(this, resId);
     }
 
     @Override
@@ -126,6 +205,6 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onStop() {
         super.onStop();
-        unregisterReceiver(networkStateReceiver);
+        connectivityManager.unregisterNetworkCallback(networkCallback);
     }
 }
