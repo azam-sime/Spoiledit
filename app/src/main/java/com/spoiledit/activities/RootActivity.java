@@ -58,6 +58,9 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
     @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
+
+        progressBar = findViewById(R.id.pb_loading);
+
         setUpToolBar();
 
         initUi();
@@ -68,6 +71,9 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
         setUpViewPager();
 
         addObservers();
+
+        if (progressBar != null)
+        progressBar.hide();
     }
 
     public abstract void setUpToolBar();
@@ -131,15 +137,16 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
         if (StringUtils.isInvalid(message))
             showInterrupt(message, false);
 
+        if (progressBar != null)
         progressBar.show();
     }
 
-    public void showKeyboard(EditText editText) {
-        InputUtils.showKeyboard(this, editText);
+    public void showKeyboard(View view) {
+        InputUtils.showKeyboard(view);
     }
 
-    public void hideKeyboard() {
-        InputUtils.hideKeyboard(this);
+    public void hideKeyboard(View view) {
+        InputUtils.hideKeyboard(view);
     }
 
     public void runOnUiAfterMillis(Runnable runnable, long delayMillis) {
@@ -198,7 +205,6 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onBackPressed() {
-        hideKeyboard();
         super.onBackPressed();
     }
 

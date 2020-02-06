@@ -23,8 +23,8 @@ public class SignUpViewModel extends ViewModel {
         signUpRepo.requestSignUp(credentials);
     }
 
-    public void requestTandC(String[] credentials) {
-        signUpRepo.requestTandC(credentials);
+    public void requestTAndC(String[] values) {
+        signUpRepo.requestTAndC(values);
     }
 
     public static final class SignUpFactory implements ViewModelProvider.Factory {

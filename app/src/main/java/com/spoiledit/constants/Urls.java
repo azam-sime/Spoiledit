@@ -1,21 +1,40 @@
 package com.spoiledit.constants;
 
-public final class Urls {
+import com.android.volley.Request;
 
-    private Urls() {
+public enum Urls {
+    USER_URL(Constants.Api.USER_URL, Constants.BASE_URL + "/users", Request.Method.GET)
+    , USER_SIGN_UP(Constants.Api.USER_SIGN_UP, USER_URL.getUrl() + "", Request.Method.GET)
+    , USER_SIGN_IN(Constants.Api.USER_SIGN_IN, USER_URL.getUrl() + "/me", Request.Method.GET)
+    , USER_PROFILE(Constants.Api.USER_PROFILE, USER_URL.getUrl() + "/", Request.Method.GET)
+    , FORGOT_PASSWORD(Constants.Api.FORGOT_PASSWORD, Constants.BASE_URL + "/forgot-password", Request.Method.POST)
+    , NEW_PASSWORD(Constants.Api.NEW_PASSWORD, Constants.BASE_URL + "/forgot-password", Request.Method.POST)
+    , T_AND_C(Constants.Api.T_AND_C, Constants.BASE_URL + "/forgot-password", Request.Method.POST)
+    , POPULAR_MOVIES(Constants.Api.POPULAR_MOVIES, Constants.BASE_URL + "/popular-movies", Request.Method.POST)
+    , MOVIES_RECENT_RELEASE(Constants.Api.MOVIES_RECENT_RELEASE, Constants.BASE_URL + "/movies-recent-releses", Request.Method.POST)
+    , MOVIES_COMING_SOON(Constants.Api.MOVIES_COMING_SOON, Constants.BASE_URL + "/movies-coming-soon", Request.Method.POST)
+    , MOVIES_THIS_WEEK(Constants.Api.MOVIES_THIS_WEEK, Constants.BASE_URL + "/new-movies-this-week", Request.Method.POST)
+    ;
+
+    private int apiId;
+    private String url;
+    private int type;
+
+    Urls(int apiId, String url, int type) {
+        this.apiId = apiId;
+        this.url = url;
+        this.type = type;
     }
 
-    private static final String BASE_URL = "https://spoiledit.com/wp-json/wp/v2";
+    public int getApiId() {
+        return apiId;
+    }
 
-    private static final String USER_URL = BASE_URL + "/users";
-    public static final String USER_SIGN_UP = USER_URL + "";
-    public static final String USER_SIGN_IN = USER_URL + "/me";
-    public static final String USER_PROFILE = USER_URL + "/";
+    public String getUrl() {
+        return url;
+    }
 
-    public static final String FORGOT_PASSWORD = BASE_URL + "/forgot-password";
-
-    public static final String POPULAR_MOVIES = BASE_URL + "/popular-movies";
-    public static final String MOVIES_RECENT_RELEASE = BASE_URL + "/movies-recent-releses";
-    public static final String MOVIES_COMING_SOON = BASE_URL + "/movies-coming-soon";
-    public static final String MOVIES_THIS_WEEK = BASE_URL + "/new-movies-this-week";
+    public int getType() {
+        return type;
+    }
 }

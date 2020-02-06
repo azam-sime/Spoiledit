@@ -21,14 +21,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".activities.SignInActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+            android:windowSoftInputMode="stateHidden|adjustResize|adjustPan"/>
         <activity android:name=".activities.SignUpActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".activities.DashboardActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".activities.VerifyPhoneActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateHidden|adjustResize|adjustPan" />
     </application>
 
 </manifest>

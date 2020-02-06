@@ -105,4 +105,6 @@
         android:id="@+id/bnv_dashboard">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+    <include layout="@layout/layout_loading" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

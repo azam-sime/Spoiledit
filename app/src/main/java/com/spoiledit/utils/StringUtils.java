@@ -21,6 +21,9 @@ import com.android.volley.VolleyError;
 import com.google.android.material.tabs.TabLayout;
 import com.spoiledit.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -255,20 +258,11 @@ public final class StringUtils {
         return word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase();
     }
 
-    public static String getError(VolleyError error) {
-        if (error == null || error.getMessage() == null)
-            return "Unknown error occured!";
-
-        String[] errors = error.getMessage().split("\\.");
-
-        String errorString = errors[errors.length - 1];
-        if (errorString == null)
-            errorString = "Error unknown!";
-
-        return errorString;
+    public static String getErrorString(VolleyError error) {
+        return NetworkUtils.getErrorString(error);
     }
 
-    public static String getError(Exception exception) {
+    public static String getErrorString(Exception exception) {
         if (exception == null)
             return "Unknown";
 
@@ -281,6 +275,16 @@ public final class StringUtils {
         return errorString;
     }
 
+    public static JSONObject getErrorJson(VolleyError volleyError) {
+        try {
+            return new JSONObject(getErrorString(volleyError));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public static void setCountInTab(TabLayout tabLayout, int index, String title, int count, int total) {
         if (count != 0 && total != 0) {
             tabLayout.getTabAt(index).setText(String.format(Locale.getDefault(), "%s(%logInfo/%logInfo)",
@@ -289,33 +293,6 @@ public final class StringUtils {
             tabLayout.getTabAt(index).setText(String.format(Locale.getDefault(), "%s(%logInfo)",
                     title, total));
         }
-    }
-
-    public static String findDisplayableError(VolleyError volleyError) {
-        String errorMessage = "";
-
-        if (volleyError != null) {
-            if (volleyError instanceof AuthFailureError) {
-                errorMessage = "Authentication failed! Please login again and try again.";
-
-            } else if (volleyError instanceof NoConnectionError) {
-                errorMessage = "Connection unavailable! Please try after sometime.";
-
-            } else if (volleyError instanceof NetworkError) {
-                errorMessage = "Server connection failed! Please retry after sometime.";
-
-            } else if (volleyError instanceof ParseError) {
-                errorMessage = "Response read failed!";
-
-            } else if (volleyError instanceof ServerError) {
-                errorMessage = "Something missing! Please check and retry.";
-
-            } else if (volleyError instanceof TimeoutError) {
-                errorMessage = "Slow network! Please check your connection and retry.";
-            }
-        }
-
-        return errorMessage;
     }
 
     public static String arrayToString(String[] array) {

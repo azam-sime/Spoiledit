@@ -36,4 +36,11 @@
     <string name="recent_movies">Recent Movies</string>
     <string name="coming_soon">Coming Soon</string>
     <string name="view_details">View Details</string>
+    <string name="create_password_prompt">Please provide your mail to update password</string>
+    <string name="hint_old_password">* Old Password</string>
+    <string name="hint_new_password">* New Password</string>
+    <string name="change_password_prompt">Enter last password you remember and continue</string>
+    <string name="new_user">New user?</string>
+    <string name="signup">Sign Up</string>
+    <string name="terms_and_conditions">Terms and conditions</string>
 </resources>

@@ -44,13 +44,14 @@ public class SplashActivity extends RootActivity {
                     break;
                 case Status.Login.REQUIRE_SIGN_IN_NOT_CREDS:
                 case Status.Login.REQUIRE_SIGN_IN_AND_CREDS:
+                case Status.Login.REQUIRE_SIGN_UP:
                     startActivity(new Intent(this, SignInActivity.class));
                     finish();
                     break;
-                case Status.Login.REQUIRE_SIGN_UP:
-                    startActivity(new Intent(this, SignUpActivity.class));
-                    finish();
-                    break;
+//                case Status.Login.REQUIRE_SIGN_UP:
+//                    startActivity(new Intent(this, SignUpActivity.class));
+//                    finish();
+//                    break;
             }
         }, 3000);
     }

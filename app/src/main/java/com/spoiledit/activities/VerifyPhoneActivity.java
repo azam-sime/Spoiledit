@@ -8,11 +8,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.button.MaterialButton;
 import com.spoiledit.R;
+import com.spoiledit.constants.Constants;
+import com.spoiledit.constants.Status;
+import com.spoiledit.fragments.CreatePasswordFragment;
 import com.spoiledit.listeners.TextChangeListener;
+import com.spoiledit.repos.VerifyRepo;
+import com.spoiledit.utils.PreferenceUtils;
 import com.spoiledit.utils.ViewUtils;
+import com.spoiledit.viewmodels.VerifyViewModel;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -20,9 +28,13 @@ import java.util.concurrent.TimeUnit;
 public class VerifyPhoneActivity extends RootActivity {
     public static final String TAG = VerifyPhoneActivity.class.getCanonicalName();
 
+    private VerifyViewModel verifyViewModel;
+
     private EditText et1, et2, et3, et4, et5, et6;
     private TextView tvResend, tvCountDown, tvCreateNew;
     private MaterialButton btnSubmit;
+
+    private boolean skip = false;
 
     private CountDownTimer countDownTimer = new CountDownTimer(
             TimeUnit.MINUTES.toMillis(2),
@@ -47,6 +59,9 @@ public class VerifyPhoneActivity extends RootActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        verifyViewModel = ViewModelProviders.of(this,
+                new VerifyViewModel.VerifyFactory(new VerifyRepo(this))).get(VerifyViewModel.class);
         setContentView(R.layout.activity_verify_phone);
     }
 
@@ -138,7 +153,7 @@ public class VerifyPhoneActivity extends RootActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (et6.getText().length() == 1) {
-                    hideKeyboard();
+                    hideKeyboard(et6);
 
                 } else if (et6.getText().length() == 0) {
                     et5.requestFocus();
@@ -159,6 +174,30 @@ public class VerifyPhoneActivity extends RootActivity {
         onRequestOtp();
     }
 
+    @Override
+    public void addObservers() {
+        verifyViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
+            if (apiStatusModel.getApi() == Constants.Api.USER_SIGN_UP) {
+                if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
+                    toggleViews(false);
+                    showLoader(apiStatusModel.getMessage());
+
+                } else if (apiStatusModel.getStatus() == Status.Request.API_ERROR) {
+                    toggleViews(true);
+                    hideLoader();
+                    showFailure(apiStatusModel.getMessage());
+                    skip = true;
+
+                } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
+                    toggleViews(false);
+                    hideLoader();
+                    PreferenceUtils.saveLoginStatus(this, Status.Login.REQUIRE_SIGN_IN_AND_CREDS);
+                    showSuccess(apiStatusModel.getMessage(), this::gotoNextScreen);
+                }
+            }
+        });
+    }
+
     private void onRequestOtp() {
         ViewUtils.showViews(tvCountDown);
         ViewUtils.hideViews(tvResend);
@@ -173,11 +212,49 @@ public class VerifyPhoneActivity extends RootActivity {
     }
 
     @Override
+    public void toggleViews(boolean enable) {
+        ViewUtils.toggleViewAbility(enable, btnSubmit, tvCreateNew, tvResend);
+    }
+
+    @Override
+    public boolean isRequestValid() {
+        if (!verifyViewModel.isOtpValid()) {
+            showWarning("Otp doesn't match!");
+            return false;
+        }
+        return super.isRequestValid();
+    }
+
+    @Override
     public void onClick(View v) {
         if (v.getId() == R.id.tv_resend) {
             onRequestOtp();
             return;
+
+        } else if (v.getId() == R.id.btn_submit) {
+            if (skip)
+                gotoNextScreen();
+
+            if (isRequestValid())
+                gotoNextScreen();
+
+            return;
+
+        } else if (v.getId() == R.id.tv_new_password) {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            CreatePasswordFragment fragment = new CreatePasswordFragment();
+            fragmentTransaction.setCustomAnimations(R.anim.rise_from_bottom, R.anim.sink_to_bottom);
+            fragmentTransaction.add(R.id.ll_container, fragment);
+            fragmentTransaction.addToBackStack(CreatePasswordFragment.TAG);
+            fragmentTransaction.commit();
+            return;
         }
         super.onClick(v);
+    }
+
+    @Override
+    public void gotoNextScreen() {
+        startActivity(new Intent(this, DashboardActivity.class));
+        finish();
     }
 }

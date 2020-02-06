@@ -7,12 +7,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.spoiledit.R;
 import com.spoiledit.constants.Status;
+import com.spoiledit.fragments.ForgotPasswordFragment;
 import com.spoiledit.repos.LoginRepo;
 import com.spoiledit.utils.PreferenceUtils;
 import com.spoiledit.utils.StringUtils;
@@ -27,7 +29,7 @@ public class SignInActivity extends RootActivity {
     private EditText etUsername, etPassword;
     private MaterialCheckBox cbRemember;
     private MaterialButton btnLogin;
-    private TextView tvForgot;
+    private TextView tvForgot, tvSignUp;
 
     private boolean skip = false;
 
@@ -55,6 +57,8 @@ public class SignInActivity extends RootActivity {
         tvForgot = findViewById(R.id.tv_forgot_password);
 
         btnLogin = findViewById(R.id.btn_login);
+
+        tvSignUp = findViewById(R.id.tv_sign_up);
     }
 
     @Override
@@ -62,6 +66,8 @@ public class SignInActivity extends RootActivity {
         tvForgot.setOnClickListener(this);
 
         btnLogin.setOnClickListener(this);
+
+        tvSignUp.setOnClickListener(this);
     }
 
     @Override
@@ -136,6 +142,20 @@ public class SignInActivity extends RootActivity {
                 PreferenceUtils.saveCredentials(this, credentials);
                 loginViewModel.requestLogin(credentials);
             }
+            return;
+
+        } else if (v.getId() == R.id.tv_sign_up) {
+            startActivity(new Intent(this, SignUpActivity.class));
+            finish();
+            return;
+
+        } else if (v.getId() == R.id.tv_forgot_password) {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            ForgotPasswordFragment fragment = new ForgotPasswordFragment();
+            fragmentTransaction.setCustomAnimations(R.anim.rise_from_bottom, R.anim.sink_to_bottom);
+            fragmentTransaction.add(R.id.ll_container, fragment);
+            fragmentTransaction.addToBackStack(ForgotPasswordFragment.TAG);
+            fragmentTransaction.commit();
             return;
         }
         super.onClick(v);

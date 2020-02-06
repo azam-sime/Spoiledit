@@ -7,12 +7,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.spoiledit.R;
+import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
+import com.spoiledit.fragments.CreatePasswordFragment;
 import com.spoiledit.repos.SignUpRepo;
 import com.spoiledit.utils.InputUtils;
 import com.spoiledit.utils.PreferenceUtils;
@@ -84,21 +87,23 @@ public class SignUpActivity extends RootActivity {
     @Override
     public void addObservers() {
         signUpViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
-            if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
-                toggleViews(false);
-                showLoader(apiStatusModel.getMessage());
+            if (apiStatusModel.getApi() == Constants.Api.USER_SIGN_UP) {
+                if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
+                    toggleViews(false);
+                    showLoader(apiStatusModel.getMessage());
 
-            } else if (apiStatusModel.getStatus() == Status.Request.API_ERROR) {
-                toggleViews(true);
-                hideLoader();
-                showFailure(apiStatusModel.getMessage());
-                skip = true;
+                } else if (apiStatusModel.getStatus() == Status.Request.API_ERROR) {
+                    toggleViews(true);
+                    hideLoader();
+                    showFailure(apiStatusModel.getMessage());
+                    skip = true;
 
-            } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
-                toggleViews(false);
-                hideLoader();
-                PreferenceUtils.saveLoginStatus(this, Status.Login.REQUIRE_SIGN_IN_AND_CREDS);
-                showSuccess(apiStatusModel.getMessage(), this::gotoNextScreen);
+                } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
+                    toggleViews(false);
+                    hideLoader();
+                    PreferenceUtils.saveLoginStatus(this, Status.Login.REQUIRE_SIGN_IN_AND_CREDS);
+                    showSuccess(apiStatusModel.getMessage(), this::gotoNextScreen);
+                }
             }
         });
     }
@@ -113,11 +118,7 @@ public class SignUpActivity extends RootActivity {
 
     @Override
     public boolean isRequestValid() {
-        if (!cbTandC.isChecked()) {
-            showWarning("Please check the box to ensure you have read our terms and conditions.");
-            return false;
-
-        } else if (StringUtils.isInvalid(etName.getText().toString())) {
+        if (StringUtils.isInvalid(etName.getText().toString())) {
             showWarning("Please enter a valid name.");
             etName.requestFocus();
             etName.setSelection(etName.getText().length());
@@ -146,6 +147,11 @@ public class SignUpActivity extends RootActivity {
             etConfirmP.requestFocus();
             etConfirmP.setSelection(etConfirmP.getText().length());
             return false;
+
+        } else if (!cbTandC.isChecked()) {
+            showWarning("Please check the box to ensure you have read our terms and conditions.");
+            return false;
+
         }
         return super.isRequestValid();
     }
@@ -157,16 +163,19 @@ public class SignUpActivity extends RootActivity {
                 gotoNextScreen();
 
             if (isRequestValid()) {
-                String[] credentials = new String[] {etPhone.getText().toString(), etPassword.getText().toString(),
-                        etName.getText().toString(), etEmail.getText().toString()};
+                String[] credentials = new String[]{etEmail.getText().toString(), etPassword.getText().toString(),
+                        etName.getText().toString(), etPhone.getText().toString()};
 
                 PreferenceUtils.saveCredentials(this, credentials);
                 signUpViewModel.requestSignUp(credentials);
             }
             return;
+
         } else if (v.getId() == R.id.tv_sign_in) {
             startActivity(new Intent(this, SignInActivity.class));
+            finish();
             return;
+
         }
         super.onClick(v);
     }

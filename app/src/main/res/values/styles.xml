@@ -10,7 +10,7 @@
     </style>
 
     <style name="SplashTheme" parent="AppTheme">
-        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="android:windowBackground">@drawable/splash_background_only</item>
     </style>
 
     <style name="DashboardTabText" parent="TextAppearance.MaterialComponents.Headline6">

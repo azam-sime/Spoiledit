@@ -57,9 +57,8 @@ public class VolleyProvider {
     }
 
 
-
     public void executePostRequest(String url, JSONArray params, OnResponseListener<JSONArray> onResponseListener, boolean cache, boolean hasAuth) {
-        LogUtils.logInfo(TAG,"executePostJsonArrayRequest: ");
+        LogUtils.logInfo(TAG, "executePostRequest: ");
 
         if (NetworkUtils.isNetworkAvailable()) {
             try {
@@ -77,15 +76,15 @@ public class VolleyProvider {
                         onResponseListener.onSuccess(response);
                 },
                 error -> {
-                    LogUtils.logError(TAG, error);
+                    LogUtils.logError(TAG, NetworkUtils.getErrorString(error));
                     if (onResponseListener != null)
                         onResponseListener.onFailure(error);
-                })
-        {
+                }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
 
+                headers.put("Content-Type", "application/json");
                 NetworkUtils.addHeaders(context, headers, hasAuth);
 
                 return headers;
@@ -102,7 +101,6 @@ public class VolleyProvider {
         request.setTag(TAG);
         requestQueue.add(request);
     }
-
 
 
     public void executePostRequest(String url, JSONObject params, OnResponseListener<JSONObject> onResponseListener, boolean cache, boolean hasAuth) {
@@ -124,23 +122,18 @@ public class VolleyProvider {
                         onResponseListener.onSuccess(response);
                 },
                 error -> {
-                    LogUtils.logError(TAG, error);
+                    LogUtils.logError(TAG, NetworkUtils.getErrorString(error));
                     if (onResponseListener != null)
                         onResponseListener.onFailure(error);
-                })
-        {
+                }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
 
+                headers.put("Content-Type", "application/json");
                 NetworkUtils.addHeaders(context, headers, hasAuth);
 
                 return headers;
-            }
-
-            @Override
-            protected Response<JSONObject> parseNetworkResponse(NetworkResponse networkResponse) {
-                return NetworkUtils.parseObject(networkResponse);
             }
         };
 
@@ -151,9 +144,8 @@ public class VolleyProvider {
     }
 
 
-
     public void executePostRequest(String url, Map<String, String> params, OnResponseListener<String> onResponseListener, boolean cache, boolean hasAuth) {
-        LogUtils.logInfo(TAG, "executePostStringRequest: ");
+        LogUtils.logInfo(TAG, "executePostRequest: ");
         if (NetworkUtils.isNetworkAvailable()) {
             try {
                 requestQueue.getCache().remove(url);
@@ -170,15 +162,15 @@ public class VolleyProvider {
                         onResponseListener.onSuccess(response);
                 },
                 error -> {
-                    LogUtils.logError(TAG, error);
+                    LogUtils.logError(TAG, NetworkUtils.getErrorString(error));
                     if (onResponseListener != null)
                         onResponseListener.onFailure(error);
-                })
-        {
+                }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
 
+//                headers.put("Content-Type", "application/json");
                 NetworkUtils.addHeaders(context, headers, hasAuth);
 
                 return headers;
@@ -197,8 +189,7 @@ public class VolleyProvider {
     }
 
 
-
-    public void executeGetRequest(String url, OnResponseListener<JSONObject> onResponseListener, boolean cache, boolean hasAuth) {
+    public void executeGetRequest(String url, OnResponseListener<String> onResponseListener, boolean cache, boolean hasAuth) {
         LogUtils.logInfo(TAG, "executeGetRequest: ");
 
         if (NetworkUtils.isNetworkAvailable()) {
@@ -213,20 +204,19 @@ public class VolleyProvider {
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 response -> {
                     LogUtils.logResponse(TAG, response);
-                    if (onResponseListener != null) {
-                        try {
-                            onResponseListener.onSuccess(new JSONObject(response));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    if (onResponseListener != null)
+                        onResponseListener.onSuccess(response);
                 },
-                error -> LogUtils.logError(TAG, error))
-        {
+                error -> {
+                    LogUtils.logError(TAG, NetworkUtils.getErrorString(error));
+                    if (onResponseListener != null)
+                        onResponseListener.onFailure(error);
+                }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
 
+                headers.put("Content-Type", "application/x-www-form-urlencoded");
                 NetworkUtils.addHeaders(context, headers, hasAuth);
 
                 return headers;

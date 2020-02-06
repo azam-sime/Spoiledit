@@ -23,8 +23,8 @@ public class LoginViewModel extends ViewModel {
         loginRepo.requestLogin(credentials);
     }
 
-    public void requestPasswordReset(String[] credentials) {
-        loginRepo.requestPasswordReset(credentials);
+    public void requestPassword(String[] values) {
+        loginRepo.requestPassword(values);
     }
 
     public static final class LoginFactory implements ViewModelProvider.Factory {

@@ -45,12 +45,12 @@ public abstract class RootBottomSheetFragment extends BottomSheetDialogFragment 
 
     }
 
-    public void showKeyboard(EditText editText) {
-        InputUtils.showKeyboard(getActivity(), editText);
+    public void showKeyboard(View view) {
+        InputUtils.showKeyboard(view);
     }
 
-    public void hideKeyboard() {
-        InputUtils.hideKeyboard(getActivity());
+    public void hideKeyboard(View view) {
+        InputUtils.hideKeyboard(view);
     }
 
     public void runOnUiAfterMillis(Runnable runnable, long delayMillis) {

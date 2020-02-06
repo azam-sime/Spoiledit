@@ -31,15 +31,15 @@ public abstract class RootRepo {
         apiStatusModelMutable.postValue(apiStatusModel);
     }
 
-    public void apiRequestHit(String message) {
-        setApiStatus(new ApiStatusModel(Status.Request.API_HIT, message));
+    public void apiRequestHit(int api, String message) {
+        setApiStatus(new ApiStatusModel(api, Status.Request.API_HIT, message));
     }
 
-    public void apiRequestSuccess(String message) {
-        setApiStatus(new ApiStatusModel(Status.Request.API_SUCCESS, message));
+    public void apiRequestSuccess(int api, String message) {
+        setApiStatus(new ApiStatusModel(api, Status.Request.API_SUCCESS, message));
     }
 
-    public void apiRequestFailure(String message) {
-        setApiStatus(new ApiStatusModel(Status.Request.API_ERROR, message));
+    public void apiRequestFailure(int api, String message) {
+        setApiStatus(new ApiStatusModel(api, Status.Request.API_ERROR, message));
     }
 }

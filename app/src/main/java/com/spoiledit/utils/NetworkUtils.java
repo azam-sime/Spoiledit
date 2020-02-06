@@ -30,7 +30,7 @@ public final class NetworkUtils {
     public static final int RETRY_NO_MAX = -1;
     public static final float RETRY_BACKOFF = DefaultRetryPolicy.DEFAULT_BACKOFF_MULT;
 
-    public static RetryPolicy RETRY_POLICY
+    public static DefaultRetryPolicy RETRY_POLICY
             = new DefaultRetryPolicy(RETRY_TIMEOUT, RETRY_NO_MAX, RETRY_BACKOFF);
 
     private static boolean networkAvailable;
@@ -65,10 +65,6 @@ public final class NetworkUtils {
     }
 
     public static void addHeaders(Context context, Map<String, String> headers, boolean addAuth) {
-        headers.put("decode", "2");
-        headers.put("g_zip", "2");
-        headers.put("is_mobile", "1");
-
         if (addAuth)
             addAuthorization(context, headers);
     }
@@ -124,5 +120,18 @@ public final class NetworkUtils {
         cacheEntry.responseHeaders = networkResponse.headers;
 
         return new String(networkResponse.data, HttpHeaderParser.parseCharset(networkResponse.headers));
+    }
+
+    public static String getErrorString(VolleyError volleyError) {
+        return new String(volleyError.networkResponse.data);
+    }
+
+    public static String getDisplayError(VolleyError volleyError) {
+        JSONObject jsonObject = StringUtils.getErrorJson(volleyError);
+
+        if (jsonObject != null && jsonObject.optInt("code") == 400)
+            return "Such user doesn't exist! You may Sign Up.";
+
+        return new String(volleyError.networkResponse.data);
     }
 }

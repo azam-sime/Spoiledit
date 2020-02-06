@@ -4,6 +4,8 @@ package com.spoiledit.fragments;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.core.widget.ContentLoadingProgressBar;
@@ -27,6 +29,9 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        progressBar = view.findViewById(R.id.pb_loading);
+
+        setUpToolbar(view);
         initUi(view);
         initialiseListener(view);
         setData(view);
@@ -35,6 +40,13 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
         setUpViewPager(view);
 
         addObservers();
+
+        if (progressBar != null)
+            progressBar.hide();
+    }
+
+    public void setUpToolbar(View view) {
+
     }
 
     public abstract void initUi(View view);
@@ -49,6 +61,24 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
 
     public void setUpViewPager(View view) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.iv_back)
+            getActivity().onBackPressed();
+        else if (v.getId() == R.id.iv_popcorn)
+            showInterrupt("Will be soon implmented...", true);
+    }
+
+    public void setupToolBar(View view, String title) {
+        TextView tvToolbar = view.findViewById(R.id.tv_toolbar);
+        tvToolbar.setText(title);
+
+        ImageView ivBack = view.findViewById(R.id.iv_back);
+        ivBack.setOnClickListener(this);
+        ImageView ivPopcorn = view.findViewById(R.id.iv_popcorn);
+        ivPopcorn.setOnClickListener(this);
     }
 
     public void addObservers() {
@@ -67,15 +97,16 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
         if (StringUtils.isInvalid(message))
             showInterrupt(message, false);
 
-        progressBar.show();
+        if (progressBar != null)
+            progressBar.show();
     }
 
-    public void showKeyboard(EditText editText) {
-        InputUtils.showKeyboard(getContext(), editText);
+    public void showKeyboard(View view) {
+        InputUtils.showKeyboard(view);
     }
 
-    public void hideKeyboard() {
-        InputUtils.hideKeyboard(getActivity());
+    public void hideKeyboard(View view) {
+        InputUtils.hideKeyboard(view);
     }
 
     public void runOnUiAfterMillis(Runnable runnable, long delayMillis) {

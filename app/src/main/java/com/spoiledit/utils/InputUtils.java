@@ -3,6 +3,7 @@ package com.spoiledit.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.text.InputFilter;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -16,18 +17,22 @@ public final class InputUtils {
     private InputUtils() {
     }
 
-    public static void hideKeyboard(Context context) {
-        if (context != null) {
-            if (((Activity) context).getCurrentFocus() != null) {
-                InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(((Activity) context).getCurrentFocus().getWindowToken(), 0);
-            }
+    public static void hideKeyboard(View view) {
+        if (view.hasFocus()) {
+            InputMethodManager inputMethodManager = (InputMethodManager)
+                    view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (inputMethodManager != null)
+                inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
-    public static void showKeyboard(Context context, EditText editText) {
-        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.toggleSoftInputFromWindow(editText.getApplicationWindowToken(), InputMethodManager.SHOW_FORCED, 0);
+    public static void showKeyboard(View view) {
+        if (view.requestFocus()) {
+            InputMethodManager inputMethodManager = (InputMethodManager)
+                    view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (inputMethodManager != null)
+                inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+        }
     }
 
     public static InputFilter getNoInputFilter() {
