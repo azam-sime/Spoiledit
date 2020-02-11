@@ -4,6 +4,7 @@ import com.android.volley.Request;
 
 public enum Urls {
     USER_URL(Constants.Api.USER_URL, Constants.BASE_URL + "/users", Request.Method.GET)
+    , TOKEN(Constants.Api.TOKEN, USER_URL.getUrl() + "/authorization?oth=gS56999pPixuB9jA38eh858lznm4bRdn", Request.Method.GET)
     , USER_SIGN_UP(Constants.Api.USER_SIGN_UP, USER_URL.getUrl() + "", Request.Method.GET)
     , USER_SIGN_IN(Constants.Api.USER_SIGN_IN, USER_URL.getUrl() + "/me", Request.Method.GET)
     , USER_PROFILE(Constants.Api.USER_PROFILE, USER_URL.getUrl() + "/", Request.Method.GET)

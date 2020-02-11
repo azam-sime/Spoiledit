@@ -10,6 +10,9 @@ import com.spoiledit.utils.StringUtils;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SignUpRepo extends RootRepo {
     public static final String TAG = SignUpRepo.class.getCanonicalName();
 
@@ -27,10 +30,10 @@ public class SignUpRepo extends RootRepo {
             apiRequestHit(api, "Requesting sign up...");
             getVolleyProvider().executePostRequest(
                     Urls.USER_SIGN_UP.getUrl(),
-                    getRequestParams(api, credentials),
-                    new VolleyProvider.OnResponseListener<JSONObject>() {
+                    getParamsMap(api, credentials),
+                    new VolleyProvider.OnResponseListener<String>() {
                         @Override
-                        public void onSuccess(JSONObject response) {
+                        public void onSuccess(String response) {
 
                         }
 
@@ -38,7 +41,7 @@ public class SignUpRepo extends RootRepo {
                         public void onFailure(VolleyError volleyError) {
                             apiRequestFailure(api, StringUtils.getErrorString(volleyError));
                         }
-                    },false, true);
+                    },false, false);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -52,10 +55,10 @@ public class SignUpRepo extends RootRepo {
             apiRequestHit(api, "Updating password...");
             getVolleyProvider().executePostRequest(
                     Urls.T_AND_C.getUrl(),
-                    getRequestParams(api, values),
-                    new VolleyProvider.OnResponseListener<JSONObject>() {
+                    getParamsMap(api, values),
+                    new VolleyProvider.OnResponseListener<String>() {
                         @Override
-                        public void onSuccess(JSONObject response) {
+                        public void onSuccess(String response) {
 
                         }
 
@@ -71,23 +74,23 @@ public class SignUpRepo extends RootRepo {
         }
     }
 
-    private JSONObject getRequestParams(int api, String[] values) {
-        JSONObject jsonRequest = new JSONObject();
+    private Map<String, String> getParamsMap(int api, String[] values) {
+        Map<String, String> hashMap = new HashMap<>();
         try {
             if (api == Constants.Api.USER_SIGN_UP) {
-                jsonRequest.put("username", values[0]);
-                jsonRequest.put("email", values[0]);
-                jsonRequest.put("password", values[1]);
-                jsonRequest.put("name", values[2]);
-                jsonRequest.put("phone", values[3]);
+                hashMap.put("username", values[0]);
+                hashMap.put("email", values[0]);
+                hashMap.put("password", values[1]);
+                hashMap.put("name", values[2]);
+                hashMap.put("phone", values[3]);
 
             } else if (api == Constants.Api.T_AND_C) {
-                jsonRequest.put("email", values[0]);
+                hashMap.put("email", values[0]);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return jsonRequest;
+        return hashMap;
     }
 }

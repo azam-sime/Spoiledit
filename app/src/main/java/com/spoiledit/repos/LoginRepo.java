@@ -9,7 +9,8 @@ import com.spoiledit.networks.VolleyProvider;
 import com.spoiledit.utils.NetworkUtils;
 import com.spoiledit.utils.StringUtils;
 
-import org.json.JSONObject;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginRepo extends RootRepo {
     public static final String TAG = LoginRepo.class.getCanonicalName();
@@ -26,8 +27,9 @@ public class LoginRepo extends RootRepo {
         int api = Constants.Api.USER_SIGN_IN;
         try {
             apiRequestHit(api, "Requesting login...");
-            getVolleyProvider().executeGetRequest(
+            getVolleyProvider().executeUrlEncodedRequest(
                     Urls.USER_SIGN_IN.getUrl(),
+                    getParamsMap(api, credentials),
                     new VolleyProvider.OnResponseListener<String>() {
                         @Override
                         public void onSuccess(String response) {
@@ -50,12 +52,12 @@ public class LoginRepo extends RootRepo {
         int api = Constants.Api.FORGOT_PASSWORD;
         try {
             apiRequestHit(api, "Requesting password change...");
-            getVolleyProvider().executePostRequest(
+            getVolleyProvider().executeUrlEncodedRequest(
                     Urls.FORGOT_PASSWORD.getUrl(),
-                    getRequestParams(api, values),
-                    new VolleyProvider.OnResponseListener<JSONObject>() {
+                    getParamsMap(api, values),
+                    new VolleyProvider.OnResponseListener<String>() {
                         @Override
-                        public void onSuccess(JSONObject response) {
+                        public void onSuccess(String response) {
 
                         }
 
@@ -71,21 +73,21 @@ public class LoginRepo extends RootRepo {
         }
     }
 
-    private JSONObject getRequestParams(int api, String[] values) {
-        JSONObject jsonRequest = new JSONObject();
+    private Map<String, String> getParamsMap(int api, String[] values) {
+        Map<String, String> hashMap = new HashMap<>();
         try {
             if (api == Constants.Api.USER_SIGN_IN) {
-                jsonRequest.put("username", values[0]);
-                jsonRequest.put("password", values[1]);
+                hashMap.put("username", values[0]);
+                hashMap.put("password", values[1]);
 
             } else if (api == Constants.Api.FORGOT_PASSWORD) {
-                jsonRequest.put("email", values[0]);
-                jsonRequest.put("password", values[1]);
+                hashMap.put("email", values[0]);
+                hashMap.put("password", values[1]);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return jsonRequest;
+        return hashMap;
     }
 }

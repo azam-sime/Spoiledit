@@ -13,6 +13,7 @@ public final class Constants {
 
         }
 
+        public static final int TOKEN = -1;
         public static final int USER_URL = 1;
         public static final int USER_SIGN_UP = 2;
         public static final int USER_SIGN_IN = 3;

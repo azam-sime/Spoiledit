@@ -43,4 +43,16 @@
     <string name="new_user">New user?</string>
     <string name="signup">Sign Up</string>
     <string name="terms_and_conditions">Terms and conditions</string>
+    <string name="add_spoiler_prompt">How was your overall view about the movie?</string>
+    <string name="select_type">Select Type</string>
+    <string name="was_there_mid_credit">Was there a Mid-Credit scene?</string>
+    <string name="was_there_post_credit">Was there a Stinger? (Post-Credit)</string>
+    <string name="yes">Yes</string>
+    <string name="full_spoiler">Full Spoiler</string>
+    <string name="just_the_ending">Just The Ending</string>
+    <string name="brief_summary">Brief Summary</string>
+    <string name="no">No</string>
+    <string name="not_sure">Not Sure</string>
+    <string name="your_message">Your message (optional)</string>
+    <string name="write_the_spoiler_here">Write the spoiler here</string>
 </resources>

@@ -10,6 +10,9 @@ import com.spoiledit.utils.StringUtils;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class VerifyRepo extends RootRepo {
     public static final String TAG = VerifyRepo.class.getCanonicalName();
 
@@ -25,12 +28,12 @@ public class VerifyRepo extends RootRepo {
         int api = Constants.Api.NEW_PASSWORD;
         try {
             apiRequestHit(api, "Requesting password change...");
-            getVolleyProvider().executePostRequest(
+            getVolleyProvider().executeUrlEncodedRequest(
                     Urls.NEW_PASSWORD.getUrl(),
-                    getRequestParams(api, values),
-                    new VolleyProvider.OnResponseListener<JSONObject>() {
+                    getParamsMap(api, values),
+                    new VolleyProvider.OnResponseListener<String>() {
                         @Override
-                        public void onSuccess(JSONObject response) {
+                        public void onSuccess(String response) {
 
                         }
 
@@ -46,17 +49,17 @@ public class VerifyRepo extends RootRepo {
         }
     }
 
-    private JSONObject getRequestParams(int api, String[] values) {
-        JSONObject jsonRequest = new JSONObject();
+    private Map<String, String> getParamsMap(int api, String[] values) {
+        Map<String, String> hashMap = new HashMap<>();
         try {
             if (api == Constants.Api.NEW_PASSWORD) {
-                jsonRequest.put("email", values[0]);
-                jsonRequest.put("password", values[1]);
+                hashMap.put("email", values[0]);
+                hashMap.put("password", values[1]);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return jsonRequest;
+        return hashMap;
     }
 }

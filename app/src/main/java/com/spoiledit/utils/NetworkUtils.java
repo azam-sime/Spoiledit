@@ -123,7 +123,17 @@ public final class NetworkUtils {
     }
 
     public static String getErrorString(VolleyError volleyError) {
-        return new String(volleyError.networkResponse.data);
+        LogUtils.logError(TAG, "" + volleyError);
+        if (volleyError != null)
+            if (volleyError.networkResponse != null)
+                if (volleyError.networkResponse.data != null)
+                    return new String(volleyError.networkResponse.data);
+                else
+                    return "Null volleyError.networkResponse.data";
+            else
+                return "Null volleyError.networkResponse";
+        else
+            return "Null volleyError";
     }
 
     public static String getDisplayError(VolleyError volleyError) {

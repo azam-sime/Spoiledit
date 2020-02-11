@@ -31,7 +31,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/terms_and_conditions"
+                android:text="@string/add_spoiler_prompt"
                 android:fontFamily="@font/montserrat_bold"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                 android:textStyle="bold"
@@ -40,12 +40,159 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@string/select_type"
                 android:layout_marginTop="@dimen/spacing_16"
-                android:text="Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th century who is thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in a type specimen book."
-                android:fontFamily="@font/montserrat_regular"
-                android:textColor="@color/colorBlack"
-                android:id="@+id/tv_t_and_c"/>
+                android:fontFamily="@font/montserrat_bold" />
 
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/full_spoiler"
+                    android:textSize="@dimen/text_12"
+                    android:id="@+id/rb_spoiler_full" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/brief_summary"
+                    android:textSize="@dimen/text_12"
+                    android:layout_marginStart="@dimen/spacing_8"
+                    android:layout_marginEnd="@dimen/spacing_8"
+                    android:id="@+id/rb_spoiler_brief" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/just_the_ending"
+                    android:textSize="@dimen/text_12"
+                    android:id="@+id/rb_spoiler_ending" />
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/was_there_mid_credit"
+                android:layout_marginTop="@dimen/spacing_16"
+                android:fontFamily="@font/montserrat_bold" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/yes"
+                    android:textSize="@dimen/text_12"
+                    android:id="@+id/rbtn_mc_yes" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no"
+                    android:textSize="@dimen/text_12"
+                    android:layout_marginStart="@dimen/spacing_8"
+                    android:layout_marginEnd="@dimen/spacing_8"
+                    android:id="@+id/rbtn_nc_no" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/not_sure"
+                    android:textSize="@dimen/text_12"
+                    android:id="@+id/rbtn_mc_ns" />
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/was_there_post_credit"
+                android:layout_marginTop="@dimen/spacing_16"
+                android:fontFamily="@font/montserrat_bold" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/yes"
+                    android:textSize="@dimen/text_12"
+                    android:id="@+id/rbtn_pc_yes" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no"
+                    android:textSize="@dimen/text_12"
+                    android:layout_marginStart="@dimen/spacing_8"
+                    android:layout_marginEnd="@dimen/spacing_8"
+                    android:id="@+id/rbtn_pc_no" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/not_sure"
+                    android:textSize="@dimen/text_12"
+                    android:id="@+id/rbtn_pc_ns" />
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/your_message"
+                android:layout_marginTop="@dimen/spacing_16"
+                android:fontFamily="@font/montserrat_bold" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_8"
+                android:background="@drawable/background_signup_input"
+                android:hint="@string/write_the_spoiler_here"
+                android:minLines="8"
+                android:gravity="start"
+                android:padding="@dimen/spacing_8"
+                android:textSize="@dimen/text_14"
+                android:id="@+id/et_spoiler"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
