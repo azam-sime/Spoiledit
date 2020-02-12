@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.spoiledit.constants.Status;
 import com.spoiledit.models.ApiStatusModel;
+import com.spoiledit.networks.MultipartRequest;
 import com.spoiledit.networks.VolleyProvider;
 
 public abstract class RootRepo {
@@ -16,6 +17,7 @@ public abstract class RootRepo {
     @CallSuper
     public void init(Context context) {
         volleyProvider = VolleyProvider.getProvider(context);
+
         apiStatusModelMutable = new MutableLiveData<>();
     }
 

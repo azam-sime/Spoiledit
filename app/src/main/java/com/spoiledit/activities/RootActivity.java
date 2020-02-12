@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.ContentLoadingProgressBar;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.spoiledit.R;
@@ -31,11 +32,15 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
     private ContentLoadingProgressBar progressBar;
     private Snackbar snackbar;
 
+    private MutableLiveData<Boolean> networkMutable;
+
     private ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
         @Override
         public void onAvailable(@NonNull Network network) {
             super.onAvailable(network);
 
+            if (networkMutable != null)
+                networkMutable.postValue(true);
             NetworkUtils.setNetworkAvailable(true);
         }
 
@@ -43,6 +48,8 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
         public void onUnavailable() {
             super.onUnavailable();
 
+            if (networkMutable != null)
+                networkMutable.postValue(false);
             NetworkUtils.setNetworkAvailable(false);
         }
     };
@@ -53,6 +60,8 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
 
         connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         progressBar = new ContentLoadingProgressBar(this);
+
+        networkMutable = new MutableLiveData<>();
     }
 
     @Override
@@ -123,6 +132,10 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
                         .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
                         .build(), networkCallback
         );
+    }
+
+    public MutableLiveData<Boolean> getNetworkMutable() {
+        return networkMutable;
     }
 
     public boolean isRequestValid() {

@@ -11,12 +11,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkError;
-import com.android.volley.NoConnectionError;
-import com.android.volley.ParseError;
-import com.android.volley.ServerError;
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.google.android.material.tabs.TabLayout;
 import com.spoiledit.R;
@@ -256,33 +250,6 @@ public final class StringUtils {
         if (isInvalid(word))
             return "N/A";
         return word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase();
-    }
-
-    public static String getErrorString(VolleyError error) {
-        return NetworkUtils.getErrorString(error);
-    }
-
-    public static String getErrorString(Exception exception) {
-        if (exception == null)
-            return "Unknown";
-
-        String[] errors = exception.getMessage().split("\\.");
-
-        String errorString = errors[errors.length - 1];
-        if (errorString == null)
-            errorString = "Unknown!";
-
-        return errorString;
-    }
-
-    public static JSONObject getErrorJson(VolleyError volleyError) {
-        try {
-            return new JSONObject(getErrorString(volleyError));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
     public static void setCountInTab(TabLayout tabLayout, int index, String title, int count, int total) {

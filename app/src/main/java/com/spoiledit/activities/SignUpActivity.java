@@ -33,8 +33,6 @@ public class SignUpActivity extends RootActivity {
     private MaterialButton btnSignUp;
     private TextView tvTandC, tvSignIn;
 
-    private boolean skip = false;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,7 +94,6 @@ public class SignUpActivity extends RootActivity {
                     toggleViews(true);
                     hideLoader();
                     showFailure(apiStatusModel.getMessage());
-                    skip = true;
 
                 } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
                     toggleViews(false);
@@ -159,9 +156,6 @@ public class SignUpActivity extends RootActivity {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_sign_up) {
-            if (skip)
-                gotoNextScreen();
-
             if (isRequestValid()) {
                 String[] credentials = new String[]{etEmail.getText().toString(), etPassword.getText().toString(),
                         etName.getText().toString(), etPhone.getText().toString()};

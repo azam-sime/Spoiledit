@@ -9,6 +9,8 @@ import com.spoiledit.networks.VolleyProvider;
 import com.spoiledit.utils.NetworkUtils;
 import com.spoiledit.utils.StringUtils;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,24 +29,63 @@ public class LoginRepo extends RootRepo {
         int api = Constants.Api.USER_SIGN_IN;
         try {
             apiRequestHit(api, "Requesting login...");
-            getVolleyProvider().executeUrlEncodedRequest(
+            getVolleyProvider().executeMultipartRequest(
                     Urls.USER_SIGN_IN.getUrl(),
                     getParamsMap(api, credentials),
                     new VolleyProvider.OnResponseListener<String>() {
                         @Override
                         public void onSuccess(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                String message = jsonObject.optString("message");
 
+                                if (jsonObject.optString("code").equals("200"))
+                                    apiRequestSuccess(api, message);
+                                else {
+                                    if (jsonObject.optString("code").equals("invalid_email"))
+                                        message = "You have entered an un-registered username!";
+                                    else if (jsonObject.optString("code").equals("incorrect_password"))
+                                        message = "You have entered an incorrect password!";
+                                    apiRequestFailure(api, message);
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                apiRequestFailure(api, NetworkUtils.getErrorString(e));
+                            }
                         }
 
                         @Override
                         public void onFailure(VolleyError volleyError) {
-                            apiRequestFailure(api, NetworkUtils.getDisplayError(volleyError));
+                            // For invalid user creds, there is an 500 server error
+                            // hence, trying to fetch coded message from server from volley error
+                            try {
+                                JSONObject jsonObject = NetworkUtils.getErrorJson(volleyError);
+                                String message = "";
+                                if (jsonObject != null) {
+                                    message = jsonObject.optString("message");
+
+                                    if (jsonObject.optString("code").equals("200"))
+                                        apiRequestSuccess(api, message);
+                                    else {
+                                        if (jsonObject.optString("code").equals("invalid_email"))
+                                            message = "You have entered an un-registered username!";
+                                        else if (jsonObject.optString("code").equals("incorrect_password"))
+                                            message = "You have entered an incorrect password!";
+                                    }
+                                }
+                                apiRequestFailure(api, message);
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                apiRequestFailure(api, NetworkUtils.getErrorString(e));
+                            }
                         }
                     }, false, true);
 
         } catch (Exception e) {
             e.printStackTrace();
-            apiRequestFailure(api, StringUtils.getErrorString(e));
+            apiRequestFailure(api, NetworkUtils.getErrorString(e));
         }
     }
 
@@ -52,7 +93,7 @@ public class LoginRepo extends RootRepo {
         int api = Constants.Api.FORGOT_PASSWORD;
         try {
             apiRequestHit(api, "Requesting password change...");
-            getVolleyProvider().executeUrlEncodedRequest(
+            getVolleyProvider().executeMultipartRequest(
                     Urls.FORGOT_PASSWORD.getUrl(),
                     getParamsMap(api, values),
                     new VolleyProvider.OnResponseListener<String>() {
@@ -63,13 +104,13 @@ public class LoginRepo extends RootRepo {
 
                         @Override
                         public void onFailure(VolleyError volleyError) {
-                            apiRequestFailure(api, NetworkUtils.getDisplayError(volleyError));
+                            apiRequestFailure(api, NetworkUtils.getErrorString(volleyError));
                         }
                     }, false, true);
 
         } catch (Exception e) {
             e.printStackTrace();
-            apiRequestFailure(api, StringUtils.getErrorString(e));
+            apiRequestFailure(api, NetworkUtils.getErrorString(e));
         }
     }
 
@@ -82,7 +123,7 @@ public class LoginRepo extends RootRepo {
 
             } else if (api == Constants.Api.FORGOT_PASSWORD) {
                 hashMap.put("email", values[0]);
-                hashMap.put("password", values[1]);
+//                hashMap.put("password", values[1]);
             }
 
         } catch (Exception e) {

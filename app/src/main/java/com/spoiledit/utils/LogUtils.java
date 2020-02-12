@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.android.volley.VolleyError;
 
+import org.json.JSONObject;
+
 public final class LogUtils {
     private static final String TAG = LogUtils.class.getCanonicalName();
     private static final boolean SHOULD_LOG = true;
@@ -47,12 +49,12 @@ public final class LogUtils {
 
 
 
-    public static void logError(String message) {
-        logError(TAG, message);
-    }
-
     public static void logError(VolleyError volleyError) {
         logError(TAG, volleyError);
+    }
+
+    public static void logError(String message) {
+        logError(TAG, message);
     }
 
     public static void logError(String tag, VolleyError volleyError) {

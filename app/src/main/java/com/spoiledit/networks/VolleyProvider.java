@@ -16,11 +16,13 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.spoiledit.utils.LogUtils;
 import com.spoiledit.utils.NetworkUtils;
+import com.spoiledit.utils.PreferenceUtils;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,8 +58,8 @@ public class VolleyProvider {
     }
 
 
-    public void addToRequestQueue(MultipartProvider multipartProvider) {
-        requestQueue.add(multipartProvider);
+    public void addToRequestQueue(MultipartRequest multipartRequest) {
+        requestQueue.add(multipartRequest);
     }
 
 
@@ -83,20 +85,12 @@ public class VolleyProvider {
                     LogUtils.logError(TAG, NetworkUtils.getErrorString(error));
                     if (onResponseListener != null)
                         onResponseListener.onFailure(error);
-                })
-        {
+                }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-
-                NetworkUtils.addAuthorization(context, headers);
-
+                headers.put("Authorzation", PreferenceUtils.getString(context, PreferenceUtils.KEY_TOKEN));
                 return headers;
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "application/x-www-form-urlencoded";
             }
 
             @Override
@@ -134,20 +128,12 @@ public class VolleyProvider {
                     LogUtils.logError(TAG, NetworkUtils.getErrorString(error));
                     if (onResponseListener != null)
                         onResponseListener.onFailure(error);
-                })
-        {
+                }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-
-                NetworkUtils.addAuthorization(context, headers);
-
+                headers.put("Authorzation", PreferenceUtils.getString(context, PreferenceUtils.KEY_TOKEN));
                 return headers;
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "application/x-www-form-urlencoded";
             }
         };
 
@@ -179,20 +165,12 @@ public class VolleyProvider {
                     LogUtils.logError(TAG, NetworkUtils.getErrorString(error));
                     if (onResponseListener != null)
                         onResponseListener.onFailure(error);
-                })
-        {
+                }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-
-                NetworkUtils.addAuthorization(context, headers);
-
+                headers.put("Authorzation", PreferenceUtils.getString(context, PreferenceUtils.KEY_TOKEN));
                 return headers;
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "application/x-www-form-urlencoded";
             }
 
             @Override
@@ -230,20 +208,12 @@ public class VolleyProvider {
                     LogUtils.logError(TAG, NetworkUtils.getErrorString(error));
                     if (onResponseListener != null)
                         onResponseListener.onFailure(error);
-                })
-        {
+                }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-
-                NetworkUtils.addAuthorization(context, headers);
-
+                headers.put("Authorzation", PreferenceUtils.getString(context, PreferenceUtils.KEY_TOKEN));
                 return headers;
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "application/x-www-form-urlencoded";
             }
         };
 
@@ -275,25 +245,59 @@ public class VolleyProvider {
                     LogUtils.logError(TAG, NetworkUtils.getErrorString(error));
                     if (onResponseListener != null)
                         onResponseListener.onFailure(error);
-                })
-        {
+                }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-
-                NetworkUtils.addAuthorization(context, headers);
-
+                headers.put("Authorzation", PreferenceUtils.getString(context, PreferenceUtils.KEY_TOKEN));
                 return headers;
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "application/x-www-form-urlencoded";
             }
 
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 return params;
+            }
+        };
+
+        request.setShouldCache(cache);
+        request.setRetryPolicy(NetworkUtils.RETRY_POLICY);
+        request.setTag(TAG);
+        requestQueue.add(request);
+    }
+
+
+    public void executeMultipartRequest(String url, Map<String, String> params, OnResponseListener<String> onResponseListener, boolean cache, boolean hasAuth) {
+        executeMultipartRequest(url, params, null, onResponseListener, cache, hasAuth);
+    }
+
+    public void executeMultipartRequest(String url, Map<String, String> params, ArrayList<File> files, OnResponseListener<String> onResponseListener, boolean cache, boolean hasAuth) {
+        LogUtils.logInfo(TAG, "executeMultipartRequest: ");
+        if (NetworkUtils.isNetworkAvailable()) {
+            try {
+                requestQueue.getCache().remove(url);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        LogUtils.logRequest(TAG, url + ":" + params.toString());
+        MultipartRequest request = new MultipartRequest(url, params, files,
+                response -> {
+                    LogUtils.logResponse(TAG, response);
+                    if (onResponseListener != null)
+                        onResponseListener.onSuccess(response);
+                },
+                error -> {
+                    LogUtils.logError(TAG, NetworkUtils.getErrorString(error));
+                    if (onResponseListener != null)
+                        onResponseListener.onFailure(error);
+                })
+        {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", PreferenceUtils.getString(context, PreferenceUtils.KEY_TOKEN));
+                return headers;
             }
         };
 

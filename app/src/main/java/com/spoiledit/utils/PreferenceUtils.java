@@ -16,11 +16,10 @@ public final class PreferenceUtils {
 
     private static final String PREF_NAME = BuildConfig.APPLICATION_ID;
 
+    public static final String KEY_TOKEN = PREF_NAME + ".token";
     public static final String KEY_LOGIN_STATUS = PREF_NAME + ".login_status";
-
     public static final String KEY_USERNAME = PREF_NAME + ".username";
     public static final String KEY_PASSWORD = PREF_NAME + ".password";
-
     public static final String KEY_USER_MODEL = PREF_NAME + ".user_model";
 
     private PreferenceUtils() {

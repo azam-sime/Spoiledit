@@ -7,6 +7,7 @@ import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
 import com.spoiledit.constants.Type;
 import com.spoiledit.utils.LogUtils;
 import com.spoiledit.utils.NetworkUtils;
@@ -24,44 +25,43 @@ import cz.msebera.android.httpclient.entity.mime.MultipartEntityBuilder;
 import cz.msebera.android.httpclient.entity.mime.content.FileBody;
 
 
-public class MultipartProvider extends Request<String> {
-    public static final String TAG = MultipartProvider.class.getCanonicalName();
+public class MultipartRequest extends StringRequest {
+    public static final String TAG = MultipartRequest.class.getCanonicalName();
 
-    private HashMap<String, String> params;
-    private int callFor;
-    private boolean addAuthHeaders;
+    private static final String FILE_BODY_KEY = "files[]";
+
+    private Map<String, String> params;
     private List<File> files;
     private Response.Listener<String> stringListener;
     private Response.ErrorListener errorListener;
 
     private HttpEntity httpEntity;
 
-    public MultipartProvider(String serverUrl, HashMap<String, String> params, int callFor, boolean addAuthHeaders, List<File> files, Response.Listener<String> stringListener, Response.ErrorListener errorListener) {
-        super(Method.POST, serverUrl, errorListener);
+    public MultipartRequest(String serverUrl, Map<String, String> params, List<File> files,
+                            Response.Listener<String> stringListener, Response.ErrorListener errorListener) {
+        super(Method.POST, serverUrl, stringListener, errorListener);
 
         this.params = params;
-        this.callFor = callFor;
-        this.addAuthHeaders = addAuthHeaders;
         this.files = files;
         this.stringListener = stringListener;
         this.errorListener = errorListener;
 
-        decideUploadCallback();
+        httpEntity = buildEntity();
     }
 
-    private void decideUploadCallback() {
-        if (callFor == Type.Multipart.USER_PHOTO) {
-            httpEntity = buildUserPhotoEntity();
-        }
-    }
-
-    private HttpEntity buildUserPhotoEntity() {
+    private HttpEntity buildEntity() {
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-        for (int i = 0; i < files.size(); i++) {
-            FileBody fileBody = new FileBody(files.get(i));
-            builder.addPart("key", fileBody);
+
+        if (files != null && files.size() > 0) {
+            for (int i = 0; i < files.size(); i++) {
+                FileBody fileBody = new FileBody(files.get(i));
+                builder.addPart(FILE_BODY_KEY, fileBody);
+            }
         }
-        builder.addTextBody("key", params.get("value_key"));
+
+        for (String key : params.keySet()) {
+            builder.addTextBody(key, params.get(key));
+        }
 
         return builder.build();
     }
@@ -91,18 +91,6 @@ public class MultipartProvider extends Request<String> {
             VolleyLog.e("" + e);
             return null;
         }
-    }
-
-    @Override
-    public Map<String, String> getHeaders() throws AuthFailureError {
-        if (addAuthHeaders) {
-            Map<String, String> headers = new HashMap<>();
-
-            NetworkUtils.addAuthorization(null, headers);
-
-            return headers;
-        } else
-            return super.getHeaders();
     }
 
     @Override

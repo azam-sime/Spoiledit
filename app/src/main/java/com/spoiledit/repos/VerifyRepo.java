@@ -6,9 +6,8 @@ import com.android.volley.VolleyError;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Urls;
 import com.spoiledit.networks.VolleyProvider;
+import com.spoiledit.utils.NetworkUtils;
 import com.spoiledit.utils.StringUtils;
-
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,13 +38,13 @@ public class VerifyRepo extends RootRepo {
 
                         @Override
                         public void onFailure(VolleyError volleyError) {
-                            apiRequestFailure(api, StringUtils.getErrorString(volleyError));
+                            apiRequestFailure(api, NetworkUtils.getErrorString(volleyError));
                         }
                     }, false, true);
 
         } catch (Exception e) {
             e.printStackTrace();
-            apiRequestFailure(api, StringUtils.getErrorString(e));
+            apiRequestFailure(api, NetworkUtils.getErrorString(e));
         }
     }
 

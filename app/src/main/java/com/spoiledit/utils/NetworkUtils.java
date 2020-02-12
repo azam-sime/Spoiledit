@@ -18,6 +18,7 @@ import com.spoiledit.R;
 import com.spoiledit.constants.Type;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Map;
@@ -122,26 +123,29 @@ public final class NetworkUtils {
         return new String(networkResponse.data, HttpHeaderParser.parseCharset(networkResponse.headers));
     }
 
-    public static String getErrorString(VolleyError volleyError) {
-        LogUtils.logError(TAG, "" + volleyError);
-        if (volleyError != null)
-            if (volleyError.networkResponse != null)
-                if (volleyError.networkResponse.data != null)
-                    return new String(volleyError.networkResponse.data);
-                else
-                    return "Null volleyError.networkResponse.data";
-            else
-                return "Null volleyError.networkResponse";
-        else
-            return "Null volleyError";
+    public static JSONObject getErrorJson(VolleyError volleyError) {
+        try {
+            return new JSONObject(new String(volleyError.networkResponse.data));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public static String getDisplayError(VolleyError volleyError) {
-        JSONObject jsonObject = StringUtils.getErrorJson(volleyError);
+    public static String getErrorString(Exception exception) {
+        if (exception == null)
+            return "Some Exception!";
 
-        if (jsonObject != null && jsonObject.optInt("code") == 400)
-            return "Such user doesn't exist! You may Sign Up.";
+        String[] errors = exception.getMessage().split("\\.");
 
+        String errorString = errors[errors.length - 1];
+        if (errorString == null)
+            errorString = "Some Exception!";
+
+        return errorString;
+    }
+
+    public static String getErrorString(VolleyError volleyError) {
         return new String(volleyError.networkResponse.data);
     }
 }
