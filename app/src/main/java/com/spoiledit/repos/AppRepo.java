@@ -7,7 +7,6 @@ import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Urls;
 import com.spoiledit.networks.VolleyProvider;
 import com.spoiledit.utils.NetworkUtils;
-import com.spoiledit.utils.StringUtils;
 
 import org.json.JSONObject;
 

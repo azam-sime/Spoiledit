@@ -193,7 +193,7 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
     }
 
     public void showSuccess(String message, Runnable positive) {
-        showInterrupt(message, true, "Proceed", positive);
+        showInterrupt(message, false, "Proceed", positive);
     }
 
     public void hideLoader() {

@@ -5,10 +5,14 @@ import android.content.Context;
 import com.android.volley.VolleyError;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Urls;
+import com.spoiledit.models.UserModel;
 import com.spoiledit.networks.VolleyProvider;
+import com.spoiledit.parsers.UserParser;
 import com.spoiledit.utils.NetworkUtils;
+import com.spoiledit.utils.PreferenceUtils;
 import com.spoiledit.utils.StringUtils;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -37,16 +41,22 @@ public class LoginRepo extends RootRepo {
                         public void onSuccess(String response) {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
-                                String message = jsonObject.optString("message");
+                                if (jsonObject.has("data")) {
+                                    PreferenceUtils.saveUserModel(context, new UserParser().execute(response).get());
+                                    apiRequestSuccess(api, "You have successfully logged in.");
 
-                                if (jsonObject.optString("code").equals("200"))
-                                    apiRequestSuccess(api, message);
-                                else {
-                                    if (jsonObject.optString("code").equals("invalid_email"))
-                                        message = "You have entered an un-registered username!";
-                                    else if (jsonObject.optString("code").equals("incorrect_password"))
-                                        message = "You have entered an incorrect password!";
-                                    apiRequestFailure(api, message);
+                                } else {
+                                    String message = jsonObject.optString("message");
+
+                                    if (jsonObject.optString("code").equals("200"))
+                                        apiRequestSuccess(api, message);
+                                    else {
+                                        if (jsonObject.optString("code").equals("invalid_email"))
+                                            message = "You have entered an un-registered username!";
+                                        else if (jsonObject.optString("code").equals("incorrect_password"))
+                                            message = "You have entered an incorrect password!";
+                                        apiRequestFailure(api, message);
+                                    }
                                 }
 
                             } catch (Exception e) {
@@ -99,7 +109,17 @@ public class LoginRepo extends RootRepo {
                     new VolleyProvider.OnResponseListener<String>() {
                         @Override
                         public void onSuccess(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                if (jsonObject.optBoolean("error"))
+                                    apiRequestFailure(api, jsonObject.optString("message"));
+                                else
+                                    apiRequestSuccess(api, jsonObject.optString("message"));
 
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                apiRequestFailure(api, NetworkUtils.getErrorString(e));
+                            }
                         }
 
                         @Override
@@ -123,7 +143,6 @@ public class LoginRepo extends RootRepo {
 
             } else if (api == Constants.Api.FORGOT_PASSWORD) {
                 hashMap.put("email", values[0]);
-//                hashMap.put("password", values[1]);
             }
 
         } catch (Exception e) {

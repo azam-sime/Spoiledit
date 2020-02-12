@@ -7,7 +7,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.button.MaterialButton;
@@ -15,7 +14,6 @@ import com.google.android.material.checkbox.MaterialCheckBox;
 import com.spoiledit.R;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
-import com.spoiledit.fragments.CreatePasswordFragment;
 import com.spoiledit.repos.SignUpRepo;
 import com.spoiledit.utils.InputUtils;
 import com.spoiledit.utils.PreferenceUtils;
@@ -176,7 +174,10 @@ public class SignUpActivity extends RootActivity {
 
     @Override
     public void gotoNextScreen() {
-        startActivity(new Intent(this, VerifyPhoneActivity.class));
+        Intent intent = new Intent(this, VerifyOtpActivity.class);
+        intent.putExtra(VerifyOtpActivity.KEY_SENT_TO, VerifyOtpActivity.SENT_TO_PHONE);
+        intent.putExtra(VerifyOtpActivity.KEY_SENT_ADDRESS, etPhone.getText().toString());
+        startActivity(intent);
         finish();
     }
 }

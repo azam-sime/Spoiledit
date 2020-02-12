@@ -49,15 +49,20 @@ public class SplashActivity extends RootActivity {
     @Override
     public void addObservers() {
         getNetworkMutable().observe(this, available -> {
-            if (available)
-                splashViewModel.requestToken();
-            else
-                showFailure("Seems you don't have internet connectivity! Please ensure 'Internet's On'.");
+            runOnUiAfterMillis(() -> {
+                if (available)
+                    splashViewModel.requestToken();
+                else
+                    showFailure("Seems you don't have internet connectivity! Please ensure 'Internet's On'.");
+            }, 2000);
         });
 
         splashViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
             if (apiStatusModel.getApi() == Constants.Api.TOKEN) {
-                if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
+                if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
+                    showInterrupt(apiStatusModel.getMessage(), true);
+
+                } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
                     PreferenceUtils.saveString(this, PreferenceUtils.KEY_TOKEN, apiStatusModel.getMessage());
 
                     switch (PreferenceUtils.loginStatus(this)) {
@@ -72,6 +77,7 @@ public class SplashActivity extends RootActivity {
                             finish();
                             break;
                     }
+
                 } else
                     showFailure(apiStatusModel.getMessage());
             }

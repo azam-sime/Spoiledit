@@ -25,13 +25,17 @@
         </activity>
 
         <activity android:name=".activities.SignInActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize|adjustPan"/>
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity android:name=".activities.SignUpActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".activities.DashboardActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".activities.VerifyPhoneActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize|adjustPan" />
+        <activity android:name=".activities.VerifyOtpActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity android:name=".activities.AddSpoilerActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity android:name=".activities.ChatActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
     </application>
 
 </manifest>

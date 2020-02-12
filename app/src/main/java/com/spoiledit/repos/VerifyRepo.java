@@ -27,7 +27,7 @@ public class VerifyRepo extends RootRepo {
         int api = Constants.Api.NEW_PASSWORD;
         try {
             apiRequestHit(api, "Requesting password change...");
-            getVolleyProvider().executeUrlEncodedRequest(
+            getVolleyProvider().executeMultipartRequest(
                     Urls.NEW_PASSWORD.getUrl(),
                     getParamsMap(api, values),
                     new VolleyProvider.OnResponseListener<String>() {

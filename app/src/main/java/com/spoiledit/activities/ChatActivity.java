@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProviders;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.spoiledit.R;
-import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
 import com.spoiledit.fragments.ForgotPasswordFragment;
 import com.spoiledit.repos.LoginRepo;
@@ -22,8 +21,8 @@ import com.spoiledit.utils.StringUtils;
 import com.spoiledit.utils.ViewUtils;
 import com.spoiledit.viewmodels.LoginViewModel;
 
-public class SignInActivity extends RootActivity {
-    public static final String TAG = SignInActivity.class.getCanonicalName();
+public class ChatActivity extends RootActivity {
+    public static final String TAG = ChatActivity.class.getCanonicalName();
 
     private LoginViewModel loginViewModel;
 
@@ -79,9 +78,6 @@ public class SignInActivity extends RootActivity {
             etUsername.setText(credentials[0]);
             etPassword.setText(credentials[1]);
 
-            etPassword.requestFocus();
-            hideKeyboard(etPassword);
-            etPassword.setSelection(etPassword.getText().length());
             cbRemember.setChecked(true);
         }
     }
@@ -89,24 +85,22 @@ public class SignInActivity extends RootActivity {
     @Override
     public void addObservers() {
         loginViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
-            if (apiStatusModel.getApi() == Constants.Api.USER_SIGN_IN) {
-                if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
-                    toggleViews(false);
-                    showLoader(apiStatusModel.getMessage());
+            if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
+                toggleViews(false);
+                showLoader(apiStatusModel.getMessage());
 
-                } else if (apiStatusModel.getStatus() == Status.Request.API_ERROR) {
-                    toggleViews(true);
-                    hideLoader();
-                    showFailure(apiStatusModel.getMessage());
+            } else if (apiStatusModel.getStatus() == Status.Request.API_ERROR) {
+                toggleViews(true);
+                hideLoader();
+                showFailure(apiStatusModel.getMessage());
 
-                } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
-                    toggleViews(false);
-                    hideLoader();
-                    PreferenceUtils.saveLoginStatus(this,
-                            cbRemember.isChecked() ? Status.Login.REQUIRE_SIGN_IN_NOT_CREDS
-                                    : Status.Login.REQUIRE_SIGN_IN_AND_CREDS);
-                    showSuccess(apiStatusModel.getMessage(), this::gotoNextScreen);
-                }
+            } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
+                toggleViews(false);
+                hideLoader();
+                PreferenceUtils.saveLoginStatus(this,
+                        cbRemember.isChecked() ? Status.Login.REQUIRE_SIGN_IN_NOT_CREDS
+                                : Status.Login.REQUIRE_SIGN_IN_AND_CREDS);
+                showSuccess(apiStatusModel.getMessage(), this::gotoNextScreen);
             }
         });
     }

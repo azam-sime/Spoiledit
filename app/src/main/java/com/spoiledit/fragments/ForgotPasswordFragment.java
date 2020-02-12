@@ -1,5 +1,6 @@
 package com.spoiledit.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.button.MaterialButton;
 import com.spoiledit.R;
+import com.spoiledit.activities.VerifyOtpActivity;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
 import com.spoiledit.utils.InputUtils;
@@ -24,10 +26,8 @@ public class ForgotPasswordFragment extends RootFragment {
 
     private LoginViewModel loginViewModel;
 
-    private EditText etEmail, etPassword, etConfirmP;
+    private EditText etEmail;
     private MaterialButton btnSubmit;
-
-    private boolean skip = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,14 +44,12 @@ public class ForgotPasswordFragment extends RootFragment {
 
     @Override
     public void setUpToolbar(View view) {
-//        setupToolBar(view, "Forgot Password?");
+
     }
 
     @Override
     public void initUi(View view) {
         etEmail = view.findViewById(R.id.et_email);
-        etPassword = view.findViewById(R.id.et_password);
-        etConfirmP = view.findViewById(R.id.et_confirm_password);
 
         btnSubmit = view.findViewById(R.id.btn_submit);
     }
@@ -59,8 +57,6 @@ public class ForgotPasswordFragment extends RootFragment {
     @Override
     public void initialiseListener(View view) {
         etEmail.setFilters(InputUtils.getLengthFilters(50));
-        etPassword.setFilters(InputUtils.getLengthFilters(20));
-        etConfirmP.setFilters(InputUtils.getLengthFilters(20));
 
         btnSubmit.setOnClickListener(this);
     }
@@ -82,7 +78,6 @@ public class ForgotPasswordFragment extends RootFragment {
                     toggleViews(true);
                     hideLoader();
                     showFailure(apiStatusModel.getMessage());
-                    skip = true;
 
                 } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
                     toggleViews(false);
@@ -95,7 +90,7 @@ public class ForgotPasswordFragment extends RootFragment {
 
     @Override
     public void toggleViews(boolean enable) {
-        ViewUtils.toggleViewAbility(enable, etEmail, etPassword, etConfirmP, btnSubmit);
+        ViewUtils.toggleViewAbility(enable, etEmail, btnSubmit);
     }
 
     @Override
@@ -106,17 +101,6 @@ public class ForgotPasswordFragment extends RootFragment {
             etEmail.setSelection(etEmail.getText().length());
             return false;
 
-        } else if (StringUtils.isInvalid(etPassword.getText().toString())) {
-            showWarning("Please enter a valid password.");
-            etPassword.requestFocus();
-            etPassword.setSelection(etPassword.getText().length());
-            return false;
-
-        } else if (!etPassword.getText().toString().equals(etConfirmP.getText().toString())) {
-            showWarning("Password doesn't match.");
-            etConfirmP.requestFocus();
-            etConfirmP.setSelection(etConfirmP.getText().length());
-            return false;
         }
         return super.isRequestValid();
     }
@@ -125,7 +109,7 @@ public class ForgotPasswordFragment extends RootFragment {
     public void onClick(View v) {
         if (v.getId() == R.id.btn_submit) {
             if (isRequestValid()) {
-                String[] values = new String[]{etEmail.getText().toString(), etPassword.getText().toString()};
+                String[] values = new String[]{etEmail.getText().toString()};
                 loginViewModel.requestPassword(values);
             }
         }
@@ -133,6 +117,11 @@ public class ForgotPasswordFragment extends RootFragment {
 
     @Override
     public void gotoNextScreen() {
+        Intent intent = new Intent(getActivity(), VerifyOtpActivity.class);
+        intent.putExtra(VerifyOtpActivity.KEY_SENT_TO, VerifyOtpActivity.SENT_TO_MAIL);
+        intent.putExtra(VerifyOtpActivity.KEY_SENT_ADDRESS, etEmail.getText().toString());
+        startActivity(intent);
 
+        getActivity().finish();
     }
 }

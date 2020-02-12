@@ -292,4 +292,18 @@ public final class StringUtils {
     public static void setTextAndBackgroundColor(TextView textView, String color) {
         setTextAndBackgroundColor(textView, NumericUtils.parseColor(color));
     }
+
+    public static String hideChars(String s) {
+        // no of chars correctly visible: if, is phone, length is > 4  is 4 else 3
+        // if mail, 2 chars before @
+        int l = s.length();
+        int end = s.contains("@") ? s.indexOf('@') - 2 : l > 4 ? l - 4 : l - 1;
+        for (int j = 0; j < l; j++) {
+            if (j != end)
+                s = s.replace(s.charAt(j), 'X');
+            else
+                return s;
+        }
+        return s;
+    }
 }

@@ -17,6 +17,7 @@ public final class Constants {
         public static final int USER_URL = 1;
         public static final int USER_SIGN_UP = 2;
         public static final int USER_SIGN_IN = 3;
+        public static final int VERIFY_OTP = 11;
         public static final int USER_PROFILE = 4;
         public static final int FORGOT_PASSWORD = 5;
         public static final int NEW_PASSWORD = 5;
