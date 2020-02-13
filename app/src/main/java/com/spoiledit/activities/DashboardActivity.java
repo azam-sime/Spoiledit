@@ -3,6 +3,7 @@ package com.spoiledit.activities;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -13,9 +14,13 @@ import com.spoiledit.fragments.MoviesFragment;
 import com.spoiledit.fragments.SettingsFragment;
 import com.spoiledit.fragments.SpoilersFragment;
 import com.spoiledit.listeners.PagerChangeListener;
+import com.spoiledit.repos.DashboardRepo;
+import com.spoiledit.viewmodels.DashboardViewModel;
 
 public class DashboardActivity extends RootActivity {
     public static final String TAG = DashboardActivity.class.getCanonicalName();
+
+    private DashboardViewModel dashboardViewModel;
 
     private TabLayout tabLayout;
     private BottomNavigationView bnvDashboard;
@@ -29,6 +34,9 @@ public class DashboardActivity extends RootActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        dashboardViewModel = ViewModelProviders.of(this, new DashboardViewModel
+                .DashboardFactory(DashboardRepo.initialise(this))).get(DashboardViewModel.class);
         setContentView(R.layout.activity_dashboard);
     }
 
@@ -75,7 +83,7 @@ public class DashboardActivity extends RootActivity {
             @Override
             public void onPageSelected(int position) {
                 bnvDashboard.setSelectedItemId(position == 0 ? R.id.menu_movies
-                                : position == 1 ? R.id.menu_spoilers : R.id.menu_settings);
+                        : position == 1 ? R.id.menu_spoilers : R.id.menu_settings);
             }
         });
 

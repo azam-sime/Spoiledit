@@ -7,12 +7,14 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.spoiledit.R;
 import com.spoiledit.activities.DashboardActivity;
 import com.spoiledit.adapters.ViewPagerAdapter;
+import com.spoiledit.viewmodels.DashboardViewModel;
 
 public class MoviesFragment extends RootFragment {
     public static final String TAG = MoviesFragment.class.getCanonicalName();

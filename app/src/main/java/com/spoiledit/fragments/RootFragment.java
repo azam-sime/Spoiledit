@@ -122,7 +122,7 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
 
     public void showInterrupt(String message, boolean definite, String actionText, Runnable action) {
         if (snackbar == null) {
-            snackbar = Snackbar.make(getView().findViewById(R.id.root), message,
+            snackbar = Snackbar.make(getActivity().findViewById(R.id.root), message,
                     definite ? Snackbar.LENGTH_LONG : Snackbar.LENGTH_INDEFINITE);
         } else {
             snackbar.setText(message);

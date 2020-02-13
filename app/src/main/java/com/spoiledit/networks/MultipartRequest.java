@@ -39,7 +39,17 @@ public class MultipartRequest extends StringRequest {
 
     public MultipartRequest(String serverUrl, Map<String, String> params, List<File> files,
                             Response.Listener<String> stringListener, Response.ErrorListener errorListener) {
-        super(Method.POST, serverUrl, stringListener, errorListener);
+        this(Method.POST, serverUrl, params, files, stringListener, errorListener);
+    }
+
+    public MultipartRequest(String serverUrl, List<File> files,
+                             Response.Listener<String> stringListener, Response.ErrorListener errorListener) {
+        this(Method.GET, serverUrl, null, files, stringListener, errorListener);
+    }
+
+    private MultipartRequest(int method, String serverUrl, Map<String, String> params, List<File> files,
+                            Response.Listener<String> stringListener, Response.ErrorListener errorListener) {
+        super(method, serverUrl, stringListener, errorListener);
 
         this.params = params;
         this.files = files;
@@ -54,13 +64,14 @@ public class MultipartRequest extends StringRequest {
 
         if (files != null && files.size() > 0) {
             for (int i = 0; i < files.size(); i++) {
-                FileBody fileBody = new FileBody(files.get(i));
-                builder.addPart(FILE_BODY_KEY, fileBody);
+                builder.addPart(FILE_BODY_KEY, new FileBody(files.get(i)));
             }
         }
 
-        for (String key : params.keySet()) {
-            builder.addTextBody(key, params.get(key));
+        if (params != null && params.size() > 0) {
+            for (String key : params.keySet()) {
+                builder.addTextBody(key, params.get(key));
+            }
         }
 
         return builder.build();
