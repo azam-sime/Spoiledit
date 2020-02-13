@@ -2,6 +2,7 @@ package com.spoiledit.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -21,6 +22,9 @@ import com.spoiledit.utils.PreferenceUtils;
 import com.spoiledit.utils.StringUtils;
 import com.spoiledit.utils.ViewUtils;
 import com.spoiledit.viewmodels.LoginViewModel;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SignInActivity extends RootActivity {
     public static final String TAG = SignInActivity.class.getCanonicalName();
@@ -97,7 +101,7 @@ public class SignInActivity extends RootActivity {
                 } else if (apiStatusModel.getStatus() == Status.Request.API_ERROR) {
                     toggleViews(true);
                     hideLoader();
-                    showFailure(apiStatusModel.getMessage());
+                    showFailure(false, apiStatusModel.getMessage());
 
                 } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
                     toggleViews(false);
@@ -105,7 +109,7 @@ public class SignInActivity extends RootActivity {
                     PreferenceUtils.saveLoginStatus(this,
                             cbRemember.isChecked() ? Status.Login.REQUIRE_SIGN_IN_NOT_CREDS
                                     : Status.Login.REQUIRE_SIGN_IN_AND_CREDS);
-                    showSuccess(apiStatusModel.getMessage(), this::gotoNextScreen);
+                    showSuccess(false, apiStatusModel.getMessage(), this::gotoNextScreen);
                 }
             }
         });
@@ -124,6 +128,11 @@ public class SignInActivity extends RootActivity {
             etUsername.setSelection(etUsername.getText().length());
             return false;
 
+        } else if (!Pattern.matches(Patterns.EMAIL_ADDRESS.pattern(), etUsername.getText().toString())) {
+            showWarning("Username doesn't match a valid email format.");
+            etPassword.requestFocus();
+            etPassword.setSelection(etPassword.getText().length());
+            return false;
         } else if (StringUtils.isInvalid(etPassword.getText().toString())) {
             showWarning("Please enter a valid password.");
             etPassword.requestFocus();

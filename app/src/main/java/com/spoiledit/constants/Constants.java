@@ -20,7 +20,7 @@ public final class Constants {
         public static final int VERIFY_OTP = 11;
         public static final int USER_PROFILE = 4;
         public static final int FORGOT_PASSWORD = 5;
-        public static final int NEW_PASSWORD = 5;
+        public static final int UPDATE_PASSWORD = 5;
         public static final int T_AND_C = 6;
         public static final int POPULAR_MOVIES = 7;
         public static final int MOVIES_RECENT_RELEASE = 8;

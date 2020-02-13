@@ -82,7 +82,7 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
         addObservers();
 
         if (progressBar != null)
-        progressBar.hide();
+            progressBar.hide();
     }
 
     public abstract void setUpToolBar();
@@ -151,7 +151,7 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
             showInterrupt(message, false);
 
         if (progressBar != null)
-        progressBar.show();
+            progressBar.show();
     }
 
     public void showKeyboard(View view) {
@@ -165,6 +165,7 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
     public void runOnUiAfterMillis(Runnable runnable, long delayMillis) {
         ExecutorUtils.getInstance().executeOnMainDelayed(runnable, delayMillis);
     }
+
 
     public void showInterrupt(String message, boolean definite) {
         showInterrupt(message, definite, null, null);
@@ -185,16 +186,71 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
     }
 
     public void showFailure(String message) {
-        showInterrupt(message, true);
+        showFailure(true, message);
     }
 
     public void showWarning(String message) {
-        showInterrupt(message, true);
+        showWarning(true, message);
     }
 
-    public void showSuccess(String message, Runnable positive) {
-        showInterrupt(message, false, "Proceed", positive);
+    public void showSuccess(String message) {
+        showSuccess(true, message);
     }
+
+    public void showFailure(boolean soft, String message) {
+        showFailure(soft, message, null);
+    }
+
+    public void showWarning(boolean soft, String message) {
+        showWarning(soft, message, null);
+    }
+
+    public void showSuccess(boolean soft, String message) {
+        showSuccess(soft, message, null);
+    }
+
+    public void showFailure(boolean soft, String message, Runnable action) {
+        if (action != null) {
+            if (soft)
+                showInterrupt(message, true, "Okay", action);
+            else
+                DialogUtils.showFailure(this, message, action);
+        } else {
+            if (soft)
+                showInterrupt(message, true);
+            else
+                DialogUtils.showFailure(this, message);
+        }
+    }
+
+    public void showWarning(boolean soft, String message, Runnable action) {
+        if (action != null) {
+            if (soft)
+                showInterrupt(message, true, "Change", action);
+            else
+                DialogUtils.showWarning(this, message, action);
+        } else {
+            if (soft)
+                showInterrupt(message, true);
+            else
+                DialogUtils.showWarning(this, message);
+        }
+    }
+
+    public void showSuccess(boolean soft, String message, Runnable action) {
+        if (action != null) {
+            if (soft)
+                showInterrupt(message, true, "Proceed", action);
+            else
+                DialogUtils.showSuccess(this, message, action);
+        } else {
+            if (soft)
+                showInterrupt(message, true);
+            else
+                DialogUtils.showSuccess(this, message);
+        }
+    }
+
 
     public void hideLoader() {
         if (snackbar != null && snackbar.isShown())

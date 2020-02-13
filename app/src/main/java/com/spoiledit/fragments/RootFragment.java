@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.spoiledit.R;
 import com.spoiledit.utils.AppUtils;
+import com.spoiledit.utils.DialogUtils;
 import com.spoiledit.utils.ExecutorUtils;
 import com.spoiledit.utils.InputUtils;
 import com.spoiledit.utils.NetworkUtils;
@@ -113,6 +114,8 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
         ExecutorUtils.getInstance().executeOnMainDelayed(runnable, delayMillis);
     }
 
+
+
     public void showInterrupt(String message, boolean definite) {
         showInterrupt(message, definite, null, null);
     }
@@ -132,16 +135,72 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
     }
 
     public void showFailure(String message) {
-        showInterrupt(message, true);
+        showFailure(true, message);
     }
 
     public void showWarning(String message) {
-        showInterrupt(message, true);
+        showWarning(true, message);
     }
 
-    public void showSuccess(String message, Runnable positive) {
-        showInterrupt(message, true, "Proceed", positive);
+    public void showSuccess(String message) {
+        showSuccess(true, message);
     }
+
+    public void showFailure(boolean soft, String message) {
+        showFailure(soft, message, null);
+    }
+
+    public void showWarning(boolean soft, String message) {
+        showWarning(soft, message, null);
+    }
+
+    public void showSuccess(boolean soft, String message) {
+        showSuccess(soft, message, null);
+    }
+
+    public void showFailure(boolean soft, String message, Runnable action) {
+        if (action != null) {
+            if (soft)
+                showInterrupt(message, true, "Okay", action);
+            else
+                DialogUtils.showFailure(getActivity(), message, action);
+        } else {
+            if (soft)
+                showInterrupt(message, true);
+            else
+                DialogUtils.showFailure(getActivity(), message);
+        }
+    }
+
+    public void showWarning(boolean soft, String message, Runnable action) {
+        if (action != null) {
+            if (soft)
+                showInterrupt(message, true, "Change", action);
+            else
+                DialogUtils.showFailure(getActivity(), message, action);
+        } else {
+            if (soft)
+                showInterrupt(message, true);
+            else
+                DialogUtils.showFailure(getActivity(), message);
+        }
+    }
+
+    public void showSuccess(boolean soft, String message, Runnable action) {
+        if (action != null) {
+            if (soft)
+                showInterrupt(message, true, "Proceed", action);
+            else
+                DialogUtils.showFailure(getActivity(), message, action);
+        } else {
+            if (soft)
+                showInterrupt(message, true);
+            else
+                DialogUtils.showFailure(getActivity(), message);
+        }
+    }
+
+
 
     public void hideLoader() {
         if (snackbar != null && snackbar.isShown())

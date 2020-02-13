@@ -21,6 +21,7 @@ public final class PreferenceUtils {
     public static final String KEY_USERNAME = PREF_NAME + ".username";
     public static final String KEY_PASSWORD = PREF_NAME + ".password";
     public static final String KEY_USER_MODEL = PREF_NAME + ".user_model";
+    public static final String USER_ID = PREF_NAME + ".user_id";
 
     private PreferenceUtils() {
     }

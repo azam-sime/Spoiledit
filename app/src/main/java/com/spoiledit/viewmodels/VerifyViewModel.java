@@ -19,12 +19,12 @@ public class VerifyViewModel extends ViewModel {
         return verifyRepo.getApiStatusModelMutable();
     }
 
-    public void requestNewPassword(String[] values) {
-        verifyRepo.requestNewPassword(values);
+    public void requestOtpVerification(String[] values) {
+        verifyRepo.requestOtpVerification(values);
     }
 
-    public boolean isOtpValid() {
-        return true;
+    public void requestUpdatePassword(String[] values) {
+        verifyRepo.requestUpdatePassword(values);
     }
 
     public static final class VerifyFactory implements ViewModelProvider.Factory {

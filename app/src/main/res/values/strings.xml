@@ -55,4 +55,16 @@
     <string name="not_sure">Not Sure</string>
     <string name="your_message">Your message (optional)</string>
     <string name="write_the_spoiler_here">Write the spoiler here</string>
+	<string name="cancel">Cancel</string>
+    <string name="ok">Ok</string>
+    <string name="smiles">Smiles!</string>
+    <string name="sorry">Sorry!</string>
+    <string name="oops">Oops!</string>
+    <string name="hey">Hey!</string>
+    <string name="hey_you_sure">Hey! You sure?</string>
+    <string name="yes_im">Yes, I\'m</string>
+    <string name="no_cancel">No, Cancel</string>
+    <string name="logout">Logout</string>
+    <string name="update_available">Yey! New Features.</string>
+    <string name="update">We\'ve upgraded ourselve. Update to enjoy latest features.</string>
 </resources>

@@ -77,12 +77,12 @@ public class ForgotPasswordFragment extends RootFragment {
                 } else if (apiStatusModel.getStatus() == Status.Request.API_ERROR) {
                     toggleViews(true);
                     hideLoader();
-                    showFailure(apiStatusModel.getMessage());
+                    showFailure(false, apiStatusModel.getMessage());
 
                 } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
                     toggleViews(false);
                     hideLoader();
-                    showSuccess(apiStatusModel.getMessage(), this::gotoNextScreen);
+                    showSuccess(false, apiStatusModel.getMessage(), this::gotoNextScreen);
                 }
             }
         });

@@ -206,13 +206,13 @@ public class VerifyOtpActivity extends RootActivity {
                 } else if (apiStatusModel.getStatus() == Status.Request.API_ERROR) {
                     toggleViews(true);
                     hideLoader();
-                    showFailure(apiStatusModel.getMessage());
+                    showFailure(false, apiStatusModel.getMessage());
 
                 } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
                     toggleViews(false);
                     hideLoader();
                     PreferenceUtils.saveLoginStatus(this, Status.Login.REQUIRE_SIGN_IN_AND_CREDS);
-                    showSuccess(apiStatusModel.getMessage(), this::gotoNextScreen);
+                    showSuccess(false, apiStatusModel.getMessage(), this::gotoNextScreen);
                 }
             }
         });
@@ -236,10 +236,21 @@ public class VerifyOtpActivity extends RootActivity {
         ViewUtils.toggleViewAbility(enable, btnSubmit, tvCreateNew, tvResend);
     }
 
+    private String combineOtp() {
+        return et1.getText().toString()
+                + et2.getText().toString()
+                + et3.getText().toString()
+                + et4.getText().toString()
+                + et5.getText().toString()
+                + et6.getText().toString();
+    }
+
     @Override
     public boolean isRequestValid() {
-        if (!verifyViewModel.isOtpValid()) {
-            showWarning("Otp doesn't match!");
+        String otp = combineOtp();
+
+        if (StringUtils.isInvalid(otp) || otp.length() < 6) {
+            showWarning(false, "Please enter a valid otp!");
             return false;
         }
         return super.isRequestValid();
@@ -249,13 +260,10 @@ public class VerifyOtpActivity extends RootActivity {
     public void onClick(View v) {
         if (v.getId() == R.id.tv_resend) {
             onRequestOtp();
-            return;
 
         } else if (v.getId() == R.id.btn_submit) {
             if (isRequestValid())
-                gotoNextScreen();
-
-            return;
+                verifyViewModel.requestOtpVerification(new String[]{sentAddress, combineOtp()});
 
         } else if (v.getId() == R.id.tv_new_password) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -264,14 +272,14 @@ public class VerifyOtpActivity extends RootActivity {
             fragmentTransaction.add(R.id.ll_container, fragment);
             fragmentTransaction.addToBackStack(CreatePasswordFragment.TAG);
             fragmentTransaction.commit();
-            return;
-        }
-        super.onClick(v);
+
+        } else
+            super.onClick(v);
     }
 
     @Override
     public void gotoNextScreen() {
-        startActivity(new Intent(this, DashboardActivity.class));
+        startActivity(new Intent(this, SignInActivity.class));
         finish();
     }
 }

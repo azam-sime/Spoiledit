@@ -92,7 +92,7 @@ public class AddSpoilerActivity extends RootActivity {
             } else if (apiStatusModel.getStatus() == Status.Request.API_ERROR) {
                 toggleViews(true);
                 hideLoader();
-                showFailure(apiStatusModel.getMessage());
+                showFailure(false, apiStatusModel.getMessage());
 
             } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
                 toggleViews(false);
@@ -100,7 +100,7 @@ public class AddSpoilerActivity extends RootActivity {
                 PreferenceUtils.saveLoginStatus(this,
                         cbRemember.isChecked() ? Status.Login.REQUIRE_SIGN_IN_NOT_CREDS
                                 : Status.Login.REQUIRE_SIGN_IN_AND_CREDS);
-                showSuccess(apiStatusModel.getMessage(), this::gotoNextScreen);
+                showSuccess(false, apiStatusModel.getMessage(), this::gotoNextScreen);
             }
         });
     }

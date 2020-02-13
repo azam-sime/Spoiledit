@@ -2,6 +2,7 @@ package com.spoiledit.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -20,6 +21,8 @@ import com.spoiledit.utils.PreferenceUtils;
 import com.spoiledit.utils.StringUtils;
 import com.spoiledit.utils.ViewUtils;
 import com.spoiledit.viewmodels.SignUpViewModel;
+
+import java.util.regex.Pattern;
 
 public class SignUpActivity extends RootActivity {
     public static final String TAG = SignUpActivity.class.getCanonicalName();
@@ -91,13 +94,13 @@ public class SignUpActivity extends RootActivity {
                 } else if (apiStatusModel.getStatus() == Status.Request.API_ERROR) {
                     toggleViews(true);
                     hideLoader();
-                    showFailure(apiStatusModel.getMessage());
+                    showFailure(false, apiStatusModel.getMessage());
 
                 } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
                     toggleViews(false);
                     hideLoader();
                     PreferenceUtils.saveLoginStatus(this, Status.Login.REQUIRE_SIGN_IN_AND_CREDS);
-                    showSuccess(apiStatusModel.getMessage(), this::gotoNextScreen);
+                    showSuccess(false, apiStatusModel.getMessage(), this::gotoNextScreen);
                 }
             }
         });
@@ -125,8 +128,20 @@ public class SignUpActivity extends RootActivity {
             etPhone.setSelection(etPhone.getText().length());
             return false;
 
+        } else if (!Pattern.matches(Patterns.PHONE.pattern(), etPhone.getText().toString())) {
+            showFailure(false, "Provided phone number doesn't match a valid phone format.");
+            etPhone.requestFocus();
+            etPhone.setSelection(etPhone.getText().length());
+            return false;
+
         } else if (StringUtils.isInvalid(etEmail.getText().toString())) {
             showWarning("Please enter a valid email.");
+            etEmail.requestFocus();
+            etEmail.setSelection(etEmail.getText().length());
+            return false;
+
+        } else if (!Pattern.matches(Patterns.EMAIL_ADDRESS.pattern(), etEmail.getText().toString())) {
+            showFailure(false, "Provided email address doesn't match a valid email format.");
             etEmail.requestFocus();
             etEmail.setSelection(etEmail.getText().length());
             return false;
@@ -138,7 +153,7 @@ public class SignUpActivity extends RootActivity {
             return false;
 
         } else if (!etPassword.getText().toString().equals(etConfirmP.getText().toString())) {
-            showWarning("Password doesn,t match.");
+            showWarning("Password doesn't match.");
             etConfirmP.requestFocus();
             etConfirmP.setSelection(etConfirmP.getText().length());
             return false;
