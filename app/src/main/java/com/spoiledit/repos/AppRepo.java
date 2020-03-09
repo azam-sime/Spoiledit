@@ -45,9 +45,9 @@ public class AppRepo extends RootRepo {
                                 JSONObject jsonObject = new JSONObject(response);
                                 // key error true returns a successful api
                                 if (jsonObject.optBoolean("error"))
-                                    apiRequestSuccess(api, jsonObject.optString("data"));
-                                else
                                     apiRequestFailure(api, jsonObject.optString("data"));
+                                else
+                                    apiRequestSuccess(api, jsonObject.optString("data"));
 
                             } catch (Exception e) {
                                 e.printStackTrace();

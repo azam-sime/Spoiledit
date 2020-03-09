@@ -35,4 +35,14 @@ public final class Type {
         public static final int UPDATE = 0x16;
         public static final int CUSTOM = 0x17;
     }
+
+    public static final class Movie {
+        private Movie() {
+
+        }
+
+        public static final int POPULARS = 1;
+        public static final int RECENTS = 2;
+        public static final int UPCOMINGS = 3;
+    }
 }

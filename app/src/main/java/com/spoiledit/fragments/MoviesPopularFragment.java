@@ -1,6 +1,5 @@
 package com.spoiledit.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.spoiledit.R;
-import com.spoiledit.activities.DashboardActivity;
 import com.spoiledit.adapters.MoviesPopularAdapter;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
@@ -52,7 +50,7 @@ public class MoviesPopularFragment extends RootFragment {
 
     @Override
     public void setData(View view) {
-        dashboardViewModel.requestPopularMovies();
+        dashboardViewModel.requestMoviesPopular();
     }
 
     @Override
@@ -71,7 +69,7 @@ public class MoviesPopularFragment extends RootFragment {
     @Override
     public void addObservers() {
         dashboardViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
-            if (apiStatusModel.getApi() == Constants.Api.POPULAR_MOVIES) {
+            if (apiStatusModel.getApi() == Constants.Api.MOVIES_POPULAR) {
                 if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
                     showLoader(apiStatusModel.getMessage());
 
@@ -85,10 +83,15 @@ public class MoviesPopularFragment extends RootFragment {
             }
         });
 
-        dashboardViewModel.getMovieModelsMutable().observe(this, movieModels -> {
-            if (movieModels != null)
-                popularAdapter.setItems(movieModels);
+        dashboardViewModel.getMoviePopularModelsMutable().observe(this, moviePopularModels -> {
+            if (moviePopularModels != null)
+                popularAdapter.setItems(moviePopularModels);
         });
+    }
+
+    @Override
+    public void requestData() {
+        dashboardViewModel.requestMoviesPopular();
     }
 
     @Override

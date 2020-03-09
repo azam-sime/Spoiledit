@@ -38,6 +38,7 @@
             android:src="@drawable/popcorn"
             android:contentDescription="@string/content_description"
             android:background="?attr/selectableItemBackground"
+            android:padding="@dimen/spacing_8"
             android:id="@+id/iv_popcorn" />
     </LinearLayout>
 </com.google.android.material.appbar.MaterialToolbar>

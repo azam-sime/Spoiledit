@@ -3,7 +3,6 @@ package com.spoiledit.fragments;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,12 +34,14 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
         setUpToolbar(view);
         initUi(view);
         initialiseListener(view);
-        setData(view);
 
         setUpRecycler(view);
         setUpViewPager(view);
 
         addObservers();
+
+        requestData();
+        setData(view);
 
         if (progressBar != null)
             progressBar.hide();
@@ -54,13 +55,23 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
 
     public abstract void initialiseListener(View view);
 
-    public abstract void setData(View view);
+    public void requestData() {
+
+    }
+
+    public void setData(View view) {
+
+    }
 
     public void setUpRecycler(View view) {
 
     }
 
     public void setUpViewPager(View view) {
+
+    }
+
+    public void addObservers() {
 
     }
 
@@ -80,10 +91,6 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
         ivBack.setOnClickListener(this);
         ImageView ivPopcorn = view.findViewById(R.id.iv_popcorn);
         ivPopcorn.setOnClickListener(this);
-    }
-
-    public void addObservers() {
-
     }
 
     public boolean isRequestValid() {

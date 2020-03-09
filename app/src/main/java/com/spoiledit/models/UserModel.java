@@ -2,6 +2,8 @@ package com.spoiledit.models;
 
 import android.os.Parcel;
 
+import java.util.Arrays;
+
 public class UserModel extends RootModel {
     private String login;
     private String password;
@@ -178,5 +180,24 @@ public class UserModel extends RootModel {
 
     public void setRoles(String[] roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public String toString() {
+        return "UserModel{" +
+                "login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", niceName='" + niceName + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", url='" + url + '\'' +
+                ", registered='" + registered + '\'' +
+                ", activationKey='" + activationKey + '\'' +
+                ", status='" + status + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", capKey='" + capKey + '\'' +
+                ", caps='" + caps + '\'' +
+                ", roles=" + Arrays.toString(roles) +
+                '}';
     }
 }

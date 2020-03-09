@@ -7,7 +7,9 @@ import androidx.lifecycle.MutableLiveData;
 import com.android.volley.VolleyError;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Urls;
-import com.spoiledit.models.MovieModel;
+import com.spoiledit.models.MoviePopularModel;
+import com.spoiledit.models.MovieRecentModel;
+import com.spoiledit.models.MovieUpcomingModel;
 import com.spoiledit.networks.VolleyProvider;
 import com.spoiledit.parsers.MovieParser;
 import com.spoiledit.utils.NetworkUtils;
@@ -31,26 +33,39 @@ public class DashboardRepo extends RootRepo {
     }
 
     private Context context;
-    private MutableLiveData<List<MovieModel>> movieModelsMutable;
+
+    private MutableLiveData<List<MoviePopularModel>> moviePopularModelsMutable;
+    private MutableLiveData<List<MovieRecentModel>> movieRecentModelsMutable;
+    private MutableLiveData<List<MovieUpcomingModel>> movieSoonModelsMutable;
 
     private DashboardRepo(Context context) {
         this.context = context;
 
         init(context);
 
-        movieModelsMutable = new MutableLiveData<>();
+        moviePopularModelsMutable = new MutableLiveData<>();
+        movieRecentModelsMutable = new MutableLiveData<>();
+        movieSoonModelsMutable = new MutableLiveData<>();
     }
 
-    public MutableLiveData<List<MovieModel>> getMovieModelsMutable() {
-        return movieModelsMutable;
+    public MutableLiveData<List<MoviePopularModel>> getMoviePopularModelsMutable() {
+        return moviePopularModelsMutable;
     }
 
-    public void requestPopularMovies() {
-        int api = Constants.Api.POPULAR_MOVIES;
+    public MutableLiveData<List<MovieRecentModel>> getMovieRecentModelsMutable() {
+        return movieRecentModelsMutable;
+    }
+
+    public MutableLiveData<List<MovieUpcomingModel>> getMovieSoonModelsMutable() {
+        return movieSoonModelsMutable;
+    }
+
+    public void requestMoviesPopular() {
+        int api = Constants.Api.MOVIES_POPULAR;
         try {
-            apiRequestHit(api, "Requesting recent...");
+            apiRequestHit(api, "Requesting populars...");
             getVolleyProvider().executeMultipartGetRequest(
-                    Urls.POPULAR_MOVIES.getUrl(),
+                    Urls.MOVIES_POPULAR.getUrl(),
                     new VolleyProvider.OnResponseListener<String>() {
                         @Override
                         public void onSuccess(String response) {
@@ -60,7 +75,114 @@ public class DashboardRepo extends RootRepo {
                                 if (jsonObject.optBoolean("error"))
                                     apiRequestFailure(api, jsonObject.optString("message"));
                                 else {
-                                    movieModelsMutable.postValue(new MovieParser().execute(response).get());
+                                    moviePopularModelsMutable.postValue(new MovieParser.PopularsParser()
+                                            .execute(jsonObject).get());
+                                    apiRequestSuccess(api, jsonObject.optString("message"));
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                apiRequestFailure(api, NetworkUtils.getErrorString(e));
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(VolleyError volleyError) {
+                            // For invalid user creds, there is an 500 server error
+                            // hence, trying to fetch coded message from server from volley error
+                            try {
+                                JSONObject jsonObject = NetworkUtils.getErrorJson(volleyError);
+                                if (jsonObject != null) {
+                                    if (jsonObject.optString("code").equals("200"))
+                                        apiRequestSuccess(api, jsonObject.optString("message"));
+                                    else
+                                        apiRequestFailure(api, jsonObject.optString("error_description"));
+                                } else
+                                    apiRequestFailure(api, "Couldn't read response");
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                apiRequestFailure(api, NetworkUtils.getErrorString(e));
+                            }
+                        }
+                    }, false, true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiRequestFailure(api, NetworkUtils.getErrorString(e));
+        }
+    }
+
+    public void requestMoviesRecent() {
+        int api = Constants.Api.MOVIES_RECENT_RELEASE;
+        try {
+            apiRequestHit(api, "Requesting recent releases...");
+            getVolleyProvider().executeMultipartGetRequest(
+                    Urls.MOVIES_RECENT_RELEASE.getUrl(),
+                    new VolleyProvider.OnResponseListener<String>() {
+                        @Override
+                        public void onSuccess(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                // key error true returns a successful api
+                                if (jsonObject.optBoolean("error"))
+                                    apiRequestFailure(api, jsonObject.optString("message"));
+                                else {
+                                    movieRecentModelsMutable.postValue(new MovieParser.RecentsParser()
+                                            .execute(jsonObject).get());
+                                    apiRequestSuccess(api, jsonObject.optString("message"));
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                apiRequestFailure(api, NetworkUtils.getErrorString(e));
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(VolleyError volleyError) {
+                            // For invalid user creds, there is an 500 server error
+                            // hence, trying to fetch coded message from server from volley error
+                            try {
+                                JSONObject jsonObject = NetworkUtils.getErrorJson(volleyError);
+                                if (jsonObject != null) {
+                                    if (jsonObject.optString("code").equals("200"))
+                                        apiRequestSuccess(api, jsonObject.optString("message"));
+                                    else
+                                        apiRequestFailure(api, jsonObject.optString("error_description"));
+                                } else
+                                    apiRequestFailure(api, "Couldn't read response");
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                apiRequestFailure(api, NetworkUtils.getErrorString(e));
+                            }
+                        }
+                    }, false, true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiRequestFailure(api, NetworkUtils.getErrorString(e));
+        }
+    }
+
+    public void requestMoviesSoon() {
+        int api = Constants.Api.MOVIES_COMING_SOON;
+        try {
+            apiRequestHit(api, "Requesting upcomings...");
+            getVolleyProvider().executeMultipartGetRequest(
+                    Urls.MOVIES_RECENT_RELEASE.getUrl(),
+                    new VolleyProvider.OnResponseListener<String>() {
+                        @Override
+                        public void onSuccess(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                // key error true returns a successful api
+                                if (jsonObject.optBoolean("error"))
+                                    apiRequestFailure(api, jsonObject.optString("message"));
+                                else {
+                                    movieSoonModelsMutable.postValue(new MovieParser.UpcomingsParser()
+                                            .execute(jsonObject).get());
                                     apiRequestSuccess(api, jsonObject.optString("message"));
                                 }
 

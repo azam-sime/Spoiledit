@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.spoiledit.R;
 import com.spoiledit.listeners.OnItemSelectionListener;
 import com.spoiledit.models.MovieModel;
-import com.spoiledit.models.MoviePopularModel;
+import com.spoiledit.models.MovieUpcomingModel;
 import com.spoiledit.utils.LogUtils;
 import com.spoiledit.utils.ViewUtils;
 import com.squareup.picasso.Callback;
@@ -23,25 +23,25 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MoviesPopularAdapter extends RootSelectionAdapter {
-    public static final String TAG = MoviesPopularAdapter.class.getCanonicalName();
+public class MoviesSoonAdapter extends RootSelectionAdapter {
+    public static final String TAG = MoviesSoonAdapter.class.getCanonicalName();
 
     private Context context;
-    private List<MoviePopularModel> moviePopularModels;
+    private List<MovieUpcomingModel> movieUpcomingModels;
     private OnItemSelectionListener onItemSelectionListener;
     private int lastSelection;
 
-    public MoviesPopularAdapter(Context context, OnItemSelectionListener onItemSelectionListener) {
+    public MoviesSoonAdapter(Context context, OnItemSelectionListener onItemSelectionListener) {
         this.context = context;
-        moviePopularModels = new ArrayList<>();
+        movieUpcomingModels = new ArrayList<>();
         this.onItemSelectionListener = onItemSelectionListener;
         lastSelection = -1;
     }
 
-    public void setItems(List<MoviePopularModel> moviePopularModels) {
-        this.moviePopularModels.clear();
-        if (moviePopularModels != null)
-            this.moviePopularModels.addAll(moviePopularModels);
+    public void setItems(List<MovieUpcomingModel> movieUpcomingModels) {
+        this.movieUpcomingModels.clear();
+        if (movieUpcomingModels != null)
+            this.movieUpcomingModels.addAll(movieUpcomingModels);
         notifyDataSetChanged();
     }
 
@@ -50,8 +50,8 @@ public class MoviesPopularAdapter extends RootSelectionAdapter {
 //        if (isLoadingMore) {
 //            MovieModel loadingModel = new MovieModel();
 //            loadingModel.setViewHolderType(Type.ViewHolder.TYPE_LOADING);
-//            moviePopularModels.add(loadingModel);
-//            notifyItemInserted(moviePopularModels.size() - 1);
+//            movieUpcomingModels.add(loadingModel);
+//            notifyItemInserted(movieUpcomingModels.size() - 1);
 //        }
 //    }
 
@@ -59,7 +59,7 @@ public class MoviesPopularAdapter extends RootSelectionAdapter {
     public void notifySelection(int currentSelection) {
         removeLastSelection();
 
-        moviePopularModels.get(currentSelection).setSelected(true);
+        movieUpcomingModels.get(currentSelection).setSelected(true);
         notifyItemChanged(currentSelection);
         lastSelection = currentSelection;
     }
@@ -67,19 +67,19 @@ public class MoviesPopularAdapter extends RootSelectionAdapter {
     @Override
     public void removeLastSelection() {
         if (lastSelection != -1) {
-            if (lastSelection > moviePopularModels.size()) {
+            if (lastSelection > movieUpcomingModels.size()) {
                 lastSelection = -1;
                 return;
             }
-            if (moviePopularModels.get(lastSelection).isSelected()) {
-                moviePopularModels.get(lastSelection).setSelected(false);
+            if (movieUpcomingModels.get(lastSelection).isSelected()) {
+                movieUpcomingModels.get(lastSelection).setSelected(false);
                 notifyItemChanged(lastSelection);
             }
         }
     }
 
     public MovieModel getItemAt(int position) {
-        return moviePopularModels.get(position);
+        return movieUpcomingModels.get(position);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class MoviesPopularAdapter extends RootSelectionAdapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof PopularMovieViewHolder) {
             PopularMovieViewHolder viewHolder = (PopularMovieViewHolder) holder;
-            MovieModel movieModel = moviePopularModels.get(position);
+            MovieModel movieModel = movieUpcomingModels.get(position);
 
             ViewUtils.changeProgressMode(movieModel.isSelected(), viewHolder.loadingBar);
 
@@ -135,7 +135,7 @@ public class MoviesPopularAdapter extends RootSelectionAdapter {
 
     @Override
     public int getItemCount() {
-        return moviePopularModels.size();
+        return movieUpcomingModels.size();
     }
 
     public class PopularMovieViewHolder extends RecyclerView.ViewHolder {

@@ -7,7 +7,6 @@ import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,6 +28,10 @@ import com.spoiledit.utils.StringUtils;
 abstract public class RootActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ConnectivityManager connectivityManager;
+
+    private TextView tvToolbar;
+    private ImageView ivBack, ivPopcorn;
+
     private ContentLoadingProgressBar progressBar;
     private Snackbar snackbar;
 
@@ -67,6 +70,10 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
     @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
+
+        tvToolbar = findViewById(R.id.tv_toolbar);
+        ivBack = findViewById(R.id.iv_back);
+        ivPopcorn = findViewById(R.id.iv_popcorn);
 
         progressBar = findViewById(R.id.pb_loading);
 
@@ -110,16 +117,19 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
         if (v.getId() == R.id.iv_back)
             onBackPressed();
         else if (v.getId() == R.id.iv_popcorn)
-            showInterrupt("Will be soon implmented...", true);
+            showInterrupt("Will be soon implemented...", true);
     }
 
     public void setupToolBar(String title) {
-        TextView tvToolbar = findViewById(R.id.tv_toolbar);
-        tvToolbar.setText(title);
+        setupToolBar(title, false);
+    }
 
-        ImageView ivBack = findViewById(R.id.iv_back);
+    public void setupToolBar(String title, boolean showPopcorn) {
+        StringUtils.setText(tvToolbar, title);
+
+        ivPopcorn.setVisibility(showPopcorn ? View.VISIBLE : View.GONE);
+
         ivBack.setOnClickListener(this);
-        ImageView ivPopcorn = findViewById(R.id.iv_popcorn);
         ivPopcorn.setOnClickListener(this);
     }
 
@@ -270,11 +280,6 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
 
     public String getResString(int resId) {
         return AppUtils.getString(this, resId);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 
     @Override

@@ -52,6 +52,7 @@ public class MoviesFragment extends RootFragment {
     @Override
     public void setUpViewPager(View view) {
         viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
+        viewPager.setOffscreenPageLimit(3);
 
         popularFragment = new MoviesPopularFragment();
         viewPagerAdapter.addFragment(popularFragment, getResString(R.string.popular_movies));

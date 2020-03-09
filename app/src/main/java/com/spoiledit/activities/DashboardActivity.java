@@ -78,7 +78,7 @@ public class DashboardActivity extends RootActivity {
     public void setUpViewPager() {
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        viewPager.setOffscreenPageLimit(2);
+        viewPager.setOffscreenPageLimit(3);
         viewPager.addOnPageChangeListener(new PagerChangeListener() {
             @Override
             public void onPageSelected(int position) {

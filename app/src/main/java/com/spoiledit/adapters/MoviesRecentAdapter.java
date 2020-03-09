@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.spoiledit.R;
 import com.spoiledit.listeners.OnItemSelectionListener;
 import com.spoiledit.models.MovieModel;
-import com.spoiledit.models.MoviePopularModel;
+import com.spoiledit.models.MovieRecentModel;
 import com.spoiledit.utils.LogUtils;
 import com.spoiledit.utils.ViewUtils;
 import com.squareup.picasso.Callback;
@@ -23,25 +23,25 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MoviesPopularAdapter extends RootSelectionAdapter {
-    public static final String TAG = MoviesPopularAdapter.class.getCanonicalName();
+public class MoviesRecentAdapter extends RootSelectionAdapter {
+    public static final String TAG = MoviesRecentAdapter.class.getCanonicalName();
 
     private Context context;
-    private List<MoviePopularModel> moviePopularModels;
+    private List<MovieRecentModel> movieRecentModels;
     private OnItemSelectionListener onItemSelectionListener;
     private int lastSelection;
 
-    public MoviesPopularAdapter(Context context, OnItemSelectionListener onItemSelectionListener) {
+    public MoviesRecentAdapter(Context context, OnItemSelectionListener onItemSelectionListener) {
         this.context = context;
-        moviePopularModels = new ArrayList<>();
+        movieRecentModels = new ArrayList<>();
         this.onItemSelectionListener = onItemSelectionListener;
         lastSelection = -1;
     }
 
-    public void setItems(List<MoviePopularModel> moviePopularModels) {
-        this.moviePopularModels.clear();
-        if (moviePopularModels != null)
-            this.moviePopularModels.addAll(moviePopularModels);
+    public void setItems(List<MovieRecentModel> movieRecentModels) {
+        this.movieRecentModels.clear();
+        if (movieRecentModels != null)
+            this.movieRecentModels.addAll(movieRecentModels);
         notifyDataSetChanged();
     }
 
@@ -50,8 +50,8 @@ public class MoviesPopularAdapter extends RootSelectionAdapter {
 //        if (isLoadingMore) {
 //            MovieModel loadingModel = new MovieModel();
 //            loadingModel.setViewHolderType(Type.ViewHolder.TYPE_LOADING);
-//            moviePopularModels.add(loadingModel);
-//            notifyItemInserted(moviePopularModels.size() - 1);
+//            movieRecentModels.add(loadingModel);
+//            notifyItemInserted(movieRecentModels.size() - 1);
 //        }
 //    }
 
@@ -59,7 +59,7 @@ public class MoviesPopularAdapter extends RootSelectionAdapter {
     public void notifySelection(int currentSelection) {
         removeLastSelection();
 
-        moviePopularModels.get(currentSelection).setSelected(true);
+        movieRecentModels.get(currentSelection).setSelected(true);
         notifyItemChanged(currentSelection);
         lastSelection = currentSelection;
     }
@@ -67,19 +67,19 @@ public class MoviesPopularAdapter extends RootSelectionAdapter {
     @Override
     public void removeLastSelection() {
         if (lastSelection != -1) {
-            if (lastSelection > moviePopularModels.size()) {
+            if (lastSelection > movieRecentModels.size()) {
                 lastSelection = -1;
                 return;
             }
-            if (moviePopularModels.get(lastSelection).isSelected()) {
-                moviePopularModels.get(lastSelection).setSelected(false);
+            if (movieRecentModels.get(lastSelection).isSelected()) {
+                movieRecentModels.get(lastSelection).setSelected(false);
                 notifyItemChanged(lastSelection);
             }
         }
     }
 
     public MovieModel getItemAt(int position) {
-        return moviePopularModels.get(position);
+        return movieRecentModels.get(position);
     }
 
     @Override
@@ -95,14 +95,14 @@ public class MoviesPopularAdapter extends RootSelectionAdapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new PopularMovieViewHolder(LayoutInflater.from(context).inflate(R.layout.row_movies_popular, parent, false));
+        return new RecentMovieViewHolder(LayoutInflater.from(context).inflate(R.layout.row_movies_popular, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof PopularMovieViewHolder) {
-            PopularMovieViewHolder viewHolder = (PopularMovieViewHolder) holder;
-            MovieModel movieModel = moviePopularModels.get(position);
+        if (holder instanceof RecentMovieViewHolder) {
+            RecentMovieViewHolder viewHolder = (RecentMovieViewHolder) holder;
+            MovieModel movieModel = movieRecentModels.get(position);
 
             ViewUtils.changeProgressMode(movieModel.isSelected(), viewHolder.loadingBar);
 
@@ -135,15 +135,15 @@ public class MoviesPopularAdapter extends RootSelectionAdapter {
 
     @Override
     public int getItemCount() {
-        return moviePopularModels.size();
+        return movieRecentModels.size();
     }
 
-    public class PopularMovieViewHolder extends RecyclerView.ViewHolder {
+    public class RecentMovieViewHolder extends RecyclerView.ViewHolder {
         private ImageView ivPoster, ivRating1, ivRating2, ivRating3, ivRating4, ivRating5;
         private ContentLoadingProgressBar loadingBar;
         private TextView tvTitle, tvOverview, tvViewDetails;
 
-        public PopularMovieViewHolder(@NonNull View itemView) {
+        public RecentMovieViewHolder(@NonNull View itemView) {
             super(itemView);
 
             ivPoster = itemView.findViewById(R.id.iv_poster);
