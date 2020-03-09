@@ -35,8 +35,7 @@ public class DashboardActivity extends RootActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dashboardViewModel = ViewModelProviders.of(this, new DashboardViewModel
-                .DashboardFactory(DashboardRepo.initialise(this))).get(DashboardViewModel.class);
+        dashboardViewModel = ViewModelProviders.of(this, new DashboardViewModel.DashboardViewModelFactory(DashboardRepo.initialise(this))).get(DashboardViewModel.class);
         setContentView(R.layout.activity_dashboard);
     }
 

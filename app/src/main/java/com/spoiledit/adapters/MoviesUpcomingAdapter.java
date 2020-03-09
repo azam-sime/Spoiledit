@@ -23,15 +23,15 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MoviesSoonAdapter extends RootSelectionAdapter {
-    public static final String TAG = MoviesSoonAdapter.class.getCanonicalName();
+public class MoviesUpcomingAdapter extends RootSelectionAdapter {
+    public static final String TAG = MoviesUpcomingAdapter.class.getCanonicalName();
 
     private Context context;
     private List<MovieUpcomingModel> movieUpcomingModels;
     private OnItemSelectionListener onItemSelectionListener;
     private int lastSelection;
 
-    public MoviesSoonAdapter(Context context, OnItemSelectionListener onItemSelectionListener) {
+    public MoviesUpcomingAdapter(Context context, OnItemSelectionListener onItemSelectionListener) {
         this.context = context;
         movieUpcomingModels = new ArrayList<>();
         this.onItemSelectionListener = onItemSelectionListener;
@@ -78,7 +78,7 @@ public class MoviesSoonAdapter extends RootSelectionAdapter {
         }
     }
 
-    public MovieModel getItemAt(int position) {
+    public MovieUpcomingModel getItemAt(int position) {
         return movieUpcomingModels.get(position);
     }
 
@@ -95,29 +95,30 @@ public class MoviesSoonAdapter extends RootSelectionAdapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new PopularMovieViewHolder(LayoutInflater.from(context).inflate(R.layout.row_movies_popular, parent, false));
+        return new UpcomingMovieViewHolder(LayoutInflater.from(context).inflate(R.layout.row_movies,
+                parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof PopularMovieViewHolder) {
-            PopularMovieViewHolder viewHolder = (PopularMovieViewHolder) holder;
-            MovieModel movieModel = movieUpcomingModels.get(position);
+        if (holder instanceof UpcomingMovieViewHolder) {
+            UpcomingMovieViewHolder viewHolder = (UpcomingMovieViewHolder) holder;
+            MovieUpcomingModel upcomingModel = movieUpcomingModels.get(position);
 
-            ViewUtils.changeProgressMode(movieModel.isSelected(), viewHolder.loadingBar);
+            ViewUtils.changeProgressMode(upcomingModel.isSelected(), viewHolder.loadingBar);
 
             ImageView[] rateBarImageViews = viewHolder.getRateBarImageViews();
             for (int i = 0; i < rateBarImageViews.length; i++) {
-                if ((i + 1) <= movieModel.getVoteAverage() / 2)
+                if ((i + 1) <= upcomingModel.getVoteAverage() / 2)
                     rateBarImageViews[i].setImageResource(R.drawable.star_yellow);
                 else
                     rateBarImageViews[i].setImageResource(R.drawable.star_grey);
             }
 
-            viewHolder.tvTitle.setText(movieModel.getTitle());
-            viewHolder.tvOverview.setText(movieModel.getOverview());
+            viewHolder.tvTitle.setText(upcomingModel.getTitle());
+            viewHolder.tvOverview.setText(upcomingModel.getOverview());
 
-            Picasso.get().load(movieModel.getPosterPath()).into(viewHolder.ivPoster,
+            Picasso.get().load(upcomingModel.getPosterPath()).into(viewHolder.ivPoster,
                     new Callback() {
                         @Override
                         public void onSuccess() {
@@ -138,12 +139,12 @@ public class MoviesSoonAdapter extends RootSelectionAdapter {
         return movieUpcomingModels.size();
     }
 
-    public class PopularMovieViewHolder extends RecyclerView.ViewHolder {
+    public class UpcomingMovieViewHolder extends RecyclerView.ViewHolder {
         private ImageView ivPoster, ivRating1, ivRating2, ivRating3, ivRating4, ivRating5;
         private ContentLoadingProgressBar loadingBar;
-        private TextView tvTitle, tvOverview, tvViewDetails;
+        private TextView tvTitle, tvOverview;
 
-        public PopularMovieViewHolder(@NonNull View itemView) {
+        public UpcomingMovieViewHolder(@NonNull View itemView) {
             super(itemView);
 
             ivPoster = itemView.findViewById(R.id.iv_poster);
@@ -158,9 +159,8 @@ public class MoviesSoonAdapter extends RootSelectionAdapter {
 
             tvTitle = itemView.findViewById(R.id.tv_title);
             tvOverview = itemView.findViewById(R.id.tv_overview);
-            tvViewDetails = itemView.findViewById(R.id.tv_view_details);
 
-            itemView.setOnClickListener(v -> {
+            itemView.findViewById(R.id.tv_view_details).setOnClickListener(v -> {
                 if (onItemSelectionListener != null) {
                     final int finalLastPosition = lastSelection;
                     notifySelection(getAdapterPosition());

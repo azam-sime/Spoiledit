@@ -7,18 +7,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.spoiledit.R;
 import com.spoiledit.constants.Status;
-import com.spoiledit.fragments.ForgotPasswordFragment;
-import com.spoiledit.repos.LoginRepo;
 import com.spoiledit.repos.ProfileRepo;
-import com.spoiledit.utils.PreferenceUtils;
-import com.spoiledit.utils.StringUtils;
-import com.spoiledit.utils.ViewUtils;
-import com.spoiledit.viewmodels.LoginViewModel;
 import com.spoiledit.viewmodels.ProfileViewModel;
 
 public class ProfileActivity extends RootActivity {
@@ -35,7 +28,7 @@ public class ProfileActivity extends RootActivity {
         super.onCreate(savedInstanceState);
 
         profileViewModel = ViewModelProviders.of(this,
-                new ProfileViewModel.ProfileFactory(new ProfileRepo(this)))
+                new ProfileViewModel.ProfileViewModelFactory(new ProfileRepo(this)))
                 .get(ProfileViewModel.class);
         setContentView(R.layout.activity_profile);
     }

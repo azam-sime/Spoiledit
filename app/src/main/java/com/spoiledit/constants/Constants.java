@@ -25,13 +25,16 @@ public final class Constants {
         public static final int UPDATE_PASSWORD = 5;
         public static final int T_AND_C = 6;
 
-        public static final int NEW_SPOILERS = 14;
-
         public static final int MOVIES_POPULAR = 7;
-        public static final int MOVIES_RECENT_RELEASE = 8;
-        public static final int MOVIES_COMING_SOON = 9;
+        public static final int MOVIES_RECENTS = 8;
+        public static final int MOVIES_UPCOMING = 9;
         public static final int MOVIES_THIS_WEEK = 10;
         public static final int MOVIES_DETAILS = 11;
+
+        public static final int SPOILERS_FULL = 14;
+        public static final int SPOILERS_BRIEF = 15;
+        public static final int SPOILERS_ENDING = 16;
+        public static final int SPOILERS_DETAILS = 17;
 
         public static final int AUTO_COMPLETE = 12;
         public static final int SEARCH_MOVIE = 13;

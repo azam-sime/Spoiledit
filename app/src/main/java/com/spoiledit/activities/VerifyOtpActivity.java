@@ -69,7 +69,7 @@ public class VerifyOtpActivity extends RootActivity {
         super.onCreate(savedInstanceState);
 
         verifyViewModel = ViewModelProviders.of(this,
-                new VerifyViewModel.VerifyFactory(new VerifyRepo(this))).get(VerifyViewModel.class);
+                new VerifyViewModel.VerifyViewModelFactory(new VerifyRepo(this))).get(VerifyViewModel.class);
 
         sentTo = getIntent().getStringExtra(KEY_SENT_TO);
         sentAddress = getIntent().getStringExtra(KEY_SENT_ADDRESS);

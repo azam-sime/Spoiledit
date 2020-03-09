@@ -78,7 +78,7 @@ public class MoviesRecentAdapter extends RootSelectionAdapter {
         }
     }
 
-    public MovieModel getItemAt(int position) {
+    public MovieRecentModel getItemAt(int position) {
         return movieRecentModels.get(position);
     }
 
@@ -95,29 +95,30 @@ public class MoviesRecentAdapter extends RootSelectionAdapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new RecentMovieViewHolder(LayoutInflater.from(context).inflate(R.layout.row_movies_popular, parent, false));
+        return new RecentMovieViewHolder(LayoutInflater.from(context).inflate(R.layout.row_movies,
+                parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof RecentMovieViewHolder) {
             RecentMovieViewHolder viewHolder = (RecentMovieViewHolder) holder;
-            MovieModel movieModel = movieRecentModels.get(position);
+            MovieRecentModel recentModel = movieRecentModels.get(position);
 
-            ViewUtils.changeProgressMode(movieModel.isSelected(), viewHolder.loadingBar);
+            ViewUtils.changeProgressMode(recentModel.isSelected(), viewHolder.loadingBar);
 
             ImageView[] rateBarImageViews = viewHolder.getRateBarImageViews();
             for (int i = 0; i < rateBarImageViews.length; i++) {
-                if ((i + 1) <= movieModel.getVoteAverage() / 2)
+                if ((i + 1) <= recentModel.getVoteAverage() / 2)
                     rateBarImageViews[i].setImageResource(R.drawable.star_yellow);
                 else
                     rateBarImageViews[i].setImageResource(R.drawable.star_grey);
             }
 
-            viewHolder.tvTitle.setText(movieModel.getTitle());
-            viewHolder.tvOverview.setText(movieModel.getOverview());
+            viewHolder.tvTitle.setText(recentModel.getTitle());
+            viewHolder.tvOverview.setText(recentModel.getOverview());
 
-            Picasso.get().load(movieModel.getPosterPath()).into(viewHolder.ivPoster,
+            Picasso.get().load(recentModel.getPosterPath()).into(viewHolder.ivPoster,
                     new Callback() {
                         @Override
                         public void onSuccess() {
@@ -141,7 +142,7 @@ public class MoviesRecentAdapter extends RootSelectionAdapter {
     public class RecentMovieViewHolder extends RecyclerView.ViewHolder {
         private ImageView ivPoster, ivRating1, ivRating2, ivRating3, ivRating4, ivRating5;
         private ContentLoadingProgressBar loadingBar;
-        private TextView tvTitle, tvOverview, tvViewDetails;
+        private TextView tvTitle, tvOverview;
 
         public RecentMovieViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -158,9 +159,8 @@ public class MoviesRecentAdapter extends RootSelectionAdapter {
 
             tvTitle = itemView.findViewById(R.id.tv_title);
             tvOverview = itemView.findViewById(R.id.tv_overview);
-            tvViewDetails = itemView.findViewById(R.id.tv_view_details);
 
-            itemView.setOnClickListener(v -> {
+            itemView.findViewById(R.id.tv_view_details).setOnClickListener(v -> {
                 if (onItemSelectionListener != null) {
                     final int finalLastPosition = lastSelection;
                     notifySelection(getAdapterPosition());

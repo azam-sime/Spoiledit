@@ -27,10 +27,10 @@ public class SignUpViewModel extends ViewModel {
         signUpRepo.requestTAndC(values);
     }
 
-    public static final class SignUpFactory implements ViewModelProvider.Factory {
+    public static final class SignUpViewModelFactory implements ViewModelProvider.Factory {
         private SignUpRepo signUpRepo;
 
-        public SignUpFactory(SignUpRepo signUpRepo) {
+        public SignUpViewModelFactory(SignUpRepo signUpRepo) {
             this.signUpRepo = signUpRepo;
         }
 

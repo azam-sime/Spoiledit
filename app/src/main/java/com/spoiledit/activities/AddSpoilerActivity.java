@@ -36,7 +36,7 @@ public class AddSpoilerActivity extends RootActivity {
         super.onCreate(savedInstanceState);
 
         loginViewModel = ViewModelProviders.of(this,
-                new LoginViewModel.LoginFactory(new LoginRepo(this)))
+                new LoginViewModel.LoginViewModelFactory(new LoginRepo(this)))
                 .get(LoginViewModel.class);
         setContentView(R.layout.activity_sign_in);
     }

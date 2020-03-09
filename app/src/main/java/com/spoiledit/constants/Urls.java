@@ -15,11 +15,11 @@ public enum Urls {
     , UPDATE_PASSWORD(Constants.Api.UPDATE_PASSWORD, Constants.BASE_URL + "/update-password", Request.Method.POST)
     , T_AND_C(Constants.Api.T_AND_C, Constants.BASE_URL + "/forgot-password", Request.Method.POST)
 
-    , NEW_SPOILERS(Constants.Api.NEW_SPOILERS, Constants.BASE_URL + "/newest-spoiler", Request.Method.GET)
+    , NEW_SPOILERS(Constants.Api.SPOILERS_FULL, Constants.BASE_URL + "/newest-spoiler", Request.Method.GET)
 
     , MOVIES_POPULAR(Constants.Api.MOVIES_POPULAR, Constants.BASE_URL + "/popular-movies", Request.Method.GET)
-    , MOVIES_RECENT_RELEASE(Constants.Api.MOVIES_RECENT_RELEASE, Constants.BASE_URL + "/movies-recent-releses", Request.Method.GET)
-    , MOVIES_COMING_SOON(Constants.Api.MOVIES_COMING_SOON, Constants.BASE_URL + "/movies-coming-soon", Request.Method.GET)
+    , MOVIES_RECENT_RELEASE(Constants.Api.MOVIES_RECENTS, Constants.BASE_URL + "/movies-recent-releses", Request.Method.GET)
+    , MOVIES_COMING_SOON(Constants.Api.MOVIES_UPCOMING, Constants.BASE_URL + "/movies-coming-soon", Request.Method.GET)
     , MOVIES_THIS_WEEK(Constants.Api.MOVIES_THIS_WEEK, Constants.BASE_URL + "/new-movies-this-week", Request.Method.GET)
     , MOVIE_DETAILS(Constants.Api.MOVIES_DETAILS, Constants.BASE_URL + "/movies-details", Request.Method.GET) // append /id
 

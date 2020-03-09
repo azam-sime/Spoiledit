@@ -49,7 +49,7 @@
     <string name="was_there_post_credit">Was there a Stinger? (Post-Credit)</string>
     <string name="yes">Yes</string>
     <string name="full_spoiler">Full Spoiler</string>
-    <string name="just_the_ending">Just The Ending</string>
+    <string name="just_ending">Just Ending</string>
     <string name="brief_summary">Brief Summary</string>
     <string name="no">No</string>
     <string name="not_sure">Not Sure</string>
@@ -66,5 +66,15 @@
     <string name="no_cancel">No, Cancel</string>
     <string name="logout">Logout</string>
     <string name="update_available">Yey! New Features.</string>
-    <string name="update">We\'ve upgraded ourselve. Update to enjoy latest features.</string>
+    <string name="update">We\'ve upgraded ourselves. Update to enjoy latest features.</string>
+    <string name="add_new_spoiler">Add New Spoilers</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="my_account">My Account</string>
+    <string name="my_spoilers">My Spoilers</string>
+    <string name="my_watchlist">My Watchlist</string>
+    <string name="change_password">Change Password</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="about_us">About Us</string>
+    <string name="faq">FAQ</string>
+    <string name="contact_us">Contact Us</string>
 </resources>

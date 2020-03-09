@@ -39,7 +39,7 @@ public class SignUpActivity extends RootActivity {
         super.onCreate(savedInstanceState);
 
         signUpViewModel = ViewModelProviders.of(this,
-                new SignUpViewModel.SignUpFactory(new SignUpRepo(this)))
+                new SignUpViewModel.SignUpViewModelFactory(new SignUpRepo(this)))
                 .get(SignUpViewModel.class);
         setContentView(R.layout.activity_sign_up);
     }

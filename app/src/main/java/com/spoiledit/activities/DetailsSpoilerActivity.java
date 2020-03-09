@@ -21,8 +21,8 @@ import com.spoiledit.utils.StringUtils;
 import com.spoiledit.utils.ViewUtils;
 import com.spoiledit.viewmodels.LoginViewModel;
 
-public class ChatActivity extends RootActivity {
-    public static final String TAG = ChatActivity.class.getCanonicalName();
+public class DetailsSpoilerActivity extends RootActivity {
+    public static final String TAG = DetailsSpoilerActivity.class.getCanonicalName();
 
     private LoginViewModel loginViewModel;
 
@@ -36,7 +36,7 @@ public class ChatActivity extends RootActivity {
         super.onCreate(savedInstanceState);
 
         loginViewModel = ViewModelProviders.of(this,
-                new LoginViewModel.LoginFactory(new LoginRepo(this)))
+                new LoginViewModel.LoginViewModelFactory(new LoginRepo(this)))
                 .get(LoginViewModel.class);
         setContentView(R.layout.activity_sign_in);
     }

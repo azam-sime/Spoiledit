@@ -14,10 +14,13 @@ import com.google.android.material.tabs.TabLayout;
 import com.spoiledit.R;
 import com.spoiledit.activities.DashboardActivity;
 import com.spoiledit.adapters.ViewPagerAdapter;
-import com.spoiledit.viewmodels.DashboardViewModel;
+import com.spoiledit.repos.MoviesRepo;
+import com.spoiledit.viewmodels.MoviesViewModel;
 
 public class MoviesFragment extends RootFragment {
     public static final String TAG = MoviesFragment.class.getCanonicalName();
+
+    private MoviesViewModel moviesViewModel;
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -25,7 +28,16 @@ public class MoviesFragment extends RootFragment {
 
     private MoviesPopularFragment popularFragment;
     private MoviesRecentFragment recentFragment;
-    private MoviesSoonFragment soonFragment;
+    private MoviesUpcomingFragment soonFragment;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        moviesViewModel = ViewModelProviders.of(this,
+                new MoviesViewModel.MoviesViewModelFactory(MoviesRepo.initialise(getContext())))
+                .get(MoviesViewModel.class);
+    }
 
     @Nullable
     @Override
@@ -60,7 +72,7 @@ public class MoviesFragment extends RootFragment {
         recentFragment = new MoviesRecentFragment();
         viewPagerAdapter.addFragment(recentFragment, getResString(R.string.recent_movies));
 
-        soonFragment = new MoviesSoonFragment();
+        soonFragment = new MoviesUpcomingFragment();
         viewPagerAdapter.addFragment(soonFragment, getResString(R.string.coming_soon));
 
         viewPager.setAdapter(viewPagerAdapter);

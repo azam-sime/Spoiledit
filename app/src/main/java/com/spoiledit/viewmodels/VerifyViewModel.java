@@ -27,10 +27,10 @@ public class VerifyViewModel extends ViewModel {
         verifyRepo.requestUpdatePassword(values);
     }
 
-    public static final class VerifyFactory implements ViewModelProvider.Factory {
+    public static final class VerifyViewModelFactory implements ViewModelProvider.Factory {
         private VerifyRepo verifyRepo;
 
-        public VerifyFactory(VerifyRepo verifyRepo) {
+        public VerifyViewModelFactory(VerifyRepo verifyRepo) {
             this.verifyRepo = verifyRepo;
         }
 

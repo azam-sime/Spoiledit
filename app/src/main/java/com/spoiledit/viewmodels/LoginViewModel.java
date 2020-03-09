@@ -27,10 +27,10 @@ public class LoginViewModel extends ViewModel {
         loginRepo.requestPassword(values);
     }
 
-    public static final class LoginFactory implements ViewModelProvider.Factory {
+    public static final class LoginViewModelFactory implements ViewModelProvider.Factory {
         private LoginRepo loginRepo;
 
-        public LoginFactory(LoginRepo loginRepo) {
+        public LoginViewModelFactory(LoginRepo loginRepo) {
             this.loginRepo = loginRepo;
         }
 

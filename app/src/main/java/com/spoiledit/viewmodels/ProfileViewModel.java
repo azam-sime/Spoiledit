@@ -22,10 +22,10 @@ public class ProfileViewModel extends ViewModel {
 
 
 
-    public static final class ProfileFactory implements ViewModelProvider.Factory {
+    public static final class ProfileViewModelFactory implements ViewModelProvider.Factory {
         private ProfileRepo profileRepo;
 
-        public ProfileFactory(ProfileRepo profileRepo) {
+        public ProfileViewModelFactory(ProfileRepo profileRepo) {
             this.profileRepo = profileRepo;
         }
 

@@ -18,18 +18,19 @@ import com.spoiledit.constants.Status;
 import com.spoiledit.utils.LogUtils;
 import com.spoiledit.utils.ViewUtils;
 import com.spoiledit.viewmodels.DashboardViewModel;
+import com.spoiledit.viewmodels.MoviesViewModel;
 
 public class MoviesPopularFragment extends RootFragment {
     public static final String TAG = MoviesPopularFragment.class.getCanonicalName();
 
-    private DashboardViewModel dashboardViewModel;
+    private MoviesViewModel moviesViewModel;
     private MoviesPopularAdapter popularAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dashboardViewModel = ViewModelProviders.of(getActivity()).get(DashboardViewModel.class);
+        moviesViewModel = ViewModelProviders.of(getParentFragment()).get(MoviesViewModel.class);
     }
 
     @Nullable
@@ -49,11 +50,6 @@ public class MoviesPopularFragment extends RootFragment {
     }
 
     @Override
-    public void setData(View view) {
-        dashboardViewModel.requestMoviesPopular();
-    }
-
-    @Override
     public void setUpRecycler(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.rv_movies_popular);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -68,7 +64,7 @@ public class MoviesPopularFragment extends RootFragment {
 
     @Override
     public void addObservers() {
-        dashboardViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
+        moviesViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
             if (apiStatusModel.getApi() == Constants.Api.MOVIES_POPULAR) {
                 if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
                     showLoader(apiStatusModel.getMessage());
@@ -83,7 +79,7 @@ public class MoviesPopularFragment extends RootFragment {
             }
         });
 
-        dashboardViewModel.getMoviePopularModelsMutable().observe(this, moviePopularModels -> {
+        moviesViewModel.getMoviePopularModelsMutable().observe(this, moviePopularModels -> {
             if (moviePopularModels != null)
                 popularAdapter.setItems(moviePopularModels);
         });
@@ -91,11 +87,6 @@ public class MoviesPopularFragment extends RootFragment {
 
     @Override
     public void requestData() {
-        dashboardViewModel.requestMoviesPopular();
-    }
-
-    @Override
-    public void onClick(View v) {
-
+        moviesViewModel.requestMoviesPopular();
     }
 }
