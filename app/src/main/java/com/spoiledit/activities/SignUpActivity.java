@@ -170,8 +170,12 @@ public class SignUpActivity extends RootActivity {
     public void onClick(View v) {
         if (v.getId() == R.id.btn_sign_up) {
             if (isRequestValid()) {
-                String[] credentials = new String[]{etEmail.getText().toString(), etPassword.getText().toString(),
-                        etName.getText().toString(), etPhone.getText().toString()};
+                String[] credentials = new String[]{
+                        etEmail.getText().toString().trim(),
+                        etPassword.getText().toString().trim(),
+                        etName.getText().toString().trim(),
+                        etPhone.getText().toString().trim()
+                };
 
                 PreferenceUtils.saveCredentials(this, credentials);
                 signUpViewModel.requestSignUp(credentials);
@@ -190,8 +194,8 @@ public class SignUpActivity extends RootActivity {
     @Override
     public void gotoNextScreen() {
         Intent intent = new Intent(this, VerifyOtpActivity.class);
-        intent.putExtra(VerifyOtpActivity.KEY_SENT_TO, VerifyOtpActivity.SENT_TO_PHONE);
-        intent.putExtra(VerifyOtpActivity.KEY_SENT_ADDRESS, etPhone.getText().toString());
+        intent.putExtra(VerifyOtpActivity.KEY_SENT_TO, VerifyOtpActivity.SENT_TO_MAIL);
+        intent.putExtra(VerifyOtpActivity.KEY_SENT_ADDRESS, etEmail.getText().toString().trim());
         startActivity(intent);
         finish();
     }

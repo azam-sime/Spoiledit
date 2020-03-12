@@ -1,44 +1,41 @@
 package com.spoiledit.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.RadioGroup;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.checkbox.MaterialCheckBox;
+
 import com.spoiledit.R;
 import com.spoiledit.constants.Status;
-import com.spoiledit.fragments.ForgotPasswordFragment;
-import com.spoiledit.repos.LoginRepo;
+import com.spoiledit.models.CreateSpoilerModel;
+import com.spoiledit.repos.CreateSpoilerRepo;
 import com.spoiledit.utils.PreferenceUtils;
 import com.spoiledit.utils.StringUtils;
 import com.spoiledit.utils.ViewUtils;
-import com.spoiledit.viewmodels.LoginViewModel;
+import com.spoiledit.viewmodels.CreateSpoilerViewModel;
 
 public class AddSpoilerActivity extends RootActivity {
     public static final String TAG = AddSpoilerActivity.class.getCanonicalName();
 
-    private LoginViewModel loginViewModel;
+    private CreateSpoilerViewModel createSpoilerViewModel;
 
-    private EditText etUsername, etPassword;
-    private MaterialCheckBox cbRemember;
-    private MaterialButton btnLogin;
-    private TextView tvForgot, tvSignUp;
+    private RadioGroup rgSpoilerType, rgMidScene, rgStringer;
+    private EditText etSpoiler;
+    private MaterialButton btnSubmit;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        loginViewModel = ViewModelProviders.of(this,
-                new LoginViewModel.LoginViewModelFactory(new LoginRepo(this)))
-                .get(LoginViewModel.class);
-        setContentView(R.layout.activity_sign_in);
+        createSpoilerViewModel = ViewModelProviders.of(this,
+                new CreateSpoilerViewModel.CreateSpoilerViewModelFactory(new CreateSpoilerRepo(this)))
+                .get(CreateSpoilerViewModel.class);
+        setContentView(R.layout.activity_add_spoiler);
     }
 
     @Override
@@ -48,43 +45,32 @@ public class AddSpoilerActivity extends RootActivity {
 
     @Override
     public void initUi() {
-        etUsername = findViewById(R.id.et_username);
-        etPassword = findViewById(R.id.et_password);
+        etSpoiler = findViewById(R.id.et_username);
 
-        cbRemember = findViewById(R.id.cb_remember_me);
-        tvForgot = findViewById(R.id.tv_forgot_password);
+        rgSpoilerType = findViewById(R.id.rg_spoiler_type);
+        rgMidScene = findViewById(R.id.rg_mid_credit);
+        rgStringer = findViewById(R.id.rg_stringer);
 
-        btnLogin = findViewById(R.id.btn_login);
-
-        tvSignUp = findViewById(R.id.tv_sign_up);
+        btnSubmit = findViewById(R.id.btn_submit);
     }
 
     @Override
     public void initialiseListener() {
-        tvForgot.setOnClickListener(this);
+//        rgSpoilerType.setOnCheckedChangeListener(this);
+//        rgMidScene.setOnCheckedChangeListener(this);
+//        rgStringer.setOnCheckedChangeListener(this);
 
-        btnLogin.setOnClickListener(this);
-
-        tvSignUp.setOnClickListener(this);
+        btnSubmit.setOnClickListener(this);
     }
 
     @Override
     public void setData() {
-        int loginStatus = PreferenceUtils.loginStatus(this);
-        String[] credentials = PreferenceUtils.credentials(this);
 
-        if (loginStatus == Status.Login.REQUIRE_SIGN_IN_NOT_CREDS
-                && credentials[0] != null && credentials[1] != null) {
-            etUsername.setText(credentials[0]);
-            etPassword.setText(credentials[1]);
-
-            cbRemember.setChecked(true);
-        }
     }
 
     @Override
     public void addObservers() {
-        loginViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
+        createSpoilerViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
             if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
                 toggleViews(false);
                 showLoader(apiStatusModel.getMessage());
@@ -97,9 +83,8 @@ public class AddSpoilerActivity extends RootActivity {
             } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
                 toggleViews(false);
                 hideLoader();
-                PreferenceUtils.saveLoginStatus(this,
-                        cbRemember.isChecked() ? Status.Login.REQUIRE_SIGN_IN_NOT_CREDS
-                                : Status.Login.REQUIRE_SIGN_IN_AND_CREDS);
+
+
                 showSuccess(false, apiStatusModel.getMessage(), this::gotoNextScreen);
             }
         });
@@ -107,57 +92,41 @@ public class AddSpoilerActivity extends RootActivity {
 
     @Override
     public void toggleViews(boolean enable) {
-        ViewUtils.toggleViewAbility(enable, etUsername, etPassword, cbRemember, btnLogin, tvForgot);
+        ViewUtils.toggleViewAbility(enable, etSpoiler, btnSubmit);
     }
 
     @Override
     public boolean isRequestValid() {
-        if (StringUtils.isInvalid(etUsername.getText().toString())) {
+        if (StringUtils.isInvalid(etSpoiler.getText().toString())) {
             showWarning("Please enter a valid username.");
-            etUsername.requestFocus();
-            etUsername.setSelection(etUsername.getText().length());
+            etSpoiler.requestFocus();
+            etSpoiler.setSelection(etSpoiler.getText().length());
             return false;
 
-        } else if (StringUtils.isInvalid(etPassword.getText().toString())) {
-            showWarning("Please enter a valid password.");
-            etPassword.requestFocus();
-            etPassword.setSelection(etPassword.getText().length());
-            return false;
         }
         return super.isRequestValid();
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.btn_login) {
+        if (v.getId() == R.id.btn_submit) {
             if (isRequestValid()) {
-                String[] credentials = new String[] {etUsername.getText().toString(),
-                        etPassword.getText().toString()};
-                PreferenceUtils.saveCredentials(this, credentials);
-                loginViewModel.requestLogin(credentials);
+                createSpoilerViewModel.createSpoiler(
+                        new CreateSpoilerModel(
+                                0,
+                                0,
+                                0,
+                                ""
+                        )
+                );
             }
-            return;
-
-        } else if (v.getId() == R.id.tv_sign_up) {
-            startActivity(new Intent(this, SignUpActivity.class));
-            finish();
-            return;
-
-        } else if (v.getId() == R.id.tv_forgot_password) {
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            ForgotPasswordFragment fragment = new ForgotPasswordFragment();
-            fragmentTransaction.setCustomAnimations(R.anim.rise_from_bottom, R.anim.sink_to_bottom);
-            fragmentTransaction.add(R.id.ll_container, fragment);
-            fragmentTransaction.addToBackStack(ForgotPasswordFragment.TAG);
-            fragmentTransaction.commit();
-            return;
         }
         super.onClick(v);
     }
 
     @Override
     public void gotoNextScreen() {
-        startActivity(new Intent(this, DashboardActivity.class));
+        setResult(RESULT_OK);
         finish();
     }
 }

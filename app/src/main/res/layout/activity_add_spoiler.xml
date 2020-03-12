@@ -47,7 +47,8 @@
             <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:id="@+id/rg_spoiler_type">
 
                 <RadioButton
                     android:layout_width="wrap_content"
@@ -93,7 +94,8 @@
             <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:id="@+id/rg_mid_credit">
 
                 <RadioButton
                     android:layout_width="wrap_content"
@@ -139,7 +141,8 @@
             <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:id="@+id/rg_stringer">
 
                 <RadioButton
                     android:layout_width="wrap_content"

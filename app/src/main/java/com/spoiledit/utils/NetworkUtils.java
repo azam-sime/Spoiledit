@@ -146,6 +146,11 @@ public final class NetworkUtils {
     }
 
     public static String getErrorString(VolleyError volleyError) {
-        return new String(volleyError.networkResponse.data);
+        try {
+            return new String(volleyError.networkResponse.data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
