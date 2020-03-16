@@ -184,12 +184,12 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
             if (soft)
                 showInterrupt(message, true, "Change", action);
             else
-                DialogUtils.showFailure(getActivity(), message, action);
+                DialogUtils.showWarning(getActivity(), message, action);
         } else {
             if (soft)
                 showInterrupt(message, true);
             else
-                DialogUtils.showFailure(getActivity(), message);
+                DialogUtils.showWarning(getActivity(), message);
         }
     }
 
@@ -198,12 +198,12 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
             if (soft)
                 showInterrupt(message, true, "Proceed", action);
             else
-                DialogUtils.showFailure(getActivity(), message, action);
+                DialogUtils.showSuccess(getActivity(), message, action);
         } else {
             if (soft)
                 showInterrupt(message, true);
             else
-                DialogUtils.showFailure(getActivity(), message);
+                DialogUtils.showSuccess(getActivity(), message);
         }
     }
 

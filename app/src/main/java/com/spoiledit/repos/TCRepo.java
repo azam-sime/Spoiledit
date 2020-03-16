@@ -2,38 +2,43 @@ package com.spoiledit.repos;
 
 import android.content.Context;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.android.volley.VolleyError;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
 import com.spoiledit.constants.Urls;
 import com.spoiledit.networks.VolleyProvider;
 import com.spoiledit.utils.NetworkUtils;
-import com.spoiledit.utils.PreferenceUtils;
-import com.spoiledit.utils.StringUtils;
 
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class SignUpRepo extends RootRepo {
-    public static final String TAG = SignUpRepo.class.getCanonicalName();
+public class TCRepo extends RootRepo {
+    public static final String TAG = TCRepo.class.getCanonicalName();
 
     private Context context;
+    private MutableLiveData<String> stringTCMutableLiveData;
 
-    public SignUpRepo(Context context) {
+    public TCRepo(Context context) {
         this.context = context;
+        stringTCMutableLiveData = new MutableLiveData<>();
 
         init(context);
     }
 
-    public void requestSignUp(String[] credentials) {
-        int api = Constants.Api.USER_SIGN_UP;
+    public MutableLiveData<String> getStringTCMutableLiveData() {
+        return stringTCMutableLiveData;
+    }
+
+    public void requestTAndC() {
+        int api = Constants.Api.T_AND_C;
         try {
-            apiRequestHit(api, "Requesting sign up...");
-            getVolleyProvider().executeMultipartRequest(
-                    Urls.USER_SIGN_UP.getUrl(),
-                    getParamsMap(api, credentials),
+            apiRequestHit(api, "Requesting T&C details...");
+            getVolleyProvider().executeGetRequest(
+                    Urls.T_AND_C.getUrl(),
                     new VolleyProvider.OnResponseListener<String>() {
                         @Override
                         public void onSuccess(String response) {
@@ -42,8 +47,7 @@ public class SignUpRepo extends RootRepo {
                                 String message = jsonObject.optString("message");
 
                                 if (jsonObject.optInt("status") == Status.Response.SUCCESS) {
-                                    PreferenceUtils.saveLoginOtp(context,
-                                            jsonObject.optJSONObject("data").optString("otp"));
+                                    stringTCMutableLiveData.postValue(jsonObject.optString("post_content"));
                                     apiRequestSuccess(api, message);
                                 } else
                                     apiRequestFailure(api, message);
@@ -64,25 +68,5 @@ public class SignUpRepo extends RootRepo {
             e.printStackTrace();
             apiRequestFailure(api, NetworkUtils.getErrorString(e));
         }
-    }
-
-    private Map<String, String> getParamsMap(int api, String[] values) {
-        Map<String, String> hashMap = new HashMap<>();
-        try {
-            if (api == Constants.Api.USER_SIGN_UP) {
-                hashMap.put("username", values[0]);
-                hashMap.put("email", values[0]);
-                hashMap.put("password", values[1]);
-                hashMap.put("name", values[2]);
-                hashMap.put("phone", values[3]);
-
-            } else if (api == Constants.Api.T_AND_C) {
-                hashMap.put("email", values[0]);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return hashMap;
     }
 }

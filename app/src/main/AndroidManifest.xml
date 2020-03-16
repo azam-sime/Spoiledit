@@ -28,6 +28,8 @@
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity android:name=".activities.SignUpActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity android:name=".activities.TCActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".activities.VerifyOtpActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".activities.DashboardActivity"

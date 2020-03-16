@@ -2,6 +2,7 @@ package com.spoiledit.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
@@ -9,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.spoiledit.R;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
+import com.spoiledit.utils.LogUtils;
 import com.spoiledit.utils.PreferenceUtils;
 import com.spoiledit.viewmodels.SplashViewModel;
 
@@ -60,7 +62,8 @@ public class SplashActivity extends RootActivity {
         splashViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
             if (apiStatusModel.getApi() == Constants.Api.TOKEN) {
                 if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
-                    showInterrupt(apiStatusModel.getMessage(), true);
+//                    showInterrupt(apiStatusModel.getMessage(), true);
+                    LogUtils.logInfo(TAG, apiStatusModel.getMessage());
 
                 } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
                     PreferenceUtils.saveString(this, PreferenceUtils.KEY_TOKEN, apiStatusModel.getMessage());

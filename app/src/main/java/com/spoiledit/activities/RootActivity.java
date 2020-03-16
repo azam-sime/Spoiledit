@@ -81,12 +81,12 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
 
         initUi();
         initialiseListener();
-        setData();
-
         setUpRecycler();
         setUpViewPager();
 
         addObservers();
+        requestData();
+        setData();
 
         if (progressBar != null)
             progressBar.hide();
@@ -97,8 +97,6 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
     public abstract void initUi();
 
     public abstract void initialiseListener();
-
-    public abstract void setData();
 
     public void setUpRecycler() {
 
@@ -112,12 +110,20 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
 
     }
 
+    public void requestData() {
+
+    }
+
+    public void setData() {
+
+    }
+
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.iv_back)
             onBackPressed();
         else if (v.getId() == R.id.iv_popcorn)
-            showInterrupt("Will be soon implemented...", true);
+            onPopcornClick();
     }
 
     public void setupToolBar(String title) {
@@ -131,6 +137,10 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
 
         ivBack.setOnClickListener(this);
         ivPopcorn.setOnClickListener(this);
+    }
+
+    public void onPopcornClick() {
+
     }
 
     @Override

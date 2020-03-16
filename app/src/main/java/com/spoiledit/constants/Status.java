@@ -25,4 +25,12 @@ public final class Status {
         public static final int API_SUCCESS = 2;
         public static final int API_ERROR = 3;
     }
+
+    public static final class Response {
+        private Response() {
+
+        }
+
+        public static final int SUCCESS = 200;
+    }
 }

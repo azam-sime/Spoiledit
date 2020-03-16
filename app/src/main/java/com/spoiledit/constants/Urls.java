@@ -7,13 +7,15 @@ public enum Urls {
     , TOKEN(Constants.Api.TOKEN, Constants.BASE_URL + "/authorization?oth=gS56999pPixuB9jA38eh858lznm4bRdn", Request.Method.GET)
 
     , USER_SIGN_UP(Constants.Api.USER_SIGN_UP, USER_URL.getUrl() + "/register", Request.Method.GET)
+    , USER_REGISTER_OTP(Constants.Api.USER_REGISTER_OTP, Constants.BASE_URL + "/otp-register", Request.Method.POST)
     , USER_SIGN_IN(Constants.Api.USER_SIGN_IN, Constants.BASE_URL + "/sp-login", Request.Method.POST)
     , USER_PROFILE(Constants.Api.USER_PROFILE, USER_URL.getUrl() + "/", Request.Method.GET)
 
-    , VERIFY_OTP(Constants.Api.VERIFY_OTP, Constants.BASE_URL + "/checkotp-password", Request.Method.POST)
     , FORGOT_PASSWORD(Constants.Api.FORGOT_PASSWORD, Constants.BASE_URL + "/forgot-password", Request.Method.POST)
+    , PASSWORD_VERIFY_OTP(Constants.Api.PASSWORD_VERIFY_OTP, Constants.BASE_URL + "/checkotp-password", Request.Method.POST)
     , UPDATE_PASSWORD(Constants.Api.UPDATE_PASSWORD, Constants.BASE_URL + "/update-password", Request.Method.POST)
-    , T_AND_C(Constants.Api.T_AND_C, Constants.BASE_URL + "/forgot-password", Request.Method.POST)
+    , T_AND_C(Constants.Api.T_AND_C, Constants.BASE_URL + "/pages/9", Request.Method.POST)
+    , COOCKIES(Constants.Api.COOKIES, Constants.BASE_URL + "/pages/7", Request.Method.POST)
 
     , NEW_SPOILERS(Constants.Api.SPOILERS_FULL, Constants.BASE_URL + "/newest-spoiler", Request.Method.GET)
 

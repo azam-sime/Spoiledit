@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.button.MaterialButton;
 import com.spoiledit.R;
+import com.spoiledit.constants.AppIntent;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
 import com.spoiledit.fragments.CreatePasswordFragment;
@@ -29,20 +30,14 @@ import java.util.concurrent.TimeUnit;
 public class VerifyOtpActivity extends RootActivity {
     public static final String TAG = VerifyOtpActivity.class.getCanonicalName();
 
-    public static final String KEY_SENT_TO = TAG + ".key_sent_to";
-    public static final String SENT_TO_MAIL = TAG + ".sent_to_mail";
-    public static final String SENT_TO_PHONE = TAG + ".sent_to_phone";
-    public static final String KEY_SENT_ADDRESS = TAG + ".sent_address";
-
     private VerifyViewModel verifyViewModel;
 
     private EditText et1, et2, et3, et4, et5, et6;
     private TextView tvResend, tvCountDown, tvCreateNew;
     private MaterialButton btnSubmit;
 
-    private String sentTo, sentAddress;
-    private final String otpHeader1 = "A 6 digit confirmation code has been sent to ";
-    private final String otpHeader2 = " via ";
+    private int extraSentTo, extraSentFor;
+    private String extraSentToAddress;
 
     private CountDownTimer countDownTimer = new CountDownTimer(
             TimeUnit.MINUTES.toMillis(2),
@@ -71,8 +66,9 @@ public class VerifyOtpActivity extends RootActivity {
         verifyViewModel = ViewModelProviders.of(this,
                 new VerifyViewModel.VerifyViewModelFactory(new VerifyRepo(this))).get(VerifyViewModel.class);
 
-        sentTo = getIntent().getStringExtra(KEY_SENT_TO);
-        sentAddress = getIntent().getStringExtra(KEY_SENT_ADDRESS);
+        extraSentFor = getIntent().getIntExtra(AppIntent.Extra.OTP_FOR, AppIntent.Value.OTP_FOR_REGISTRATION);
+        extraSentTo = getIntent().getIntExtra(AppIntent.Extra.OTP_SENT_TO, AppIntent.Value.OTP_SENT_TO_MAIL);
+        extraSentToAddress = getIntent().getStringExtra(AppIntent.Extra.OTP_SENT_TO_ADDRESS);
 
         setContentView(R.layout.activity_verify_phone);
     }
@@ -183,11 +179,14 @@ public class VerifyOtpActivity extends RootActivity {
 
     @Override
     public void setData() {
-        boolean mail = sentTo.equals(SENT_TO_MAIL);
+        boolean mail = extraSentTo == AppIntent.Value.OTP_SENT_TO_MAIL;
+
+        String otpHeader1 = "A 6 digit confirmation code has been sent to ";
+        String otpHeader2 = " via ";
         ((TextView) findViewById(R.id.tv_otp_prompt)).setText(
                 new StringBuilder()
                         .append(otpHeader1)
-                        .append(StringUtils.hideChars(sentAddress))
+                        .append(StringUtils.hideChars(extraSentToAddress))
                         .append(otpHeader2)
                         .append(mail ? "mail" : "phone")
                         .toString()
@@ -198,7 +197,7 @@ public class VerifyOtpActivity extends RootActivity {
     @Override
     public void addObservers() {
         verifyViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
-            if (apiStatusModel.getApi() == Constants.Api.VERIFY_OTP) {
+            if (apiStatusModel.getApi() == Constants.Api.USER_REGISTER_OTP) {
                 if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
                     toggleViews(false);
                     showLoader(apiStatusModel.getMessage());
@@ -212,7 +211,8 @@ public class VerifyOtpActivity extends RootActivity {
                     toggleViews(false);
                     hideLoader();
                     PreferenceUtils.saveLoginStatus(this, Status.Login.REQUIRE_SIGN_IN_AND_CREDS);
-                    showSuccess(false, apiStatusModel.getMessage(), this::gotoNextScreen);
+//                    showSuccess(false, apiStatusModel.getMessage(), this::gotoNextScreen);
+                    gotoNextScreen();
                 }
             }
         });
@@ -252,6 +252,9 @@ public class VerifyOtpActivity extends RootActivity {
         if (StringUtils.isInvalid(otp) || otp.length() < 6) {
             showWarning(false, "Please enter a valid otp!");
             return false;
+        } else if (!otp.equals(PreferenceUtils.getOtp(this))) {
+            showWarning("You have entered incorrect otp.");
+            return false;
         }
         return super.isRequestValid();
     }
@@ -262,8 +265,12 @@ public class VerifyOtpActivity extends RootActivity {
             onRequestOtp();
 
         } else if (v.getId() == R.id.btn_submit) {
-            if (isRequestValid())
-                verifyViewModel.requestOtpVerification(new String[]{sentAddress, combineOtp()});
+            if (isRequestValid()) {
+                if (extraSentFor == AppIntent.Value.OTP_FOR_VERIFICATION)
+                    verifyViewModel.requestOtpVerification(new String[]{extraSentToAddress, combineOtp()});
+                else
+                    verifyViewModel.requestOtpRegistration(new String[]{extraSentToAddress, combineOtp()});
+            }
 
         } else if (v.getId() == R.id.tv_new_password) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();

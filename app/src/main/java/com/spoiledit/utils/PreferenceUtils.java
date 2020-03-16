@@ -8,6 +8,7 @@ import com.google.gson.reflect.TypeToken;
 import com.spoiledit.BuildConfig;
 import com.spoiledit.activities.SplashActivity;
 import com.spoiledit.models.UserModel;
+import com.spoiledit.networks.VolleyProvider;
 
 import java.lang.reflect.Type;
 
@@ -22,6 +23,7 @@ public final class PreferenceUtils {
     public static final String KEY_PASSWORD = PREF_NAME + ".password";
     public static final String KEY_USER_MODEL = PREF_NAME + ".user_model";
     public static final String USER_ID = PREF_NAME + ".user_id";
+    public static final String KEY_CURRENT_OTP = PREF_NAME + ".current_otp";
 
     private PreferenceUtils() {
     }
@@ -87,5 +89,13 @@ public final class PreferenceUtils {
 
     public static void saveUserModel(Context context, UserModel userModel) {
         saveString(context, KEY_USER_MODEL, new Gson().toJson(userModel, UserModel.class));
+    }
+
+    public static String getOtp(Context context) {
+        return getString(context, KEY_CURRENT_OTP);
+    }
+
+    public static void saveLoginOtp(Context context, String currentOtp) {
+        saveString(context, KEY_CURRENT_OTP, currentOtp);
     }
 }

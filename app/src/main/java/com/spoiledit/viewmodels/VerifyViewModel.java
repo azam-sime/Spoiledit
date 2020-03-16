@@ -19,6 +19,10 @@ public class VerifyViewModel extends ViewModel {
         return verifyRepo.getApiStatusModelMutable();
     }
 
+    public void requestOtpRegistration(String[] values) {
+        verifyRepo.requestOtpRegistration(values);
+    }
+
     public void requestOtpVerification(String[] values) {
         verifyRepo.requestOtpVerification(values);
     }

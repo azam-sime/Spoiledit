@@ -77,4 +77,7 @@
     <string name="about_us">About Us</string>
     <string name="faq">FAQ</string>
     <string name="contact_us">Contact Us</string>
+    <string name="accept_terms">Accept Terms</string>
+    <string name="read_later">Read Later</string>
+    <string name="spoilers">Spoilers</string>
 </resources>

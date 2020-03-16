@@ -1,6 +1,7 @@
 package com.spoiledit.activities;
 
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
@@ -14,7 +15,6 @@ import com.spoiledit.R;
 import com.spoiledit.constants.Status;
 import com.spoiledit.models.CreateSpoilerModel;
 import com.spoiledit.repos.CreateSpoilerRepo;
-import com.spoiledit.utils.PreferenceUtils;
 import com.spoiledit.utils.StringUtils;
 import com.spoiledit.utils.ViewUtils;
 import com.spoiledit.viewmodels.CreateSpoilerViewModel;
@@ -46,6 +46,9 @@ public class AddSpoilerActivity extends RootActivity {
     @Override
     public void initUi() {
         etSpoiler = findViewById(R.id.et_username);
+        etSpoiler.setFilters(new InputFilter[] {
+                new InputFilter.LengthFilter(500)
+        });
 
         rgSpoilerType = findViewById(R.id.rg_spoiler_type);
         rgMidScene = findViewById(R.id.rg_mid_credit);
@@ -102,7 +105,6 @@ public class AddSpoilerActivity extends RootActivity {
             etSpoiler.requestFocus();
             etSpoiler.setSelection(etSpoiler.getText().length());
             return false;
-
         }
         return super.isRequestValid();
     }
