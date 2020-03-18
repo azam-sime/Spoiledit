@@ -28,29 +28,29 @@ public class SpoilersViewModel extends ViewModel {
         return spoilersRepo.getApiStatusModelMutable();
     }
 
-    public MutableLiveData<List<SpoilerFullModel>> getSpoilerFullModelsMutable() {
-        return spoilersRepo.getSpoilerFullModelsMutable();
-    }
-
-    public MutableLiveData<List<SpoilerBriefModel>> getSpoilerBriefModelsMutable() {
-        return spoilersRepo.getSpoilerBriefModelsMutable();
-    }
-
-    public MutableLiveData<List<SpoilerEndingModel>> getSpoilerEndingModelsMutable() {
-        return spoilersRepo.getSpoilerEndingModelsMutable();
-    }
-
-    public void requestSpoilerFull() {
-        spoilersRepo.requestSpoilerFull();
-    }
-
-    public void requestSpoilerBrief() {
-        spoilersRepo.requestSpoilerBrief();
-    }
-
-    public void requestSpoilerEnding() {
-        spoilersRepo.requestSpoilerEnding();
-    }
+//    public MutableLiveData<List<SpoilerFullModel>> getSpoilerFullModelsMutable() {
+//        return spoilersRepo.getSpoilerFullModelsMutable();
+//    }
+//
+//    public MutableLiveData<List<SpoilerBriefModel>> getSpoilerBriefModelsMutable() {
+//        return spoilersRepo.getSpoilerBriefModelsMutable();
+//    }
+//
+//    public MutableLiveData<List<SpoilerEndingModel>> getSpoilerEndingModelsMutable() {
+//        return spoilersRepo.getSpoilerEndingModelsMutable();
+//    }
+//
+//    public void requestSpoilerFull() {
+//        spoilersRepo.requestSpoilerFull();
+//    }
+//
+//    public void requestSpoilerBrief() {
+//        spoilersRepo.requestSpoilerBrief();
+//    }
+//
+//    public void requestSpoilerEnding() {
+//        spoilersRepo.requestSpoilerEnding();
+//    }
 
     public static final class SpoilersViewModelFactory implements ViewModelProvider.Factory {
         private SpoilersRepo spoilersRepo;

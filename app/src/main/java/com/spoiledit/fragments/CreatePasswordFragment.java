@@ -68,7 +68,7 @@ public class CreatePasswordFragment extends RootFragment {
     @Override
     public void addObservers() {
         verifyViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
-            if (apiStatusModel.getApi() == Constants.Api.UPDATE_PASSWORD) {
+            if (apiStatusModel.getApi() == Constants.Api.PASSWORD_UPDATE) {
                 if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
                     toggleViews(false);
                     showLoader(apiStatusModel.getMessage());

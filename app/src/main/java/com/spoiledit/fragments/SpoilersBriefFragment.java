@@ -64,7 +64,7 @@ public class SpoilersBriefFragment extends RootFragment {
     @Override
     public void addObservers() {
         spoilersViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
-            if (apiStatusModel.getApi() == Constants.Api.SPOILERS_BRIEF) {
+            if (apiStatusModel.getApi() == Constants.Api.MOVIE_SPOILERS_BRIEF) {
                 if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
                     showLoader(apiStatusModel.getMessage());
 
@@ -78,14 +78,14 @@ public class SpoilersBriefFragment extends RootFragment {
             }
         });
 
-        spoilersViewModel.getSpoilerBriefModelsMutable().observe(this, spoilerBriefModels -> {
-            if (spoilerBriefModels != null)
-                spoilerBriefAdapter.setItems(spoilerBriefModels);
-        });
+//        spoilersViewModel.getSpoilerBriefModelsMutable().observe(this, spoilerBriefModels -> {
+//            if (spoilerBriefModels != null)
+//                spoilerBriefAdapter.setItems(spoilerBriefModels);
+//        });
     }
 
     @Override
     public void requestData() {
-        spoilersViewModel.requestSpoilerBrief();
+//        spoilersViewModel.requestSpoilerBrief();
     }
 }

@@ -8,7 +8,6 @@ import com.spoiledit.constants.Urls;
 import com.spoiledit.networks.VolleyProvider;
 import com.spoiledit.utils.NetworkUtils;
 import com.spoiledit.utils.PreferenceUtils;
-import com.spoiledit.utils.StringUtils;
 
 import org.json.JSONObject;
 
@@ -103,11 +102,11 @@ public class VerifyRepo extends RootRepo {
     }
 
     public void requestUpdatePassword(String[] values) {
-        int api = Constants.Api.UPDATE_PASSWORD;
+        int api = Constants.Api.PASSWORD_UPDATE;
         try {
             apiRequestHit(api, "Requesting password change...");
             getVolleyProvider().executeMultipartRequest(
-                    Urls.UPDATE_PASSWORD.getUrl(),
+                    Urls.PASSWORD_UPDATE.getUrl(),
                     getParamsMap(api, values),
                     new VolleyProvider.OnResponseListener<String>() {
                         @Override
@@ -145,7 +144,7 @@ public class VerifyRepo extends RootRepo {
                 hashMap.put("email", values[0]);
                 hashMap.put("otp", values[1]);
 
-            } else if (api == Constants.Api.UPDATE_PASSWORD) {
+            } else if (api == Constants.Api.PASSWORD_UPDATE) {
 //                hashMap.put("new_password", values[0]);
 //                hashMap.put("user_id", StringUtils.asString(
 //                        PreferenceUtils.getInt(context, PreferenceUtils.USER_ID)));

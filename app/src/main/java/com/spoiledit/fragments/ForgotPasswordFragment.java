@@ -70,7 +70,7 @@ public class ForgotPasswordFragment extends RootFragment {
     @Override
     public void addObservers() {
         loginViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
-            if (apiStatusModel.getApi() == Constants.Api.FORGOT_PASSWORD) {
+            if (apiStatusModel.getApi() == Constants.Api.PASSWORD_FORGOT) {
                 if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
                     toggleViews(false);
                     showLoader(apiStatusModel.getMessage());

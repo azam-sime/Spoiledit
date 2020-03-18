@@ -87,7 +87,7 @@ public class SignUpActivity extends RootActivity {
     @Override
     public void addObservers() {
         signUpViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
-            if (apiStatusModel.getApi() == Constants.Api.USER_SIGN_UP) {
+            if (apiStatusModel.getApi() == Constants.Api.USER_REGISTER) {
                 if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
                     toggleViews(false);
                     showLoader(apiStatusModel.getMessage());

@@ -35,7 +35,7 @@ public class MoviesFragment extends RootFragment {
         super.onCreate(savedInstanceState);
 
         moviesViewModel = ViewModelProviders.of(this,
-                new MoviesViewModel.MoviesViewModelFactory(MoviesRepo.initialise(getContext())))
+                new MoviesViewModel.MoviesViewModelFactory(MoviesRepo.initialise()))
                 .get(MoviesViewModel.class);
     }
 

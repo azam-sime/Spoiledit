@@ -9,7 +9,6 @@ import com.spoiledit.constants.Urls;
 import com.spoiledit.networks.VolleyProvider;
 import com.spoiledit.utils.NetworkUtils;
 import com.spoiledit.utils.PreferenceUtils;
-import com.spoiledit.utils.StringUtils;
 
 import org.json.JSONObject;
 
@@ -28,11 +27,11 @@ public class SignUpRepo extends RootRepo {
     }
 
     public void requestSignUp(String[] credentials) {
-        int api = Constants.Api.USER_SIGN_UP;
+        int api = Constants.Api.USER_REGISTER;
         try {
             apiRequestHit(api, "Requesting sign up...");
             getVolleyProvider().executeMultipartRequest(
-                    Urls.USER_SIGN_UP.getUrl(),
+                    Urls.USER_REGISTER.getUrl(),
                     getParamsMap(api, credentials),
                     new VolleyProvider.OnResponseListener<String>() {
                         @Override
@@ -69,7 +68,7 @@ public class SignUpRepo extends RootRepo {
     private Map<String, String> getParamsMap(int api, String[] values) {
         Map<String, String> hashMap = new HashMap<>();
         try {
-            if (api == Constants.Api.USER_SIGN_UP) {
+            if (api == Constants.Api.USER_REGISTER) {
                 hashMap.put("username", values[0]);
                 hashMap.put("email", values[0]);
                 hashMap.put("password", values[1]);

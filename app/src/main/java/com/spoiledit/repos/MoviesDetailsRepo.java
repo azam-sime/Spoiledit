@@ -8,58 +8,62 @@ import com.spoiledit.constants.Urls;
 import com.spoiledit.models.MoviePopularModel;
 import com.spoiledit.models.MovieRecentModel;
 import com.spoiledit.models.MovieUpcomingModel;
+import com.spoiledit.models.SpoilerBriefModel;
+import com.spoiledit.models.SpoilerEndingModel;
+import com.spoiledit.models.SpoilerFullModel;
 import com.spoiledit.networks.VolleyProvider;
 import com.spoiledit.parsers.MovieParser;
+import com.spoiledit.parsers.SpoilerParser;
 import com.spoiledit.utils.NetworkUtils;
 
 import org.json.JSONObject;
 
 import java.util.List;
 
-public class MoviesRepo extends RootRepo {
-    public static final String TAG = MoviesRepo.class.getCanonicalName();
+public class MoviesDetailsRepo extends RootRepo {
+    public static final String TAG = MoviesDetailsRepo.class.getCanonicalName();
 
-    public static MoviesRepo moviesRepo;
+    public static MoviesDetailsRepo moviesDetailsRepo;
 
-    public static synchronized MoviesRepo initialise() {
+    public static synchronized MoviesDetailsRepo initialise() {
         synchronized (TAG) {
-            if (moviesRepo == null)
-                moviesRepo = new MoviesRepo();
+            if (moviesDetailsRepo == null)
+                moviesDetailsRepo = new MoviesDetailsRepo();
         }
 
-        return moviesRepo;
+        return moviesDetailsRepo;
     }
 
-    private MutableLiveData<List<MoviePopularModel>> moviePopularModelsMutable;
-    private MutableLiveData<List<MovieRecentModel>> movieRecentModelsMutable;
-    private MutableLiveData<List<MovieUpcomingModel>> movieSoonModelsMutable;
+    private MutableLiveData<List<SpoilerFullModel>> spoilerFullModelsMutable;
+    private MutableLiveData<List<SpoilerBriefModel>> spoilerBriefModelsMutable;
+    private MutableLiveData<List<SpoilerEndingModel>> spoilerEndingModelsMutable;
 
-    private MoviesRepo() {
+    private MoviesDetailsRepo() {
         init();
 
-        moviePopularModelsMutable = new MutableLiveData<>();
-        movieRecentModelsMutable = new MutableLiveData<>();
-        movieSoonModelsMutable = new MutableLiveData<>();
+        spoilerFullModelsMutable = new MutableLiveData<>();
+        spoilerBriefModelsMutable = new MutableLiveData<>();
+        spoilerEndingModelsMutable = new MutableLiveData<>();
     }
 
-    public MutableLiveData<List<MoviePopularModel>> getMoviePopularModelsMutable() {
-        return moviePopularModelsMutable;
+    public MutableLiveData<List<SpoilerFullModel>> getSpoilerFullModelsMutable() {
+        return spoilerFullModelsMutable;
     }
 
-    public MutableLiveData<List<MovieRecentModel>> getMovieRecentModelsMutable() {
-        return movieRecentModelsMutable;
+    public MutableLiveData<List<SpoilerBriefModel>> getSpoilerBriefModelsMutable() {
+        return spoilerBriefModelsMutable;
     }
 
-    public MutableLiveData<List<MovieUpcomingModel>> getMovieSoonModelsMutable() {
-        return movieSoonModelsMutable;
+    public MutableLiveData<List<SpoilerEndingModel>> getSpoilerEndingModelsMutable() {
+        return spoilerEndingModelsMutable;
     }
 
-    public void requestMoviesPopular() {
-        int api = Constants.Api.MOVIES_POPULAR;
+    public void requestSpoilerFull() {
+        int api = Constants.Api.MOVIE_SPOILERS_FULL;
         try {
-            apiRequestHit(api, "Requesting populars...");
+            apiRequestHit(api, "Requesting full spoilers...");
             getVolleyProvider().executeMultipartGetRequest(
-                    Urls.MOVIES_POPULAR.getUrl(),
+                    Urls.MOVIE_SPOILERS_FULL.getUrl(),
                     new VolleyProvider.OnResponseListener<String>() {
                         @Override
                         public void onSuccess(String response) {
@@ -69,7 +73,7 @@ public class MoviesRepo extends RootRepo {
                                 if (jsonObject.optBoolean("error"))
                                     apiRequestFailure(api, jsonObject.optString("message"));
                                 else {
-                                    moviePopularModelsMutable.postValue(new MovieParser.PopularsParser()
+                                    spoilerFullModelsMutable.postValue(new SpoilerParser.FullsParser()
                                             .execute(jsonObject).get());
                                     apiRequestSuccess(api, jsonObject.optString("message"));
                                 }
@@ -107,12 +111,12 @@ public class MoviesRepo extends RootRepo {
         }
     }
 
-    public void requestMoviesRecent() {
-        int api = Constants.Api.MOVIES_RECENTS;
+    public void requestSpoilerBrief() {
+        int api = Constants.Api.MOVIE_SPOILERS_BRIEF;
         try {
-            apiRequestHit(api, "Requesting recent releases...");
+            apiRequestHit(api, "Requesting brief spoilers...");
             getVolleyProvider().executeMultipartGetRequest(
-                    Urls.MOVIES_RECENTS.getUrl(),
+                    Urls.MOVIE_SPOILERS_BRIEF.getUrl(),
                     new VolleyProvider.OnResponseListener<String>() {
                         @Override
                         public void onSuccess(String response) {
@@ -122,7 +126,7 @@ public class MoviesRepo extends RootRepo {
                                 if (jsonObject.optBoolean("error"))
                                     apiRequestFailure(api, jsonObject.optString("message"));
                                 else {
-                                    movieRecentModelsMutable.postValue(new MovieParser.RecentsParser()
+                                    spoilerBriefModelsMutable.postValue(new SpoilerParser.BriefsParser()
                                             .execute(jsonObject).get());
                                     apiRequestSuccess(api, jsonObject.optString("message"));
                                 }
@@ -160,12 +164,12 @@ public class MoviesRepo extends RootRepo {
         }
     }
 
-    public void requestMoviesSoon() {
-        int api = Constants.Api.MOVIES_UPCOMING;
+    public void requestSpoilerEnding() {
+        int api = Constants.Api.MOVIE_SPOILERS_ENDING;
         try {
-            apiRequestHit(api, "Requesting upcomings...");
+            apiRequestHit(api, "Requesting ending spoilers...");
             getVolleyProvider().executeMultipartGetRequest(
-                    Urls.MOVIES_UPCOMING.getUrl(),
+                    Urls.MOVIE_SPOILERS_ENDING.getUrl(),
                     new VolleyProvider.OnResponseListener<String>() {
                         @Override
                         public void onSuccess(String response) {
@@ -175,7 +179,7 @@ public class MoviesRepo extends RootRepo {
                                 if (jsonObject.optBoolean("error"))
                                     apiRequestFailure(api, jsonObject.optString("message"));
                                 else {
-                                    movieSoonModelsMutable.postValue(new MovieParser.UpcomingsParser()
+                                    spoilerEndingModelsMutable.postValue(new SpoilerParser.EndingsParser()
                                             .execute(jsonObject).get());
                                     apiRequestSuccess(api, jsonObject.optString("message"));
                                 }

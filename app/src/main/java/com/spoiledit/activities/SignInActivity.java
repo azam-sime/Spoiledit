@@ -92,7 +92,7 @@ public class SignInActivity extends RootActivity {
     @Override
     public void addObservers() {
         loginViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
-            if (apiStatusModel.getApi() == Constants.Api.USER_SIGN_IN) {
+            if (apiStatusModel.getApi() == Constants.Api.USER_LOGIN) {
                 if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
                     toggleViews(false);
                     showLoader(apiStatusModel.getMessage());

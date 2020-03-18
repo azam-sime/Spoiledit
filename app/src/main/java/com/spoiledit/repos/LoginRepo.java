@@ -5,14 +5,11 @@ import android.content.Context;
 import com.android.volley.VolleyError;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Urls;
-import com.spoiledit.models.UserModel;
 import com.spoiledit.networks.VolleyProvider;
 import com.spoiledit.parsers.UserParser;
 import com.spoiledit.utils.NetworkUtils;
 import com.spoiledit.utils.PreferenceUtils;
-import com.spoiledit.utils.StringUtils;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -30,11 +27,11 @@ public class LoginRepo extends RootRepo {
     }
 
     public void requestLogin(String[] credentials) {
-        int api = Constants.Api.USER_SIGN_IN;
+        int api = Constants.Api.USER_LOGIN;
         try {
             apiRequestHit(api, "Requesting login...");
             getVolleyProvider().executeMultipartRequest(
-                    Urls.USER_SIGN_IN.getUrl(),
+                    Urls.USER_LOGIN.getUrl(),
                     getParamsMap(api, credentials),
                     new VolleyProvider.OnResponseListener<String>() {
                         @Override
@@ -100,11 +97,11 @@ public class LoginRepo extends RootRepo {
     }
 
     public void requestPassword(String[] values) {
-        int api = Constants.Api.FORGOT_PASSWORD;
+        int api = Constants.Api.PASSWORD_FORGOT;
         try {
             apiRequestHit(api, "Requesting password change...");
             getVolleyProvider().executeMultipartRequest(
-                    Urls.FORGOT_PASSWORD.getUrl(),
+                    Urls.PASSWORD_FORGOT.getUrl(),
                     getParamsMap(api, values),
                     new VolleyProvider.OnResponseListener<String>() {
                         @Override
@@ -137,11 +134,11 @@ public class LoginRepo extends RootRepo {
     private Map<String, String> getParamsMap(int api, String[] values) {
         Map<String, String> hashMap = new HashMap<>();
         try {
-            if (api == Constants.Api.USER_SIGN_IN) {
+            if (api == Constants.Api.USER_LOGIN) {
                 hashMap.put("username", values[0]);
                 hashMap.put("password", values[1]);
 
-            } else if (api == Constants.Api.FORGOT_PASSWORD) {
+            } else if (api == Constants.Api.PASSWORD_FORGOT) {
                 hashMap.put("email", values[0]);
             }
 
