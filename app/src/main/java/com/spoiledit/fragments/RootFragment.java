@@ -12,15 +12,18 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.spoiledit.R;
+import com.spoiledit.models.UserModel;
 import com.spoiledit.utils.AppUtils;
 import com.spoiledit.utils.DialogUtils;
 import com.spoiledit.utils.ExecutorUtils;
 import com.spoiledit.utils.InputUtils;
 import com.spoiledit.utils.NetworkUtils;
+import com.spoiledit.utils.PreferenceUtils;
 import com.spoiledit.utils.StringUtils;
 
 public abstract class RootFragment extends Fragment implements View.OnClickListener {
 
+    private UserModel userModel;
     private ContentLoadingProgressBar progressBar;
     private Snackbar snackbar;
     private boolean fragmentVisibleToUser = false;
@@ -29,6 +32,7 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        userModel = PreferenceUtils.getUserModel(getContext());
         progressBar = view.findViewById(R.id.pb_loading);
 
         setUpToolbar(view);
@@ -227,6 +231,10 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
 
     public boolean isNetworkAvailable() {
         return NetworkUtils.isNetworkAvailable();
+    }
+
+    public UserModel getUserModel() {
+        return userModel;
     }
 
     @Override

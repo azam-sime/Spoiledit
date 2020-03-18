@@ -49,12 +49,7 @@ public class SettingsFragment extends RootFragment {
 
     @Override
     public void setData(View view) {
-
-    }
-
-    @Override
-    public void setUpViewPager(View view) {
-
+        tvUserName.setText(getUserModel().getDisplayName());
     }
 
     @Override

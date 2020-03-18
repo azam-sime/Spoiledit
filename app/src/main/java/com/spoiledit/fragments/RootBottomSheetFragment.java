@@ -24,10 +24,14 @@ public abstract class RootBottomSheetFragment extends BottomSheetDialogFragment 
 
         initUi(view);
         initialiseListener(view);
-        setData(view);
 
         setUpRecycler(view);
         setUpViewPager(view);
+
+        addObservers();
+
+        requestData();
+        setData(view);
     }
 
 
@@ -35,11 +39,15 @@ public abstract class RootBottomSheetFragment extends BottomSheetDialogFragment 
 
     public abstract void initialiseListener(View view);
 
-    public abstract void setData(View view);
-
     public void setUpRecycler(View view){}
 
     public void setUpViewPager(View view){}
+
+    public void addObservers() {}
+
+    public void requestData() {}
+
+    public void setData(View view) {}
 
     public void toggleClickViews(boolean enable) {
 

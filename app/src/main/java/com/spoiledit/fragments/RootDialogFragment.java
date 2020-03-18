@@ -9,25 +9,53 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.spoiledit.R;
+import com.spoiledit.models.UserModel;
 import com.spoiledit.utils.ExecutorUtils;
 import com.spoiledit.utils.InputUtils;
+import com.spoiledit.utils.PreferenceUtils;
 
 public abstract class RootDialogFragment extends DialogFragment {
 
+    private UserModel userModel;
     private boolean isNetworkAvailable;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        userModel = PreferenceUtils.getUserModel(getContext());
+
         initUi(view);
         initListener(view);
+
+        setUpRecycler(view);
+        setUpViewPager(view);
+
+        addObservers();
+
+        requestData();
         setData(view);
     }
 
     public abstract void initUi(View view);
 
     public abstract void initListener(View view);
+
+    public void setUpRecycler(View view) {
+
+    }
+
+    public void setUpViewPager(View view) {
+
+    }
+
+    public void addObservers() {
+
+    }
+
+    public void requestData() {
+
+    }
 
     public abstract void setData(View view);
 
