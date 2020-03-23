@@ -38,30 +38,29 @@ public class SignUpRepo extends RootRepo {
                         public void onSuccess(String response) {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
-                                String message = jsonObject.optString("message");
-
-                                if (jsonObject.optInt("status") == Status.Response.SUCCESS) {
-                                    PreferenceUtils.saveLoginOtp(context,
-                                            jsonObject.optJSONObject("data").optString("otp"));
-                                    apiRequestSuccess(api, message);
+                                if (isRequestSuccess(jsonObject)) {
+                                    PreferenceUtils.saveLoginOtp(context, jsonObject.optJSONObject("data").optString("otp"));
+                                    apiRequestSuccess(api, jsonObject.optString("message"));
                                 } else
-                                    apiRequestFailure(api, message);
+                                    postError(api, jsonObject);
 
                             } catch (Exception e) {
-                                e.printStackTrace();
-                                apiRequestFailure(api, NetworkUtils.getErrorString(e));
+                                onException(api, e);
                             }
                         }
 
                         @Override
                         public void onFailure(VolleyError volleyError) {
-                            apiRequestFailure(api, NetworkUtils.getErrorString(volleyError));
+                            try {
+                                apiRequestFailure(api, getErrorFromVolleyAsJson(volleyError));
+                            } catch (Exception e) {
+                                onException(api, e);
+                            }
                         }
                     },false, true);
 
         } catch (Exception e) {
-            e.printStackTrace();
-            apiRequestFailure(api, NetworkUtils.getErrorString(e));
+            onException(api, e);
         }
     }
 

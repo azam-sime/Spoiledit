@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_buy_now"
+        android:title="@string/buy_now"
+        android:icon="@drawable/clapperboard_grey" />
+
+    <item android:id="@+id/menu_add_watchlist"
+        android:title="@string/add_to_watchlist"
+        android:icon="@drawable/spoilers_grey" />
+
+    <item android:id="@+id/menu_view_spoilers"
+        android:title="@string/view_spoilers"
+        android:icon="@drawable/spoilers_grey" />
+</menu>

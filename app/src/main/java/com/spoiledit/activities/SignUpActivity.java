@@ -1,6 +1,5 @@
 package com.spoiledit.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -13,7 +12,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.spoiledit.R;
-import com.spoiledit.constants.AppIntent;
+import com.spoiledit.constants.App;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
 import com.spoiledit.repos.SignUpRepo;
@@ -184,31 +183,33 @@ public class SignUpActivity extends RootActivity {
             }
 
         } else if (v.getId() == R.id.tv_t_and_c) {
-            startActivityForResult(new Intent(this, TCActivity.class),
-                    AppIntent.Result.IS_TC_AGREED);
+            android.content.Intent intent = new android.content.Intent(this, TCAndPPActivity.class);
+            intent.putExtra(App.Intent.Extra.TC_AND_PP, App.Intent.Value.FOR_TC);
+            intent.putExtra(App.Intent.Extra.TC_AND_PP_DISPLAY_ONLY, false);
+            startActivityForResult(intent, App.Intent.Result.IS_TC_AGREED);
 
         } else if (v.getId() == R.id.tv_sign_in) {
-            startActivity(new Intent(this, SignInActivity.class));
+            startActivity(new android.content.Intent(this, SignInActivity.class));
             finish();
         } else
             super.onClick(v);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable android.content.Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == AppIntent.Result.IS_TC_AGREED) {
+        if (requestCode == App.Intent.Result.IS_TC_AGREED) {
             cbTandC.setChecked(resultCode == RESULT_OK);
         }
     }
 
     @Override
     public void gotoNextScreen() {
-        Intent intent = new Intent(this, VerifyOtpActivity.class);
-        intent.putExtra(AppIntent.Extra.OTP_FOR, AppIntent.Value.OTP_FOR_REGISTRATION);
-        intent.putExtra(AppIntent.Extra.OTP_SENT_TO, AppIntent.Value.OTP_SENT_TO_MAIL);
-        intent.putExtra(AppIntent.Extra.OTP_SENT_TO_ADDRESS, etEmail.getText().toString().trim());
+        android.content.Intent intent = new android.content.Intent(this, VerifyOtpActivity.class);
+        intent.putExtra(App.Intent.Extra.OTP_FOR, App.Intent.Value.OTP_FOR_REGISTRATION);
+        intent.putExtra(App.Intent.Extra.OTP_SENT_TO, App.Intent.Value.OTP_SENT_TO_MAIL);
+        intent.putExtra(App.Intent.Extra.OTP_SENT_TO_ADDRESS, etEmail.getText().toString().trim());
         startActivity(intent);
         finish();
     }

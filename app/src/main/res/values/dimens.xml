@@ -26,6 +26,7 @@
 	<dimen name="spacing_20">20dp</dimen>
     <dimen name="text_10">10sp</dimen>
     <dimen name="size_rating_star">24dp</dimen>
+    <dimen name="size_rating_star_big">28dp</dimen>
     <dimen name="size_image_user">180dp</dimen>
     <dimen name="radius_image_user">90dp</dimen>
     <dimen name="spacing_12">12dp</dimen>

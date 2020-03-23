@@ -24,6 +24,7 @@ import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -52,7 +53,8 @@ public final class ViewUtils {
 
             new Timer().schedule(new TimerTask() {
                 @Override
-                public void run() { context.runOnUiThread(() -> {
+                public void run() {
+                    context.runOnUiThread(() -> {
                         try {
                             view.animate().translationZ(0f).start();
                         } catch (Exception e) {
@@ -98,12 +100,12 @@ public final class ViewUtils {
 
         Calendar calendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(context, (datePicker, i, i1, i2) -> {
-                    Calendar calendar1 = Calendar.getInstance();
-                    calendar1.set(Calendar.YEAR, i);
-                    calendar1.set(Calendar.MONTH, i1);
-                    calendar1.set(Calendar.DAY_OF_MONTH, i2);
-                    onDateSelectedListener.onDateSelected(DateUtils.getDateInString(calendar1.getTime()), calendar1);
-                },
+            Calendar calendar1 = Calendar.getInstance();
+            calendar1.set(Calendar.YEAR, i);
+            calendar1.set(Calendar.MONTH, i1);
+            calendar1.set(Calendar.DAY_OF_MONTH, i2);
+            onDateSelectedListener.onDateSelected(DateUtils.getDateInString(calendar1.getTime()), calendar1);
+        },
                 calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.setTitle(title);
         if (setNowAsMax)
@@ -273,19 +275,17 @@ public final class ViewUtils {
     }
 
     public static void toggleViewVisibility(boolean visible, View... views) {
-        if (visible)
-            showViews(views);
-        else
-            hideViews(views);
+        toggleViewVisibility(false, visible, views);
     }
 
-    public static void swapViewVisibility(boolean showView1, View view1, View view2) {
-        if (showView1) {
-            view1.setVisibility(View.VISIBLE);
-            view2.setVisibility(View.GONE);
-        } else {
-            view1.setVisibility(View.GONE);
-            view2.setVisibility(View.VISIBLE);
+    public static void toggleViewVisibility(boolean makeInvisible, boolean visible, View... views) {
+        if (visible)
+            showViews(views);
+        else {
+            if (makeInvisible)
+                invisibleViews(views);
+            else
+                hideViews(views);
         }
     }
 
@@ -299,8 +299,23 @@ public final class ViewUtils {
             v.setVisibility(View.GONE);
     }
 
+    public static void invisibleViews(View... views) {
+        for (View v : views)
+            v.setVisibility(View.INVISIBLE);
+    }
+
     public static boolean isVisible(View v) {
         return v.getVisibility() == View.VISIBLE;
+    }
+
+    public static void swapViewVisibility(boolean showView1, View view1, View view2) {
+        if (showView1) {
+            view1.setVisibility(View.VISIBLE);
+            view2.setVisibility(View.GONE);
+        } else {
+            view1.setVisibility(View.GONE);
+            view2.setVisibility(View.VISIBLE);
+        }
     }
 
     public static int setAnimation(Context context, View viewToAnimate, int position, int lastPosition) {
@@ -340,7 +355,7 @@ public final class ViewUtils {
     public static void makeUneditable(TextInputEditText... textInputEditTexts) {
         for (TextInputEditText textInputEditText : textInputEditTexts) {
             textInputEditText.setInputType(InputType.TYPE_NULL);
-            textInputEditText.setFilters(new InputFilter[] {InputUtils.getNoInputFilter()});
+            textInputEditText.setFilters(new InputFilter[]{InputUtils.getNoInputFilter()});
             textInputEditText.setFocusableInTouchMode(false);
         }
     }
@@ -365,7 +380,7 @@ public final class ViewUtils {
         int centerX = itemX + menuItemView.getWidth() / 2;
         int centerY = itemY + menuItemView.getHeight() / 2;
 
-        return new int[] {centerX, centerY};
+        return new int[]{centerX, centerY};
     }
 
     public static int[] getViewCentre(View view) {
@@ -374,7 +389,14 @@ public final class ViewUtils {
         return centre;
     }
 
-    public static void toggleFabVisibility(FloatingActionButton floatingActionButton, boolean visible) {
+    public static void toggleFabVisibility(boolean visible, FloatingActionButton floatingActionButton) {
+        if (visible)
+            floatingActionButton.show();
+        else
+            floatingActionButton.hide();
+    }
+
+    public static void toggleEFabVisibility(boolean visible, ExtendedFloatingActionButton floatingActionButton) {
         if (visible)
             floatingActionButton.show();
         else

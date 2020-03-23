@@ -147,7 +147,7 @@ public final class NetworkUtils {
 
     public static String getErrorString(VolleyError volleyError) {
         try {
-            return new String(volleyError.networkResponse.data);
+            return "Error Code: " + volleyError.networkResponse.statusCode;
         } catch (Exception e) {
             e.printStackTrace();
             return null;

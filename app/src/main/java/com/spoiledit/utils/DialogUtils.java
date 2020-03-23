@@ -6,6 +6,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.spoiledit.R;
 import com.spoiledit.constants.Type;
+import com.spoiledit.listeners.OnFileSourceChoiceListener;
 
 import java.util.Objects;
 
@@ -210,6 +212,38 @@ public final class DialogUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void showFileSources(Context context, final OnFileSourceChoiceListener sourceChoiceListener) {
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_file_source);
+
+        dialog.findViewById(R.id.view_camera).setOnClickListener(view -> {
+            if (sourceChoiceListener != null) {
+                sourceChoiceListener.onCameraChosen();
+            }
+            dialog.dismiss();
+        });
+        dialog.findViewById(R.id.view_gallery).setOnClickListener(view -> {
+            if (sourceChoiceListener != null) {
+                sourceChoiceListener.onGalleryChosen();
+            }
+            dialog.dismiss();
+        });
+        dialog.findViewById(R.id.view_file_manager).setOnClickListener(view -> {
+            if (sourceChoiceListener != null) {
+                sourceChoiceListener.onFileManagerChosen();
+            }
+            dialog.dismiss();
+        });
+
+        dialog.setCancelable(true);
+        dialog.show();
+
+        if (dialog.getWindow() != null)
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        resizeDialogToMatchWindow(context, dialog);
     }
 
     public static void resizeDialogToMatchWindow(Context context, Dialog dialog) {

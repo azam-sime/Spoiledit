@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-164dp"
+                android:src="@drawable/dashboard_header"
+                android:scaleType="centerCrop"
+                app:riv_corner_radius_bottom_left="24dp"
+                app:riv_corner_radius_bottom_right="24dp"
+                app:layout_collapseMode="parallax"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="bottom"
+                app:layout_collapseMode="pin">
+
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:layout_width="match_parent"
+                    android:layout_height="?actionBarSize"
+                    android:animateLayoutChanges="true"
+                    app:contentInsetStart="0dp" >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="?actionBarSize"
+                            android:layout_height="?actionBarSize"
+                            android:contentDescription="@string/content_description"
+                            android:src="@drawable/arrow_left"
+                            android:padding="@dimen/spacing_20"
+                            android:id="@+id/iv_menu" />
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="match_parent"
+                            android:layout_margin="@dimen/spacing_8"
+                            app:cardBackgroundColor="@color/colorWhite"
+                            app:cardCornerRadius="4dp"
+                            android:id="@+id/mcv_searchbar">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:padding="@dimen/spacing_8"
+                                android:gravity="center_vertical">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:contentDescription="@string/content_description"
+                                    android:src="@drawable/search"
+                                    android:padding="@dimen/spacing_4"/>
+
+                                <EditText
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@android:color/transparent"
+                                    android:textSize="@dimen/text_14"
+                                    android:hint="@string/search"
+                                    android:id="@+id/et_search" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <ImageView
+                            android:layout_width="?actionBarSize"
+                            android:layout_height="?actionBarSize"
+                            android:contentDescription="@string/content_description"
+                            android:src="@drawable/popcorn"
+                            android:padding="@dimen/spacing_8"
+                            android:id="@+id/iv_popcorn" />
+                    </LinearLayout>
+                </com.google.android.material.appbar.MaterialToolbar>
+
+                <com.google.android.material.tabs.TabLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:tabMode="fixed"
+                    android:background="@android:color/transparent"
+                    app:tabBackground="@android:color/transparent"
+                    app:tabIndicator="@android:color/transparent"
+                    app:tabTextAppearance="@style/TabTextApperance"
+                    app:tabTextColor="@color/colorBlack"
+                    app:tabSelectedTextColor="@color/colorWhite"
+                    android:id="@+id/tl_spoilers">
+
+                </com.google.android.material.tabs.TabLayout>
+            </LinearLayout>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vp_spoilers"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+    </androidx.viewpager.widget.ViewPager>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab_add_spoiler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="@dimen/spacing_8"
+        android:fontFamily="@font/montserrat_bold"
+        android:gravity="center"
+        android:text="@string/add_new_spoiler"
+        android:textAllCaps="false"
+        android:textColor="@color/colorWhite"
+        android:textStyle="bold"
+        app:backgroundTint="@color/colorAccent" />
+
+    <include layout="@layout/layout_loading" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

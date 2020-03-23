@@ -106,9 +106,10 @@ public class SignInActivity extends RootActivity {
                     toggleViews(false);
                     hideLoader();
                     PreferenceUtils.saveLoginStatus(this,
-                            cbRemember.isChecked() ? Status.Login.REQUIRE_SIGN_IN_NOT_CREDS
-                                    : Status.Login.REQUIRE_SIGN_IN_AND_CREDS);
-                    showSuccess(false, apiStatusModel.getMessage(), this::gotoNextScreen);
+                            cbRemember.isChecked() ? Status.Login.REQUIRE_NOTHING
+                                    : Status.Login.REQUIRE_SIGN_IN_NOT_CREDS);
+//                    showSuccess(false, apiStatusModel.getMessage(), this::gotoNextScreen);
+                    gotoNextScreen();
                 }
             }
         });

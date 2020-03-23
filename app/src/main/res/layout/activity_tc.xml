@@ -35,13 +35,15 @@
                 android:text="@string/terms_and_conditions"
                 android:fontFamily="@font/montserrat_medium"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                android:textColor="@color/colorBlack" />
+                android:textColor="@color/colorBlack"
+                android:id="@+id/tv_header"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_32"
-                android:id="@+id/tv_terms_conditions"/>
+                android:id="@+id/tv_terms_conditions"
+                android:scrollbars="vertical"/>
 
             <Space
                 android:layout_width="match_parent"

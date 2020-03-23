@@ -10,26 +10,29 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.spoiledit.R;
+import com.spoiledit.activities.DetailsMovieActivity;
 import com.spoiledit.adapters.SpoilerFullAdapter;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
 import com.spoiledit.utils.LogUtils;
 import com.spoiledit.utils.ViewUtils;
-import com.spoiledit.viewmodels.SpoilersViewModel;
+import com.spoiledit.viewmodels.DetailsMovieViewModel;
 
 public class SpoilersFullFragment extends RootFragment {
     public static final String TAG = SpoilersFullFragment.class.getCanonicalName();
 
-    private SpoilersViewModel spoilersViewModel;
+    private DetailsMovieViewModel detailsMovieViewModel;
     private SpoilerFullAdapter spoilerFullAdapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        spoilersViewModel = ViewModelProviders.of(getParentFragment()).get(SpoilersViewModel.class);
+        detailsMovieViewModel = ViewModelProviders.of(getActivity()).get(DetailsMovieViewModel.class);
     }
 
     @Nullable
@@ -40,12 +43,12 @@ public class SpoilersFullFragment extends RootFragment {
 
     @Override
     public void initUi(View view) {
-
+        swipeRefreshLayout = view.findViewById(R.id.srl_spoilers_full);
     }
 
     @Override
     public void initialiseListener(View view) {
-
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
     @Override
@@ -55,15 +58,20 @@ public class SpoilersFullFragment extends RootFragment {
 
         spoilerFullAdapter = new SpoilerFullAdapter(getContext(),
                 (lastSelection, currentSelection) -> {
-                    LogUtils.logInfo(TAG, spoilerFullAdapter.getItemAt(currentSelection).toString());
+                    ((DetailsMovieActivity) getActivity()).gotoCommentsActivity(
+                            spoilerFullAdapter.getItemAt(currentSelection));
+                    spoilerFullAdapter.removeLastSelection();
                 });
+
         recyclerView.setAdapter(spoilerFullAdapter);
         ViewUtils.addFabOffset(getContext(), recyclerView);
+
+        spoilerFullAdapter.registerAdapterDataObserver(getAdapterDataObserver());
     }
 
     @Override
     public void addObservers() {
-        spoilersViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
+        detailsMovieViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
             if (apiStatusModel.getApi() == Constants.Api.MOVIE_SPOILERS_FULL) {
                 if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
                     showLoader(apiStatusModel.getMessage());
@@ -73,19 +81,37 @@ public class SpoilersFullFragment extends RootFragment {
 
                 } else {
                     hideLoader();
+                    setError(apiStatusModel.getMessage());
                     showFailure(false, apiStatusModel.getMessage());
                 }
             }
         });
 
-//        spoilersViewModel.getSpoilerFullModelsMutable().observe(this, spoilerFullModels -> {
-//            if (spoilerFullModels != null)
-//                spoilerFullAdapter.setItems(spoilerFullModels);
-//        });
+        detailsMovieViewModel.getSpoilerFullModelsMutable().observe(this, spoilerFullModels -> {
+            if (spoilerFullModels != null)
+                spoilerFullAdapter.setItems(spoilerFullModels);
+        });
+    }
+
+    @Override
+    public void onAdapterDataChanged() {
+        swipeRefreshLayout.setRefreshing(false);
+        toggleTvNoData(spoilerFullAdapter.getItemCount() == 0);
     }
 
     @Override
     public void requestData() {
-//        spoilersViewModel.requestSpoilerFull();
+        detailsMovieViewModel.requestSpoilerFull();
+    }
+
+    @Override
+    public void onRefresh() {
+        requestData();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        spoilerFullAdapter.unregisterAdapterDataObserver(getAdapterDataObserver());
     }
 }

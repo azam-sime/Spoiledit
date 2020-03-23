@@ -1,5 +1,6 @@
 package com.spoiledit.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,27 +11,28 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.spoiledit.R;
+import com.spoiledit.activities.DetailsMovieActivity;
 import com.spoiledit.adapters.MoviesPopularAdapter;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
-import com.spoiledit.utils.LogUtils;
 import com.spoiledit.utils.ViewUtils;
 import com.spoiledit.viewmodels.DashboardViewModel;
-import com.spoiledit.viewmodels.MoviesViewModel;
 
 public class MoviesPopularFragment extends RootFragment {
     public static final String TAG = MoviesPopularFragment.class.getCanonicalName();
 
-    private MoviesViewModel moviesViewModel;
+    private DashboardViewModel dashboardViewModel;
     private MoviesPopularAdapter popularAdapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        moviesViewModel = ViewModelProviders.of(getParentFragment()).get(MoviesViewModel.class);
+        dashboardViewModel = ViewModelProviders.of(getActivity()).get(DashboardViewModel.class);
     }
 
     @Nullable
@@ -41,12 +43,12 @@ public class MoviesPopularFragment extends RootFragment {
 
     @Override
     public void initUi(View view) {
-
+        swipeRefreshLayout = view.findViewById(R.id.srl_movies_popular);
     }
 
     @Override
     public void initialiseListener(View view) {
-
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
     @Override
@@ -56,37 +58,62 @@ public class MoviesPopularFragment extends RootFragment {
 
         popularAdapter = new MoviesPopularAdapter(getContext(),
                 (lastSelection, currentSelection) -> {
-                    LogUtils.logInfo(TAG, popularAdapter.getItemAt(currentSelection).toString());
+                    dashboardViewModel.requestMovieDetails(
+                            popularAdapter.getItemAt(currentSelection).getId()
+                    );
                 });
+
         recyclerView.setAdapter(popularAdapter);
         ViewUtils.addFabOffset(getContext(), recyclerView);
+
+        popularAdapter.registerAdapterDataObserver(getAdapterDataObserver());
     }
 
     @Override
     public void addObservers() {
-        moviesViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
-            if (apiStatusModel.getApi() == Constants.Api.MOVIES_POPULAR) {
-                if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
+        dashboardViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
+            if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
+                if (apiStatusModel.getApi() != Constants.Api.MOVIES_DETAILS)
                     showLoader(apiStatusModel.getMessage());
 
-                } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
-                    hideLoader();
-
-                } else {
-                    hideLoader();
-                    showFailure(false, apiStatusModel.getMessage());
+            } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
+                hideLoader();
+                if (apiStatusModel.getApi() == Constants.Api.MOVIES_DETAILS) {
+                    popularAdapter.removeLastSelection();
+                    startActivity(new Intent(getContext(), DetailsMovieActivity.class));
                 }
+
+            } else {
+                hideLoader();
+                showFailure(false, apiStatusModel.getMessage());
             }
         });
 
-        moviesViewModel.getMoviePopularModelsMutable().observe(this, moviePopularModels -> {
+        dashboardViewModel.getMoviePopularModelsMutable().observe(this, moviePopularModels -> {
             if (moviePopularModels != null)
                 popularAdapter.setItems(moviePopularModels);
         });
     }
 
     @Override
+    public void onAdapterDataChanged() {
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
     public void requestData() {
-        moviesViewModel.requestMoviesPopular();
+        showLoader();
+        dashboardViewModel.requestMoviesPopular();
+    }
+
+    @Override
+    public void onRefresh() {
+        requestData();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        popularAdapter.unregisterAdapterDataObserver(getAdapterDataObserver());
     }
 }

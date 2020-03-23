@@ -6,6 +6,7 @@ import com.android.volley.VolleyError;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Urls;
 import com.spoiledit.networks.VolleyProvider;
+import com.spoiledit.parsers.UserParser;
 import com.spoiledit.utils.NetworkUtils;
 
 import org.json.JSONObject;
@@ -43,27 +44,28 @@ public class AppRepo extends RootRepo {
                         public void onSuccess(String response) {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
-                                // key error true returns a successful api
-                                if (jsonObject.optBoolean("error"))
-                                    apiRequestFailure(api, jsonObject.optString("data"));
-                                else
+                                if (isRequestSuccess(jsonObject))
                                     apiRequestSuccess(api, jsonObject.optString("data"));
+                                else
+                                    postError(api, jsonObject);
 
                             } catch (Exception e) {
-                                e.printStackTrace();
-                                apiRequestFailure(api, NetworkUtils.getErrorString(e));
+                                onException(api, e);
                             }
                         }
 
                         @Override
                         public void onFailure(VolleyError volleyError) {
-                            apiRequestFailure(api, NetworkUtils.getErrorString(volleyError));
+                            try {
+                                apiRequestFailure(api, getErrorFromVolleyAsJson(volleyError));
+                            } catch (Exception e) {
+                                onException(api, e);
+                            }
                         }
                     }, false, false);
 
         } catch (Exception e) {
-            e.printStackTrace();
-            apiRequestFailure(api, NetworkUtils.getErrorString(e));
+            onException(api, e);
         }
     }
 }

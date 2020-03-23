@@ -10,26 +10,29 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.spoiledit.R;
+import com.spoiledit.activities.DetailsMovieActivity;
 import com.spoiledit.adapters.SpoilerBriefAdapter;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
 import com.spoiledit.utils.LogUtils;
 import com.spoiledit.utils.ViewUtils;
-import com.spoiledit.viewmodels.SpoilersViewModel;
+import com.spoiledit.viewmodels.DetailsMovieViewModel;
 
 public class SpoilersBriefFragment extends RootFragment {
     public static final String TAG = SpoilersBriefFragment.class.getCanonicalName();
 
-    private SpoilersViewModel spoilersViewModel;
+    private DetailsMovieViewModel detailsMovieViewModel;
     private SpoilerBriefAdapter spoilerBriefAdapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        spoilersViewModel = ViewModelProviders.of(getParentFragment()).get(SpoilersViewModel.class);
+        detailsMovieViewModel = ViewModelProviders.of(getActivity()).get(DetailsMovieViewModel.class);
     }
 
     @Nullable
@@ -40,12 +43,12 @@ public class SpoilersBriefFragment extends RootFragment {
 
     @Override
     public void initUi(View view) {
-
+        swipeRefreshLayout = view.findViewById(R.id.srl_spoilers_brief);
     }
 
     @Override
     public void initialiseListener(View view) {
-
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
     @Override
@@ -55,15 +58,20 @@ public class SpoilersBriefFragment extends RootFragment {
 
         spoilerBriefAdapter = new SpoilerBriefAdapter(getContext(),
                 (lastSelection, currentSelection) -> {
-                    LogUtils.logInfo(TAG, spoilerBriefAdapter.getItemAt(currentSelection).toString());
+                    ((DetailsMovieActivity) getActivity()).gotoCommentsActivity(
+                            spoilerBriefAdapter.getItemAt(currentSelection));
+                    spoilerBriefAdapter.removeLastSelection();
                 });
+
         recyclerView.setAdapter(spoilerBriefAdapter);
         ViewUtils.addFabOffset(getContext(), recyclerView);
+
+        spoilerBriefAdapter.registerAdapterDataObserver(getAdapterDataObserver());
     }
 
     @Override
     public void addObservers() {
-        spoilersViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
+        detailsMovieViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
             if (apiStatusModel.getApi() == Constants.Api.MOVIE_SPOILERS_BRIEF) {
                 if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
                     showLoader(apiStatusModel.getMessage());
@@ -73,19 +81,37 @@ public class SpoilersBriefFragment extends RootFragment {
 
                 } else {
                     hideLoader();
+                    setError(apiStatusModel.getMessage());
                     showFailure(false, apiStatusModel.getMessage());
                 }
             }
         });
 
-//        spoilersViewModel.getSpoilerBriefModelsMutable().observe(this, spoilerBriefModels -> {
-//            if (spoilerBriefModels != null)
-//                spoilerBriefAdapter.setItems(spoilerBriefModels);
-//        });
+        detailsMovieViewModel.getSpoilerBriefModelsMutable().observe(this, spoilerBriefModels -> {
+            if (spoilerBriefModels != null)
+                spoilerBriefAdapter.setItems(spoilerBriefModels);
+        });
+    }
+
+    @Override
+    public void onAdapterDataChanged() {
+        swipeRefreshLayout.setRefreshing(false);
+        toggleTvNoData(spoilerBriefAdapter.getItemCount() == 0);
     }
 
     @Override
     public void requestData() {
-//        spoilersViewModel.requestSpoilerBrief();
+        detailsMovieViewModel.requestSpoilerBrief();
+    }
+
+    @Override
+    public void onRefresh() {
+        requestData();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        spoilerBriefAdapter.unregisterAdapterDataObserver(getAdapterDataObserver());
     }
 }

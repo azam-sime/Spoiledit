@@ -1,6 +1,5 @@
 package com.spoiledit.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -13,7 +12,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.button.MaterialButton;
 import com.spoiledit.R;
-import com.spoiledit.constants.AppIntent;
+import com.spoiledit.constants.App;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
 import com.spoiledit.fragments.CreatePasswordFragment;
@@ -66,9 +65,9 @@ public class VerifyOtpActivity extends RootActivity {
         verifyViewModel = ViewModelProviders.of(this,
                 new VerifyViewModel.VerifyViewModelFactory(new VerifyRepo(this))).get(VerifyViewModel.class);
 
-        extraSentFor = getIntent().getIntExtra(AppIntent.Extra.OTP_FOR, AppIntent.Value.OTP_FOR_REGISTRATION);
-        extraSentTo = getIntent().getIntExtra(AppIntent.Extra.OTP_SENT_TO, AppIntent.Value.OTP_SENT_TO_MAIL);
-        extraSentToAddress = getIntent().getStringExtra(AppIntent.Extra.OTP_SENT_TO_ADDRESS);
+        extraSentFor = getIntent().getIntExtra(App.Intent.Extra.OTP_FOR, App.Intent.Value.OTP_FOR_REGISTRATION);
+        extraSentTo = getIntent().getIntExtra(App.Intent.Extra.OTP_SENT_TO, App.Intent.Value.OTP_SENT_TO_MAIL);
+        extraSentToAddress = getIntent().getStringExtra(App.Intent.Extra.OTP_SENT_TO_ADDRESS);
 
         setContentView(R.layout.activity_verify_phone);
     }
@@ -178,23 +177,6 @@ public class VerifyOtpActivity extends RootActivity {
     }
 
     @Override
-    public void setData() {
-        boolean mail = extraSentTo == AppIntent.Value.OTP_SENT_TO_MAIL;
-
-        String otpHeader1 = "A 6 digit confirmation code has been sent to ";
-        String otpHeader2 = " via ";
-        ((TextView) findViewById(R.id.tv_otp_prompt)).setText(
-                new StringBuilder()
-                        .append(otpHeader1)
-                        .append(StringUtils.hideChars(extraSentToAddress))
-                        .append(otpHeader2)
-                        .append(mail ? "mail" : "phone")
-                        .toString()
-        );
-        onRequestOtp();
-    }
-
-    @Override
     public void addObservers() {
         verifyViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
             if (apiStatusModel.getApi() == Constants.Api.USER_REGISTER_OTP) {
@@ -216,6 +198,23 @@ public class VerifyOtpActivity extends RootActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void setData() {
+        boolean mail = extraSentTo == App.Intent.Value.OTP_SENT_TO_MAIL;
+
+        String otpHeader1 = "A 6 digit confirmation code has been sent to ";
+        String otpHeader2 = " via ";
+        ((TextView) findViewById(R.id.tv_otp_prompt)).setText(
+                new StringBuilder()
+                        .append(otpHeader1)
+                        .append(StringUtils.hideChars(extraSentToAddress))
+                        .append(otpHeader2)
+                        .append(mail ? "mail" : "phone")
+                        .toString()
+        );
+        onRequestOtp();
     }
 
     private void onRequestOtp() {
@@ -266,7 +265,7 @@ public class VerifyOtpActivity extends RootActivity {
 
         } else if (v.getId() == R.id.btn_submit) {
             if (isRequestValid()) {
-                if (extraSentFor == AppIntent.Value.OTP_FOR_VERIFICATION)
+                if (extraSentFor == App.Intent.Value.OTP_FOR_VERIFICATION)
                     verifyViewModel.requestOtpVerification(new String[]{extraSentToAddress, combineOtp()});
                 else
                     verifyViewModel.requestOtpRegistration(new String[]{extraSentToAddress, combineOtp()});
@@ -286,7 +285,7 @@ public class VerifyOtpActivity extends RootActivity {
 
     @Override
     public void gotoNextScreen() {
-        startActivity(new Intent(this, SignInActivity.class));
+        startActivity(new android.content.Intent(this, SignInActivity.class));
         finish();
     }
 }

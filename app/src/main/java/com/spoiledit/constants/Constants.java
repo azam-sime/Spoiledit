@@ -12,7 +12,7 @@ public final class Constants {
     public static final class Api {
 
         private Api() {
-            // last = 45
+            // last = 46
         }
 
         public static final String BASE_URL = "https://spoiledit.com/wp-json/wp/v2";
@@ -45,6 +45,7 @@ public final class Constants {
 
         public static final int SPOILERS_NEW = 18;
 
+        public static final int MOVIE_IMAGES = 46;
         public static final int MOVIES_POPULAR = 19;
         public static final int MOVIES_RECENTS = 20;
         public static final int MOVIES_UPCOMING = 21;

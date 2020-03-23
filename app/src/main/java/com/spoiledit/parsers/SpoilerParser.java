@@ -2,21 +2,60 @@ package com.spoiledit.parsers;
 
 import android.os.AsyncTask;
 
-import com.spoiledit.models.MovieRecentModel;
-import com.spoiledit.models.MovieUpcomingModel;
 import com.spoiledit.models.SpoilerBriefModel;
 import com.spoiledit.models.SpoilerEndingModel;
 import com.spoiledit.models.SpoilerFullModel;
+import com.spoiledit.models.SpoilersNewModel;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class SpoilerParser {
     public static final String TAG = SpoilerParser.class.getCanonicalName();
+
+
+    public static class NewParser extends AsyncTask<JSONObject, Void, List<SpoilersNewModel>> {
+        public static final String TAG = NewParser.class.getCanonicalName();
+
+        @Override
+        protected List<SpoilersNewModel> doInBackground(JSONObject... jsonObjects) {
+            List<SpoilersNewModel> spoilersNewModels = new ArrayList<>();
+            try {
+                JSONArray dataArray = jsonObjects[0].optJSONArray("data");
+                if (dataArray != null) {
+
+                    int l = dataArray.length();
+                    for (int i = 0; i < l; i++) {
+
+                        JSONObject spoilerObject = dataArray.optJSONObject(i);
+                        SpoilersNewModel spoilersNewModel = new SpoilersNewModel();
+
+                        spoilersNewModel.setId(spoilerObject.optInt("id"));
+                        spoilersNewModel.setmId(spoilerObject.optInt("m_id"));
+                        spoilersNewModel.setmName(spoilerObject.optString("m_name"));
+                        spoilersNewModel.setUserId(spoilerObject.optInt("user_id"));
+                        spoilersNewModel.setSelectType(spoilerObject.optInt("select_type"));
+                        spoilersNewModel.setMidCredit(spoilerObject.optString("mid_credit"));
+                        spoilersNewModel.setStringer(spoilerObject.optString("stringer"));
+                        spoilersNewModel.setSpoiler(spoilerObject.optString("spoiler"));
+                        spoilersNewModel.setCratedOn(spoilerObject.optString("created_on"));
+                        spoilersNewModel.setCategory(spoilerObject.optString("category"));
+                        spoilersNewModel.setUsername(spoilerObject.optString("username"));
+                        spoilersNewModel.setDateFormat(spoilerObject.optString("date_format"));
+                        spoilersNewModel.setPosterPath(spoilerObject.optString("poster_path"));
+
+                        spoilersNewModels.add(spoilersNewModel);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return spoilersNewModels;
+        }
+    }
 
 
 
@@ -27,58 +66,34 @@ public class SpoilerParser {
         protected List<SpoilerFullModel> doInBackground(JSONObject... jsonObjects) {
             List<SpoilerFullModel> spoilerFullModels = new ArrayList<>();
             try {
-                JSONObject dataObject = jsonObjects[0].optJSONObject("data");
-                if (dataObject != null) {
+                JSONArray dataArray = jsonObjects[0].optJSONArray("result_data");
+                if (dataArray != null) {
 
-                    JSONArray dataArray = dataObject.optJSONArray("data");
-                    if (dataArray != null) {
+                    int l = dataArray.length();
+                    for (int i = 0; i < l; i++) {
 
-                        int l = dataArray.length();
-                        for (int i = 0; i < l; i++) {
+                        JSONObject spoilerObject = dataArray.optJSONObject(i);
+                        SpoilerFullModel fullModel = new SpoilerFullModel();
 
-                            JSONObject spoilerObject = dataArray.optJSONObject(i);
-                            SpoilerFullModel fullModel = new SpoilerFullModel();
-                            fullModel.setId(spoilerObject.optInt("id"));
+                        fullModel.setUserLogin(spoilerObject.optString("user_login"));
+                        fullModel.setId(spoilerObject.optInt("id"));
+                        fullModel.setmId(spoilerObject.optInt("m_id"));
+                        fullModel.setmName(spoilerObject.optString("m_name"));
+                        fullModel.setUserId(spoilerObject.optInt("user_id"));
+                        fullModel.setSelectType(spoilerObject.optInt("select_type"));
+                        fullModel.setMidCredit(spoilerObject.optString("mid_credit"));
+                        fullModel.setStringer(spoilerObject.optString("stringer"));
+                        fullModel.setSpoiler(spoilerObject.optString("spoiler"));
+                        fullModel.setCratedOn(spoilerObject.optString("created_on"));
+                        fullModel.setDisplayName(spoilerObject.optString("display_name"));
+                        fullModel.setDate(spoilerObject.optString("date"));
+                        fullModel.setDescription(spoilerObject.optString("desciption"));
+                        fullModel.setThumbsUp(spoilerObject.optString("thumbs_up"));
+                        fullModel.setThumbsDown(spoilerObject.optString("thumbs_down"));
+                        fullModel.setAvatarUrl(spoilerObject.optString("avatar_url"));
+                        fullModel.setDarkBackground(i % 2 == 1);
 
-//                            JSONObject castsObject = spoilerObject.optJSONObject("stars");
-//                            List<String> casts = new ArrayList<>();
-//                            if (castsObject != null) {
-//                                Iterator<String> iterator = castsObject.keys();
-//                                while (iterator.hasNext())
-//                                    casts.add(iterator.next());
-//                            }
-//                            fullModel.setCasts(casts.toArray(new String[0]));
-//
-//                            JSONObject directorsObject = spoilerObject.optJSONObject("director");
-//                            List<String> directors = new ArrayList<>();
-//                            if (directorsObject != null) {
-//                                Iterator<String> iterator = directorsObject.keys();
-//                                while (iterator.hasNext())
-//                                    directors.add(iterator.next());
-//                            }
-//                            fullModel.setDirectors(directors.toArray(new String[0]));
-//
-//                            JSONArray genreArray = spoilerObject.optJSONArray("genres");
-//                            if (genreArray != null) {
-//                                String[] genres = new String[genreArray.length()];
-//                                for (int j = 0; j < genreArray.length(); j++)
-//                                    genres[j] = genreArray.optString(j);
-//                                fullModel.setGenres(genres);
-//                            } else
-//                                fullModel.setGenres(new String[0]);
-//
-//                            fullModel.setOverview(spoilerObject.optString("overview"));
-//                            fullModel.setPgNames(spoilerObject.optString("pg_names"));
-//                            fullModel.setPopularity(spoilerObject.optInt("popularity"));
-//                            fullModel.setPosterPath(spoilerObject.optString("poster_path"));
-//                            fullModel.setReleaseDate(spoilerObject.optString("release_date"));
-//                            fullModel.setRunTime(spoilerObject.optString("runtime"));
-//                            fullModel.setTitle(spoilerObject.optString("title"));
-//                            fullModel.setTotalPages(spoilerObject.optInt("total_pages"));
-//                            fullModel.setVoteAverage(spoilerObject.optInt("vote_average"));
-
-                            spoilerFullModels.add(fullModel);
-                        }
+                        spoilerFullModels.add(fullModel);
                     }
                 }
             } catch (Exception e) {
@@ -97,58 +112,34 @@ public class SpoilerParser {
         protected List<SpoilerBriefModel> doInBackground(JSONObject... jsonObjects) {
             List<SpoilerBriefModel> spoilerBriefModels = new ArrayList<>();
             try {
-                JSONObject dataObject = jsonObjects[0].optJSONObject("data");
-                if (dataObject != null) {
+                JSONArray dataArray = jsonObjects[0].optJSONArray("result_data");
+                if (dataArray != null) {
 
-                    JSONArray dataArray = dataObject.optJSONArray("data");
-                    if (dataArray != null) {
+                    int l = dataArray.length();
+                    for (int i = 0; i < l; i++) {
 
-                        int l = dataArray.length();
-                        for (int i = 0; i < l; i++) {
+                        JSONObject spoilerObject = dataArray.optJSONObject(i);
+                        SpoilerBriefModel briefModel = new SpoilerBriefModel();
 
-                            JSONObject spoilerObject = dataArray.optJSONObject(i);
-                            SpoilerBriefModel briefModel = new SpoilerBriefModel();
-                            briefModel.setId(spoilerObject.optInt("id"));
+                        briefModel.setUserLogin(spoilerObject.optString("user_login"));
+                        briefModel.setId(spoilerObject.optInt("id"));
+                        briefModel.setmId(spoilerObject.optInt("m_id"));
+                        briefModel.setmName(spoilerObject.optString("m_name"));
+                        briefModel.setUserId(spoilerObject.optInt("user_id"));
+                        briefModel.setSelectType(spoilerObject.optInt("select_type"));
+                        briefModel.setMidCredit(spoilerObject.optString("mid_credit"));
+                        briefModel.setStringer(spoilerObject.optString("stringer"));
+                        briefModel.setSpoiler(spoilerObject.optString("spoiler"));
+                        briefModel.setCratedOn(spoilerObject.optString("created_on"));
+                        briefModel.setDisplayName(spoilerObject.optString("display_name"));
+                        briefModel.setDate(spoilerObject.optString("date"));
+                        briefModel.setDescription(spoilerObject.optString("desciption"));
+                        briefModel.setThumbsUp(spoilerObject.optString("thumbs_up"));
+                        briefModel.setThumbsDown(spoilerObject.optString("thumbs_down"));
+                        briefModel.setAvatarUrl(spoilerObject.optString("avatar_url"));
+                        briefModel.setDarkBackground(i % 2 == 0);
 
-//                            JSONObject castsObject = spoilerObject.optJSONObject("stars");
-//                            List<String> casts = new ArrayList<>();
-//                            if (castsObject != null) {
-//                                Iterator<String> iterator = castsObject.keys();
-//                                while (iterator.hasNext())
-//                                    casts.add(iterator.next());
-//                            }
-//                            briefModel.setCasts(casts.toArray(new String[0]));
-//
-//                            JSONObject directorsObject = spoilerObject.optJSONObject("director");
-//                            List<String> directors = new ArrayList<>();
-//                            if (directorsObject != null) {
-//                                Iterator<String> iterator = directorsObject.keys();
-//                                while (iterator.hasNext())
-//                                    directors.add(iterator.next());
-//                            }
-//                            briefModel.setDirectors(directors.toArray(new String[0]));
-//
-//                            JSONArray genreArray = spoilerObject.optJSONArray("genres");
-//                            if (genreArray != null) {
-//                                String[] genres = new String[genreArray.length()];
-//                                for (int j = 0; j < genreArray.length(); j++)
-//                                    genres[j] = genreArray.optString(j);
-//                                briefModel.setGenres(genres);
-//                            } else
-//                                briefModel.setGenres(new String[0]);
-//
-//                            briefModel.setOverview(spoilerObject.optString("overview"));
-//                            briefModel.setPgNames(spoilerObject.optString("pg_names"));
-//                            briefModel.setPopularity(spoilerObject.optInt("popularity"));
-//                            briefModel.setPosterPath(spoilerObject.optString("poster_path"));
-//                            briefModel.setReleaseDate(spoilerObject.optString("release_date"));
-//                            briefModel.setRunTime(spoilerObject.optString("runtime"));
-//                            briefModel.setTitle(spoilerObject.optString("title"));
-//                            briefModel.setTotalPages(spoilerObject.optInt("total_pages"));
-//                            briefModel.setVoteAverage(spoilerObject.optInt("vote_average"));
-
-                            spoilerBriefModels.add(briefModel);
-                        }
+                        spoilerBriefModels.add(briefModel);
                     }
                 }
             } catch (Exception e) {
@@ -167,10 +158,10 @@ public class SpoilerParser {
         protected List<SpoilerEndingModel> doInBackground(JSONObject... jsonObjects) {
             List<SpoilerEndingModel> spoilerEndingModels = new ArrayList<>();
             try {
-                JSONObject dataObject = jsonObjects[0].optJSONObject("data");
+                JSONObject dataObject = jsonObjects[0];
                 if (dataObject != null) {
 
-                    JSONArray dataArray = dataObject.optJSONArray("data");
+                    JSONArray dataArray = dataObject.optJSONArray("result_data");
                     if (dataArray != null) {
 
                         int l = dataArray.length();
@@ -178,44 +169,24 @@ public class SpoilerParser {
 
                             JSONObject spoilerObject = dataArray.optJSONObject(i);
                             SpoilerEndingModel endingModel = new SpoilerEndingModel();
-                            endingModel.setId(spoilerObject.optInt("id"));
 
-//                            JSONObject castsObject = spoilerObject.optJSONObject("stars");
-//                            List<String> casts = new ArrayList<>();
-//                            if (castsObject != null) {
-//                                Iterator<String> iterator = castsObject.keys();
-//                                while (iterator.hasNext())
-//                                    casts.add(iterator.next());
-//                            }
-//                            endingModel.setCasts(casts.toArray(new String[0]));
-//
-//                            JSONObject directorsObject = spoilerObject.optJSONObject("director");
-//                            List<String> directors = new ArrayList<>();
-//                            if (directorsObject != null) {
-//                                Iterator<String> iterator = directorsObject.keys();
-//                                while (iterator.hasNext())
-//                                    directors.add(iterator.next());
-//                            }
-//                            endingModel.setDirectors(directors.toArray(new String[0]));
-//
-//                            JSONArray genreArray = spoilerObject.optJSONArray("genres");
-//                            if (genreArray != null) {
-//                                String[] genres = new String[genreArray.length()];
-//                                for (int j = 0; j < genreArray.length(); j++)
-//                                    genres[j] = genreArray.optString(j);
-//                                endingModel.setGenres(genres);
-//                            } else
-//                                endingModel.setGenres(new String[0]);
-//
-//                            endingModel.setOverview(spoilerObject.optString("overview"));
-//                            endingModel.setPgNames(spoilerObject.optString("pg_names"));
-//                            endingModel.setPopularity(spoilerObject.optInt("popularity"));
-//                            endingModel.setPosterPath(spoilerObject.optString("poster_path"));
-//                            endingModel.setReleaseDate(spoilerObject.optString("release_date"));
-//                            endingModel.setRunTime(spoilerObject.optString("runtime"));
-//                            endingModel.setTitle(spoilerObject.optString("title"));
-//                            endingModel.setTotalPages(spoilerObject.optInt("total_pages"));
-//                            endingModel.setVoteAverage(spoilerObject.optInt("vote_average"));
+                            endingModel.setUserLogin(spoilerObject.optString("user_login"));
+                            endingModel.setId(spoilerObject.optInt("id"));
+                            endingModel.setmId(spoilerObject.optInt("m_id"));
+                            endingModel.setmName(spoilerObject.optString("m_name"));
+                            endingModel.setUserId(spoilerObject.optInt("user_id"));
+                            endingModel.setSelectType(spoilerObject.optInt("select_type"));
+                            endingModel.setMidCredit(spoilerObject.optString("mid_credit"));
+                            endingModel.setStringer(spoilerObject.optString("stringer"));
+                            endingModel.setSpoiler(spoilerObject.optString("spoiler"));
+                            endingModel.setCratedOn(spoilerObject.optString("created_on"));
+                            endingModel.setDisplayName(spoilerObject.optString("display_name"));
+                            endingModel.setDate(spoilerObject.optString("date"));
+                            endingModel.setDescription(spoilerObject.optString("desciption"));
+                            endingModel.setThumbsUp(spoilerObject.optString("thumbs_up"));
+                            endingModel.setThumbsDown(spoilerObject.optString("thumbs_down"));
+                            endingModel.setAvatarUrl(spoilerObject.optString("avatar_url"));
+                            endingModel.setDarkBackground(i % 2 == 0);
 
                             spoilerEndingModels.add(endingModel);
                         }

@@ -2,6 +2,7 @@ package com.spoiledit.parsers;
 
 import android.os.AsyncTask;
 
+import com.spoiledit.models.ProfileModel;
 import com.spoiledit.models.UserModel;
 
 import org.json.JSONArray;
@@ -52,6 +53,14 @@ public class UserParser extends AsyncTask<String, Void, UserModel> {
 
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static final class ProfileParser extends AsyncTask<JSONObject, Void, ProfileModel> {
+
+        @Override
+        protected ProfileModel doInBackground(JSONObject... jsonObjects) {
             return null;
         }
     }

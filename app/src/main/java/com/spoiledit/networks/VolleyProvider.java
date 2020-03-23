@@ -89,7 +89,7 @@ public class VolleyProvider {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("Authorzation", PreferenceUtils.getString(context, PreferenceUtils.KEY_TOKEN));
+                headers.put("Authorization", "Bearer " + PreferenceUtils.getString(context, PreferenceUtils.KEY_TOKEN));
                 return headers;
             }
 
@@ -132,7 +132,7 @@ public class VolleyProvider {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("Authorzation", PreferenceUtils.getString(context, PreferenceUtils.KEY_TOKEN));
+                headers.put("Authorization", "Bearer " + PreferenceUtils.getString(context, PreferenceUtils.KEY_TOKEN));
                 return headers;
             }
         };
@@ -169,7 +169,7 @@ public class VolleyProvider {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("Authorzation", PreferenceUtils.getString(context, PreferenceUtils.KEY_TOKEN));
+                headers.put("Authorization", "Bearer " + PreferenceUtils.getString(context, PreferenceUtils.KEY_TOKEN));
                 return headers;
             }
 
@@ -212,7 +212,7 @@ public class VolleyProvider {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("Authorzation", PreferenceUtils.getString(context, PreferenceUtils.KEY_TOKEN));
+                headers.put("Authorization", "Bearer " + PreferenceUtils.getString(context, PreferenceUtils.KEY_TOKEN));
                 return headers;
             }
         };
@@ -270,7 +270,7 @@ public class VolleyProvider {
         executeMultipartRequest(url, params, null, onResponseListener, cache, hasAuth);
     }
 
-    public void executeMultipartRequest(String url, Map<String, String> params, ArrayList<File> files, OnResponseListener<String> onResponseListener, boolean cache, boolean hasAuth) {
+    public void executeMultipartRequest(String url, Map<String, String> params, Map<String, File> files, OnResponseListener<String> onResponseListener, boolean cache, boolean hasAuth) {
         LogUtils.logInfo(TAG, "executeMultipartRequest: ");
         if (NetworkUtils.isNetworkAvailable()) {
             try {
@@ -311,7 +311,7 @@ public class VolleyProvider {
         executeMultipartGetRequest(url, null, onResponseListener, cache, hasAuth);
     }
 
-    public void executeMultipartGetRequest(String url, ArrayList<File> files, OnResponseListener<String> onResponseListener, boolean cache, boolean hasAuth) {
+    public void executeMultipartGetRequest(String url, Map<String, File> files, OnResponseListener<String> onResponseListener, boolean cache, boolean hasAuth) {
         LogUtils.logInfo(TAG, "executeMultipartRequest: ");
         if (NetworkUtils.isNetworkAvailable()) {
             try {

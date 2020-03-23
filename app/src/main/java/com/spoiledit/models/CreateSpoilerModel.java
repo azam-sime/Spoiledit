@@ -1,39 +1,75 @@
 package com.spoiledit.models;
 
+import android.os.Parcel;
+
 public class CreateSpoilerModel extends RootModel {
-    private int spoilerType;
-    private int midCreditExists;
-    private int postCreditExists;
+    private String spoilerType;
+    private String midCreditExists;
+    private String postCreditExists;
     private String spoiler;
 
-    public CreateSpoilerModel(int spoilerType, int midCreditExists, int postCreditExists, String spoiler) {
+    public CreateSpoilerModel(String spoilerType, String midCreditExists, String postCreditExists, String spoiler) {
         this.spoilerType = spoilerType;
         this.midCreditExists = midCreditExists;
         this.postCreditExists = postCreditExists;
         this.spoiler = spoiler;
     }
 
-    public int getSpoilerType() {
+    protected CreateSpoilerModel(Parcel in) {
+        super(in);
+        spoilerType = in.readString();
+        midCreditExists = in.readString();
+        postCreditExists = in.readString();
+        spoiler = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeString(spoilerType);
+        dest.writeString(midCreditExists);
+        dest.writeString(postCreditExists);
+        dest.writeString(spoiler);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<CreateSpoilerModel> CREATOR = new Creator<CreateSpoilerModel>() {
+        @Override
+        public CreateSpoilerModel createFromParcel(Parcel in) {
+            return new CreateSpoilerModel(in);
+        }
+
+        @Override
+        public CreateSpoilerModel[] newArray(int size) {
+            return new CreateSpoilerModel[size];
+        }
+    };
+
+    public String getSpoilerType() {
         return spoilerType;
     }
 
-    public void setSpoilerType(int spoilerType) {
+    public void setSpoilerType(String spoilerType) {
         this.spoilerType = spoilerType;
     }
 
-    public int getMidCreditExists() {
+    public String getMidCreditExists() {
         return midCreditExists;
     }
 
-    public void setMidCreditExists(int midCreditExists) {
+    public void setMidCreditExists(String midCreditExists) {
         this.midCreditExists = midCreditExists;
     }
 
-    public int getPostCreditExists() {
+    public String getPostCreditExists() {
         return postCreditExists;
     }
 
-    public void setPostCreditExists(int postCreditExists) {
+    public void setPostCreditExists(String postCreditExists) {
         this.postCreditExists = postCreditExists;
     }
 

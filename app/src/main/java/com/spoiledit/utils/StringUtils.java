@@ -197,7 +197,7 @@ public final class StringUtils {
     }
 
     public static String asString(int i) {
-        return String.format(Locale.getDefault(), "%logInfo", i);
+        return String.format(Locale.getDefault(), "%d", i);
     }
 
     public static String asStringWithHeader(String header, int i) {
@@ -209,7 +209,7 @@ public final class StringUtils {
     }
 
     public static String asString(long l) {
-        return String.format(Locale.getDefault(), "%logInfo", l);
+        return String.format(Locale.getDefault(), "%d", l);
     }
 
     public static String asStringWithHeader(String header, long l) {
@@ -254,10 +254,10 @@ public final class StringUtils {
 
     public static void setCountInTab(TabLayout tabLayout, int index, String title, int count, int total) {
         if (count != 0 && total != 0) {
-            tabLayout.getTabAt(index).setText(String.format(Locale.getDefault(), "%s(%logInfo/%logInfo)",
+            tabLayout.getTabAt(index).setText(String.format(Locale.getDefault(), "%s(%d/%d)",
                     title, count, total));
         } else {
-            tabLayout.getTabAt(index).setText(String.format(Locale.getDefault(), "%s(%logInfo)",
+            tabLayout.getTabAt(index).setText(String.format(Locale.getDefault(), "%s(%d)",
                     title, total));
         }
     }
@@ -305,5 +305,14 @@ public final class StringUtils {
                 return s;
         }
         return s;
+    }
+
+    public static boolean compareInput(EditText inputField, String comparingValue) {
+        if (isInvalid(inputField))
+            return false;
+        else if (isInvalid(comparingValue))
+            return false;
+        else
+            return !inputField.getText().toString().trim().equals(comparingValue);
     }
 }

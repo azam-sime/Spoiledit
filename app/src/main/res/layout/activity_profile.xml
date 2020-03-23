@@ -11,14 +11,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorWhite">
 
-        <include layout="@layout/toolbar" />
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+        <include layout="@layout/toolbar_back_only" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,6 +27,7 @@
                     android:layout_width="@dimen/size_image_user"
                     android:layout_height="@dimen/size_image_user"
                     android:layout_gravity="center_horizontal"
+                    android:scaleType="centerCrop"
                     app:riv_corner_radius="@dimen/radius_image_user"
                     app:riv_tile_mode="clamp"
                     android:src="@drawable/app_icon_logo"
@@ -47,10 +41,12 @@
                     android:id="@+id/iv_add_photo" />
             </FrameLayout>
 
-            <TextView
-                android:id="@+id/tv_name"
+            <EditText
+                android:id="@+id/et_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:inputType="textPersonName"
                 android:fontFamily="@font/montserrat_bold"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/spacing_16"
@@ -58,6 +54,22 @@
                 android:textSize="24sp"
                 android:textColor="@color/colorBlack"
                 tools:text="Victor Smith"/>
+        </LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <requestFocus />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -77,9 +89,7 @@
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:background="@drawable/background_circle_fill_3f3e3e"
-                        android:src="@drawable/star_yellow"
-                        android:padding="@dimen/spacing_8"/>
+                        android:src="@drawable/prof_email"/>
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -94,10 +104,12 @@
                             android:text="Email Address"
                             android:textColor="@color/colorBlack"/>
 
-                        <TextView
-                            android:id="@+id/tv_email_address"
+                        <EditText
+                            android:id="@+id/et_email_address"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:inputType="textEmailAddress"
                             android:fontFamily="@font/montserrat_bold"
                             android:textSize="18sp"
                             android:textColor="@color/colorBlack"
@@ -114,9 +126,7 @@
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:background="@drawable/background_circle_fill_3f3e3e"
-                        android:src="@drawable/star_yellow"
-                        android:padding="@dimen/spacing_8"/>
+                        android:src="@drawable/prof_phone" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -131,10 +141,12 @@
                             android:text="Phone Number"
                             android:textColor="@color/colorBlack"/>
 
-                        <TextView
-                            android:id="@+id/tv_phone_number"
+                        <EditText
+                            android:id="@+id/et_phone_number"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:inputType="phone"
                             android:fontFamily="@font/montserrat_bold"
                             android:textSize="18sp"
                             android:textColor="@color/colorBlack"
@@ -151,9 +163,7 @@
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:background="@drawable/background_circle_fill_3f3e3e"
-                        android:src="@drawable/star_yellow"
-                        android:padding="@dimen/spacing_8"/>
+                        android:src="@drawable/prof_address" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -188,9 +198,7 @@
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:background="@drawable/background_circle_fill_3f3e3e"
-                        android:src="@drawable/star_yellow"
-                        android:padding="@dimen/spacing_8"/>
+                        android:src="@drawable/prof_dob" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -254,6 +262,14 @@
                                 android:textColor="@color/colorBlack"/>
                         </LinearLayout>
 
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/arrow_circle_right"
+                            android:layout_marginEnd="@dimen/spacing_8"
+                            android:tint="@color/colorAccent"
+                            android:layout_gravity="center_vertical"/>
+
                         <View
                             android:layout_width="1dp"
                             android:layout_height="match_parent"
@@ -278,16 +294,27 @@
                                 android:id="@+id/tv_spoilers_status"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="(176)"
+                                tools:text="(176)"
                                 android:textColor="@color/colorBlack"/>
                         </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/arrow_circle_right"
+                            android:layout_marginEnd="@dimen/spacing_8"
+                            android:tint="@color/colorAccent"
+                            android:layout_gravity="center_vertical"/>
+
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <Space
+                <com.google.android.material.button.MaterialButton
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_16"
+                    android:text="Update"
+                    android:id="@+id/btn_update" />
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

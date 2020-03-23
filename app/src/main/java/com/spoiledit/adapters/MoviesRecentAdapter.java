@@ -12,6 +12,7 @@ import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.spoiledit.R;
+import com.spoiledit.constants.Urls;
 import com.spoiledit.listeners.OnItemSelectionListener;
 import com.spoiledit.models.MovieModel;
 import com.spoiledit.models.MovieRecentModel;
@@ -118,19 +119,12 @@ public class MoviesRecentAdapter extends RootSelectionAdapter {
             viewHolder.tvTitle.setText(recentModel.getTitle());
             viewHolder.tvOverview.setText(recentModel.getOverview());
 
-            Picasso.get().load(recentModel.getPosterPath()).into(viewHolder.ivPoster,
-                    new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            LogUtils.logResponse("Image preview successful.");
-                        }
-
-                        @Override
-                        public void onError(Exception e) {
-                            LogUtils.logError(e.getMessage());
-                            viewHolder.ivPoster.setImageResource(R.drawable.popcorn);
-                        }
-                    });
+            Picasso.get()
+                    .load(Urls.MOVIE_IMAGES.getUrl() + recentModel.getPosterPath())
+                    .resize(80, 132)
+                    .centerCrop()
+                    .error(context.getResources().getDrawable(R.drawable.popcorn))
+                    .into(viewHolder.ivPoster);
         }
     }
 
@@ -160,7 +154,7 @@ public class MoviesRecentAdapter extends RootSelectionAdapter {
             tvTitle = itemView.findViewById(R.id.tv_title);
             tvOverview = itemView.findViewById(R.id.tv_overview);
 
-            itemView.findViewById(R.id.tv_view_details).setOnClickListener(v -> {
+            itemView.setOnClickListener(v -> {
                 if (onItemSelectionListener != null) {
                     final int finalLastPosition = lastSelection;
                     notifySelection(getAdapterPosition());

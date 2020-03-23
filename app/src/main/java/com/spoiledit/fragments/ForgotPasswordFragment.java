@@ -1,6 +1,5 @@
 package com.spoiledit.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.google.android.material.button.MaterialButton;
 import com.spoiledit.R;
 import com.spoiledit.activities.VerifyOtpActivity;
-import com.spoiledit.constants.AppIntent;
+import com.spoiledit.constants.App;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
 import com.spoiledit.utils.InputUtils;
@@ -118,10 +117,10 @@ public class ForgotPasswordFragment extends RootFragment {
 
     @Override
     public void gotoNextScreen() {
-        Intent intent = new Intent(getActivity(), VerifyOtpActivity.class);
-        intent.putExtra(AppIntent.Extra.OTP_FOR, AppIntent.Value.OTP_FOR_VERIFICATION);
-        intent.putExtra(AppIntent.Extra.OTP_SENT_TO, AppIntent.Value.OTP_SENT_TO_MAIL);
-        intent.putExtra(AppIntent.Extra.OTP_SENT_TO_ADDRESS, etEmail.getText().toString().trim());
+        android.content.Intent intent = new android.content.Intent(getActivity(), VerifyOtpActivity.class);
+        intent.putExtra(App.Intent.Extra.OTP_FOR, App.Intent.Value.OTP_FOR_VERIFICATION);
+        intent.putExtra(App.Intent.Extra.OTP_SENT_TO, App.Intent.Value.OTP_SENT_TO_MAIL);
+        intent.putExtra(App.Intent.Extra.OTP_SENT_TO_ADDRESS, etEmail.getText().toString().trim());
         startActivity(intent);
 
         getActivity().finish();

@@ -48,33 +48,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:gravity="center"
                 android:id="@+id/rg_spoiler_type">
 
                 <RadioButton
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="@string/full_spoiler"
                     android:textSize="@dimen/text_12"
                     android:id="@+id/rb_spoiler_full" />
 
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
                 <RadioButton
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="@string/brief_summary"
                     android:textSize="@dimen/text_12"
                     android:layout_marginStart="@dimen/spacing_8"
                     android:layout_marginEnd="@dimen/spacing_8"
                     android:id="@+id/rb_spoiler_brief" />
-
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
 
                 <RadioButton
                     android:layout_width="wrap_content"
@@ -95,33 +88,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:gravity="center"
                 android:id="@+id/rg_mid_credit">
 
                 <RadioButton
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="@string/yes"
                     android:textSize="@dimen/text_12"
                     android:id="@+id/rbtn_mc_yes" />
 
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
                 <RadioButton
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="@string/no"
                     android:textSize="@dimen/text_12"
                     android:layout_marginStart="@dimen/spacing_8"
                     android:layout_marginEnd="@dimen/spacing_8"
-                    android:id="@+id/rbtn_nc_no" />
-
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:id="@+id/rbtn_mc_no" />
 
                 <RadioButton
                     android:layout_width="wrap_content"
@@ -142,33 +128,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:gravity="center"
                 android:id="@+id/rg_stringer">
 
                 <RadioButton
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="@string/yes"
                     android:textSize="@dimen/text_12"
                     android:id="@+id/rbtn_pc_yes" />
 
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
                 <RadioButton
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="@string/no"
                     android:textSize="@dimen/text_12"
                     android:layout_marginStart="@dimen/spacing_8"
                     android:layout_marginEnd="@dimen/spacing_8"
                     android:id="@+id/rbtn_pc_no" />
-
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
 
                 <RadioButton
                     android:layout_width="wrap_content"
@@ -196,6 +175,10 @@
                 android:padding="@dimen/spacing_8"
                 android:textSize="@dimen/text_14"
                 android:id="@+id/et_spoiler"/>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="100dp" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

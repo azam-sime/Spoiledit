@@ -15,6 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.lifecycle.MutableLiveData;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.spoiledit.R;
@@ -24,16 +26,25 @@ import com.spoiledit.utils.ExecutorUtils;
 import com.spoiledit.utils.InputUtils;
 import com.spoiledit.utils.NetworkUtils;
 import com.spoiledit.utils.StringUtils;
+import com.spoiledit.utils.ViewUtils;
 
-abstract public class RootActivity extends AppCompatActivity implements View.OnClickListener {
+abstract public class RootActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private ConnectivityManager connectivityManager;
 
     private TextView tvToolbar;
     private ImageView ivBack, ivPopcorn;
 
+    private TextView tvNoData;
+    private RecyclerView.AdapterDataObserver adapterDataObserver = new RecyclerView.AdapterDataObserver() {
+        @Override
+        public void onChanged() {
+            onAdapterDataChanged();
+        }
+    };
+
     private ContentLoadingProgressBar progressBar;
-    private Snackbar snackbar;
+    private Snackbar snanckbarNetwork, snackbar;
 
     private MutableLiveData<Boolean> networkMutable;
 
@@ -44,6 +55,9 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
 
             if (networkMutable != null)
                 networkMutable.postValue(true);
+
+            if (snanckbarNetwork != null && snanckbarNetwork.isShown())
+                snanckbarNetwork.dismiss();
             NetworkUtils.setNetworkAvailable(true);
         }
 
@@ -53,6 +67,10 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
 
             if (networkMutable != null)
                 networkMutable.postValue(false);
+
+            snanckbarNetwork = Snackbar.make(findViewById(R.id.root),
+                    "No internet connection!", Snackbar.LENGTH_INDEFINITE);
+            snanckbarNetwork.show();
             NetworkUtils.setNetworkAvailable(false);
         }
     };
@@ -76,6 +94,7 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
         ivPopcorn = findViewById(R.id.iv_popcorn);
 
         progressBar = findViewById(R.id.pb_loading);
+        tvNoData = findViewById(R.id.tv_error);
 
         setUpToolBar();
 
@@ -84,12 +103,12 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
         setUpRecycler();
         setUpViewPager();
 
+        if (progressBar != null)
+            progressBar.hide();
+
         addObservers();
         requestData();
         setData();
-
-        if (progressBar != null)
-            progressBar.hide();
     }
 
     public abstract void setUpToolBar();
@@ -126,17 +145,30 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
             onPopcornClick();
     }
 
+    @Override
+    public void onRefresh() {
+
+    }
+
     public void setupToolBar(String title) {
         setupToolBar(title, false);
     }
 
+    public void setupBackIconOnly() {
+        setupToolBar(null, false);
+    }
+
     public void setupToolBar(String title, boolean showPopcorn) {
-        StringUtils.setText(tvToolbar, title);
+        if (tvToolbar != null)
+            StringUtils.setText(tvToolbar, title);
 
-        ivPopcorn.setVisibility(showPopcorn ? View.VISIBLE : View.GONE);
+        if (ivPopcorn != null) {
+            ivPopcorn.setVisibility(showPopcorn ? View.VISIBLE : View.GONE);
+            ivPopcorn.setOnClickListener(this);
+        }
 
-        ivBack.setOnClickListener(this);
-        ivPopcorn.setOnClickListener(this);
+        if (ivBack != null)
+            ivBack.setOnClickListener(this);
     }
 
     public void onPopcornClick() {
@@ -150,6 +182,7 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
         connectivityManager.registerNetworkCallback(
                 new NetworkRequest.Builder()
                         .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                        .addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
                         .build(), networkCallback
         );
     }
@@ -164,6 +197,10 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
 
     public void toggleViews(boolean enable) {
 
+    }
+
+    public void showLoader() {
+        showLoader(null);
     }
 
     public void showLoader(String message) {
@@ -284,12 +321,30 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
 
     }
 
+    public void setError(String message) {
+        if (tvNoData != null)
+            tvNoData.setText(message);
+    }
+
+    void toggleTvNoData(boolean show) {
+        if (tvNoData != null)
+            ViewUtils.toggleViewVisibility(show, tvNoData);
+    }
+
+    RecyclerView.AdapterDataObserver getAdapterDataObserver() {
+        return adapterDataObserver;
+    }
+
     public boolean isNetworkAvailable() {
         return NetworkUtils.isNetworkAvailable();
     }
 
     public String getResString(int resId) {
         return AppUtils.getString(this, resId);
+    }
+
+    public void onAdapterDataChanged() {
+
     }
 
     @Override

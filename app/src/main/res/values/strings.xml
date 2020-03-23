@@ -80,4 +80,19 @@
     <string name="accept_terms">Accept Terms</string>
     <string name="read_later">Read Later</string>
     <string name="spoilers">Spoilers</string>
+    <string name="category">Category</string>
+    <string name="char_hyphen">-</string>
+    <string name="mid_credit_scene">Mid Credit Scene</string>
+    <string name="post_credit_scene">Post Credit Scene</string>
+    <string name="go_to_spoiler">Go To Spoiler</string>
+    <string name="buy_now">Buy Now</string>
+    <string name="add_to_watchlist">Add To Watchlist</string>
+    <string name="view_spoilers">View Spoilers</string>
+    <string name="see_spoiler_now">See Spoiler Now</string>
+    <string name="director">Director:</string>
+    <string name="stars">Stars:</string>
+    <string name="details">Details</string>
+    <string name="comment">Comment</string>
+    <string name="type_your_message">Type your message</string>
+    <string name="reply">Reply</string>
 </resources>

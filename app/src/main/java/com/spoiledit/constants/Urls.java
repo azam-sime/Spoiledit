@@ -28,12 +28,13 @@ public enum Urls {
 
     , SPOILERS_NEW(Constants.Api.SPOILERS_NEW, Constants.Api.BASE_URL + "/newest-spoiler", Request.Method.GET)
 
+    , MOVIE_IMAGES(Constants.Api.MOVIE_IMAGES, "https://image.tmdb.org/t/p/w300", Request.Method.GET)
     , MOVIES_POPULAR(Constants.Api.MOVIES_POPULAR, Constants.Api.BASE_URL + "/popular-movies", Request.Method.GET)
     , MOVIES_RECENTS(Constants.Api.MOVIES_RECENTS, Constants.Api.BASE_URL + "/movies-recent-releses", Request.Method.GET)
     , MOVIES_UPCOMING(Constants.Api.MOVIES_UPCOMING, Constants.Api.BASE_URL + "/movies-coming-soon", Request.Method.GET)
     , MOVIES_THIS_WEEK(Constants.Api.MOVIES_THIS_WEEK, Constants.Api.BASE_URL + "/new-movies-this-week", Request.Method.GET)
 
-    , MOVIE_DETAILS(Constants.Api.MOVIES_DETAILS, Constants.Api.BASE_URL + "/movies-details", Request.Method.GET)
+    , MOVIE_DETAILS(Constants.Api.MOVIES_DETAILS, Constants.Api.BASE_URL + "/movies-details/", Request.Method.GET)
 
     , MOVIE_SPOILERS_FULL(Constants.Api.MOVIE_SPOILERS_FULL, Constants.Api.MOVIE_DETAILS_URL + "full-spoiler", Request.Method.POST)
     , MOVIE_SPOILERS_BRIEF(Constants.Api.MOVIE_SPOILERS_BRIEF, Constants.Api.MOVIE_DETAILS_URL + "brief-summary", Request.Method.POST)

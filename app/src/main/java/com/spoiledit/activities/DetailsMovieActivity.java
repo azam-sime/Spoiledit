@@ -1,44 +1,48 @@
 package com.spoiledit.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.spoiledit.R;
-import com.spoiledit.constants.Status;
-import com.spoiledit.fragments.ForgotPasswordFragment;
-import com.spoiledit.repos.LoginRepo;
-import com.spoiledit.utils.PreferenceUtils;
-import com.spoiledit.utils.StringUtils;
+import com.spoiledit.adapters.ViewPagerAdapter;
+import com.spoiledit.fragments.MovieDetailsFragment;
+import com.spoiledit.fragments.MovieSpoilersFragment;
+import com.spoiledit.listeners.PagerChangeListener;
+import com.spoiledit.models.MovieSpoilerModel;
+import com.spoiledit.repos.CommentsRepo;
 import com.spoiledit.utils.ViewUtils;
-import com.spoiledit.viewmodels.LoginViewModel;
+import com.spoiledit.viewmodels.DetailsMovieViewModel;
 
 public class DetailsMovieActivity extends RootActivity {
     public static final String TAG = DetailsMovieActivity.class.getCanonicalName();
 
-    private LoginViewModel loginViewModel;
+    public static final int REQUEST_ADD_SPOILER = 1234;
 
-    private EditText etUsername, etPassword;
-    private MaterialCheckBox cbRemember;
-    private MaterialButton btnLogin;
-    private TextView tvForgot, tvSignUp;
+    private DetailsMovieViewModel detailsMovieViewModel;
+
+    private ViewPager viewPager;
+    private ViewPagerAdapter viewPagerAdapter;
+    private BottomNavigationView bnvMovie;
+
+    private MovieDetailsFragment detailsFragment;
+    private MovieSpoilersFragment spoilersFragment;
+
+    private boolean autoSet = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        loginViewModel = ViewModelProviders.of(this,
-                new LoginViewModel.LoginViewModelFactory(new LoginRepo(this)))
-                .get(LoginViewModel.class);
-        setContentView(R.layout.activity_sign_in);
+        detailsMovieViewModel = ViewModelProviders.of(this).get(DetailsMovieViewModel.class);
+        setContentView(R.layout.activity_movie_details);
     }
 
     @Override
@@ -48,116 +52,87 @@ public class DetailsMovieActivity extends RootActivity {
 
     @Override
     public void initUi() {
-        etUsername = findViewById(R.id.et_username);
-        etPassword = findViewById(R.id.et_password);
-
-        cbRemember = findViewById(R.id.cb_remember_me);
-        tvForgot = findViewById(R.id.tv_forgot_password);
-
-        btnLogin = findViewById(R.id.btn_login);
-
-        tvSignUp = findViewById(R.id.tv_sign_up);
+        viewPager = findViewById(R.id.vp_movie_details);
+        bnvMovie = findViewById(R.id.bnv_movie);
     }
 
     @Override
     public void initialiseListener() {
-        tvForgot.setOnClickListener(this);
+        bnvMovie.setOnNavigationItemSelectedListener(menuItem -> {
+            if (menuItem.getItemId() == R.id.menu_buy_now) {
+                if (autoSet) {
+                    autoSet = false;
+                    return false;
+                }
 
-        btnLogin.setOnClickListener(this);
+                openLinkInWeb(detailsMovieViewModel.getMovieDetailsModel().getBuyNowLink());
+                return true;
 
-        tvSignUp.setOnClickListener(this);
-    }
+            } else if (menuItem.getItemId() == R.id.menu_add_watchlist) {
+                Toast.makeText(this, "Implementing soon...", Toast.LENGTH_SHORT).show();
+                return true;
 
-    @Override
-    public void setData() {
-        int loginStatus = PreferenceUtils.loginStatus(this);
-        String[] credentials = PreferenceUtils.credentials(this);
+            } else if (menuItem.getItemId() == R.id.menu_view_spoilers) {
+                Log.i(TAG, "setOnNavigationItemSelectedListener: ");
 
-        if (loginStatus == Status.Login.REQUIRE_SIGN_IN_NOT_CREDS
-                && credentials[0] != null && credentials[1] != null) {
-            etUsername.setText(credentials[0]);
-            etPassword.setText(credentials[1]);
-
-            cbRemember.setChecked(true);
-        }
-    }
-
-    @Override
-    public void addObservers() {
-        loginViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
-            if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
-                toggleViews(false);
-                showLoader(apiStatusModel.getMessage());
-
-            } else if (apiStatusModel.getStatus() == Status.Request.API_ERROR) {
-                toggleViews(true);
-                hideLoader();
-                showFailure(false, apiStatusModel.getMessage());
-
-            } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
-                toggleViews(false);
-                hideLoader();
-                PreferenceUtils.saveLoginStatus(this,
-                        cbRemember.isChecked() ? Status.Login.REQUIRE_SIGN_IN_NOT_CREDS
-                                : Status.Login.REQUIRE_SIGN_IN_AND_CREDS);
-                showSuccess(false, apiStatusModel.getMessage(), this::gotoNextScreen);
+                viewPager.setCurrentItem(1, true);
+                ViewUtils.hideViews(bnvMovie);
+                return true;
             }
+            return false;
         });
     }
 
     @Override
-    public void toggleViews(boolean enable) {
-        ViewUtils.toggleViewAbility(enable, etUsername, etPassword, cbRemember, btnLogin, tvForgot);
-    }
+    public void setUpViewPager() {
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-    @Override
-    public boolean isRequestValid() {
-        if (StringUtils.isInvalid(etUsername.getText().toString())) {
-            showWarning("Please enter a valid username.");
-            etUsername.requestFocus();
-            etUsername.setSelection(etUsername.getText().length());
-            return false;
+        viewPager.setOffscreenPageLimit(2);
+        viewPager.addOnPageChangeListener(new PagerChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                Log.i(TAG, "onPageSelected: ");
 
-        } else if (StringUtils.isInvalid(etPassword.getText().toString())) {
-            showWarning("Please enter a valid password.");
-            etPassword.requestFocus();
-            etPassword.setSelection(etPassword.getText().length());
-            return false;
-        }
-        return super.isRequestValid();
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.btn_login) {
-            if (isRequestValid()) {
-                String[] credentials = new String[] {etUsername.getText().toString(),
-                        etPassword.getText().toString()};
-                PreferenceUtils.saveCredentials(this, credentials);
-                loginViewModel.requestLogin(credentials);
+                autoSet = true;
+                bnvMovie.setSelectedItemId(position == 2 ? R.id.menu_view_spoilers : R.id.menu_buy_now);
+                ViewUtils.toggleViewVisibility(position != 2, bnvMovie);
             }
-            return;
+        });
 
-        } else if (v.getId() == R.id.tv_sign_up) {
-            startActivity(new Intent(this, SignUpActivity.class));
-            finish();
-            return;
+        detailsFragment = new MovieDetailsFragment();
+        viewPagerAdapter.addFragment(detailsFragment, getResString(R.string.details));
 
-        } else if (v.getId() == R.id.tv_forgot_password) {
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            ForgotPasswordFragment fragment = new ForgotPasswordFragment();
-            fragmentTransaction.setCustomAnimations(R.anim.rise_from_bottom, R.anim.sink_to_bottom);
-            fragmentTransaction.add(R.id.ll_container, fragment);
-            fragmentTransaction.addToBackStack(ForgotPasswordFragment.TAG);
-            fragmentTransaction.commit();
-            return;
-        }
-        super.onClick(v);
+        spoilersFragment = new MovieSpoilersFragment();
+        viewPagerAdapter.addFragment(spoilersFragment, getResString(R.string.spoilers));
+
+        viewPager.setAdapter(viewPagerAdapter);
+    }
+
+    public void openLinkInWeb(String link) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+        startActivity(browserIntent);
+    }
+
+    public void gotoCommentsActivity(MovieSpoilerModel movieSpoilerModel) {
+        CommentsRepo.initialise(movieSpoilerModel);
+        startActivity(new Intent(this, SpoilerCommentsActivity.class));
     }
 
     @Override
-    public void gotoNextScreen() {
-        startActivity(new Intent(this, DashboardActivity.class));
-        finish();
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        spoilersFragment.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (viewPager.getCurrentItem() == 1) {
+            ViewUtils.showViews(bnvMovie);
+            autoSet = true;
+            bnvMovie.setSelectedItemId(R.id.menu_buy_now);
+            viewPager.setCurrentItem(0);
+        } else
+            super.onBackPressed();
     }
 }

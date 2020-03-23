@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.spoiledit.R;
@@ -20,13 +22,22 @@ import com.spoiledit.utils.InputUtils;
 import com.spoiledit.utils.NetworkUtils;
 import com.spoiledit.utils.PreferenceUtils;
 import com.spoiledit.utils.StringUtils;
+import com.spoiledit.utils.ViewUtils;
 
-public abstract class RootFragment extends Fragment implements View.OnClickListener {
+public abstract class RootFragment extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private UserModel userModel;
     private ContentLoadingProgressBar progressBar;
     private Snackbar snackbar;
     private boolean fragmentVisibleToUser = false;
+
+    private TextView tvNoData;
+    private RecyclerView.AdapterDataObserver adapterDataObserver = new RecyclerView.AdapterDataObserver() {
+        @Override
+        public void onChanged() {
+            onAdapterDataChanged();
+        }
+    };
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -35,6 +46,8 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
         userModel = PreferenceUtils.getUserModel(getContext());
         progressBar = view.findViewById(R.id.pb_loading);
 
+        tvNoData = view.findViewById(R.id.tv_error);
+
         setUpToolbar(view);
         initUi(view);
         initialiseListener(view);
@@ -42,13 +55,13 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
         setUpRecycler(view);
         setUpViewPager(view);
 
+        if (progressBar != null)
+            progressBar.hide();
+
         addObservers();
 
         requestData();
         setData(view);
-
-        if (progressBar != null)
-            progressBar.hide();
     }
 
     public void setUpToolbar(View view) {
@@ -87,6 +100,11 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
             showInterrupt("Will be soon implmented...", true);
     }
 
+    @Override
+    public void onRefresh() {
+
+    }
+
     public void setupToolBar(View view, String title) {
         TextView tvToolbar = view.findViewById(R.id.tv_toolbar);
         tvToolbar.setText(title);
@@ -105,8 +123,12 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
 
     }
 
+    public void showLoader() {
+        showLoader(null);
+    }
+
     public void showLoader(String message) {
-        if (StringUtils.isInvalid(message))
+        if (!StringUtils.isInvalid(message))
             showInterrupt(message, false);
 
         if (progressBar != null)
@@ -124,7 +146,6 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
     public void runOnUiAfterMillis(Runnable runnable, long delayMillis) {
         ExecutorUtils.getInstance().executeOnMainDelayed(runnable, delayMillis);
     }
-
 
 
     public void showInterrupt(String message, boolean definite) {
@@ -212,7 +233,6 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
     }
 
 
-
     public void hideLoader() {
         if (snackbar != null && snackbar.isShown())
             snackbar.dismiss();
@@ -225,7 +245,17 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
 
     }
 
-    public String getResString(int resId) {
+    public void setError(String message) {
+        if (tvNoData != null)
+            tvNoData.setText(message);
+    }
+
+    void toggleTvNoData(boolean show) {
+        if (tvNoData != null)
+            ViewUtils.toggleViewVisibility(show, tvNoData);
+    }
+
+    String getResString(int resId) {
         return AppUtils.getString(getContext(), resId);
     }
 
@@ -233,8 +263,12 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
         return NetworkUtils.isNetworkAvailable();
     }
 
-    public UserModel getUserModel() {
+    UserModel getUserModel() {
         return userModel;
+    }
+
+    RecyclerView.AdapterDataObserver getAdapterDataObserver() {
+        return adapterDataObserver;
     }
 
     @Override
@@ -246,5 +280,9 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
 
     public boolean isFragmentVisibleToUser() {
         return fragmentVisibleToUser;
+    }
+
+    public void onAdapterDataChanged() {
+
     }
 }

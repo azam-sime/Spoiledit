@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.spoiledit.BuildConfig;
 import com.spoiledit.activities.SplashActivity;
+import com.spoiledit.models.ProfileModel;
 import com.spoiledit.models.UserModel;
 import com.spoiledit.networks.VolleyProvider;
 
@@ -91,11 +92,22 @@ public final class PreferenceUtils {
         saveString(context, KEY_USER_MODEL, new Gson().toJson(userModel, UserModel.class));
     }
 
+    public static void updateUserModel(Context context, ProfileModel profileModel) {
+        profileModel.setUrl(getUserModel(context).getUrl());
+        saveString(context, KEY_USER_MODEL, new Gson().toJson(profileModel.toUserModel(), UserModel.class));
+    }
+
     public static String getOtp(Context context) {
         return getString(context, KEY_CURRENT_OTP);
     }
 
     public static void saveLoginOtp(Context context, String currentOtp) {
         saveString(context, KEY_CURRENT_OTP, currentOtp);
+    }
+
+    public static void updateProfilePicPath(Context context, String filePath) {
+        UserModel userModel = getUserModel(context);
+        userModel.setUrl(filePath);
+        saveUserModel(context, userModel);
     }
 }

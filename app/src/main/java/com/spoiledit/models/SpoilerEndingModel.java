@@ -1,6 +1,6 @@
 package com.spoiledit.models;
 
-public class SpoilerEndingModel extends SpoilerModel {
+public class SpoilerEndingModel extends MovieSpoilerModel {
 
     public SpoilerEndingModel() {
 

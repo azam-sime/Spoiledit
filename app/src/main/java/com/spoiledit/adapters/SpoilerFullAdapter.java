@@ -1,6 +1,7 @@
 package com.spoiledit.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.spoiledit.R;
 import com.spoiledit.listeners.OnItemSelectionListener;
 import com.spoiledit.models.SpoilerFullModel;
 import com.spoiledit.utils.ViewUtils;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,7 +93,7 @@ public class SpoilerFullAdapter extends RootSelectionAdapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new SpoilerFullViewHolder(LayoutInflater.from(context).inflate(R.layout.row_spoilers,
+        return new SpoilerFullViewHolder(LayoutInflater.from(context).inflate(R.layout.row_movie_spoilers,
                 parent, false));
     }
 
@@ -103,19 +105,20 @@ public class SpoilerFullAdapter extends RootSelectionAdapter {
 
             ViewUtils.changeProgressMode(spoilerModel.isSelected(), viewHolder.loadingBar);
 
-//            Picasso.get().load(spoilerModel.getPosterPath()).into(viewHolder.ivPoster,
-//                    new Callback() {
-//                        @Override
-//                        public void onSuccess() {
-//                            LogUtils.logResponse("Image preview successful.");
-//                        }
-//
-//                        @Override
-//                        public void onError(Exception e) {
-//                            LogUtils.logError(e.getMessage());
-//                            viewHolder.ivPoster.setImageResource(R.drawable.popcorn);
-//                        }
-//                    });
+            viewHolder.tvUserName.setText(spoilerModel.getDisplayName());
+            viewHolder.tvSpoiler.setText(spoilerModel.getSpoiler());
+            viewHolder.tvDate.setText(spoilerModel.getCratedOn());
+            viewHolder.tvThumbsUp.setText("(" + spoilerModel.getThumbsUp() + ")");
+            viewHolder.tvThumbsDown.setText("(" + spoilerModel.getThumbsDown() + ")");
+            viewHolder.itemView.setBackgroundColor(spoilerModel.isDarkBackground()
+                    ? Color.parseColor("#F3F3F3") : Color.parseColor("#FFFFFF"));
+
+            Picasso.get()
+                    .load(spoilerModel.getAvatarUrl())
+                    .resize(60, 60)
+                    .centerCrop()
+                    .error(context.getResources().getDrawable(R.drawable.popcorn))
+                    .into(viewHolder.rivUser);
         }
     }
 

@@ -10,14 +10,15 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.tabs.TabLayout;
 import com.spoiledit.R;
 import com.spoiledit.adapters.ViewPagerAdapter;
 import com.spoiledit.fragments.MoviesFragment;
-import com.spoiledit.fragments.SettingsFragment;
-import com.spoiledit.fragments.SpoilersFragment;
+import com.spoiledit.fragments.SpoilersNewFragment;
 import com.spoiledit.listeners.PagerChangeListener;
 import com.spoiledit.repos.DashboardRepo;
+import com.spoiledit.utils.ViewUtils;
 import com.spoiledit.viewmodels.DashboardViewModel;
 
 public class DashboardActivity extends RootActivity {
@@ -28,20 +29,22 @@ public class DashboardActivity extends RootActivity {
 
     private TabLayout tabLayout;
     private BottomNavigationView bnvDashboard;
+    private MaterialCardView mcvSearchBar;
+
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
 
     private MoviesFragment moviesFragment;
-    private SpoilersFragment spoilersFragment;
-//    private SettingsFragment settingsFragment;
+    private SpoilersNewFragment spoilersNewFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         dashboardViewModel = ViewModelProviders.of(this,
-                new DashboardViewModel.DashboardViewModelFactory(DashboardRepo.initialise(this)))
+                new DashboardViewModel.DashboardViewModelFactory(DashboardRepo.initialise()))
                 .get(DashboardViewModel.class);
+
         setContentView(R.layout.activity_dashboard);
     }
 
@@ -56,6 +59,8 @@ public class DashboardActivity extends RootActivity {
 
         tabLayout = findViewById(R.id.tl_dashboard);
         bnvDashboard = findViewById(R.id.bnv_dashboard);
+        mcvSearchBar = findViewById(R.id.mcv_searchbar);
+
         viewPager = findViewById(R.id.vp_dashboard);
     }
 
@@ -65,15 +70,16 @@ public class DashboardActivity extends RootActivity {
 
         bnvDashboard.setOnNavigationItemSelectedListener(menuItem -> {
             if (menuItem.getItemId() == R.id.menu_movies) {
+                ViewUtils.showViews(tabLayout, mcvSearchBar);
                 viewPager.setCurrentItem(0, true);
+
                 return true;
             } else if (menuItem.getItemId() == R.id.menu_spoilers) {
+                ViewUtils.invisibleViews(tabLayout, mcvSearchBar);
                 viewPager.setCurrentItem(1, true);
+
                 return true;
-            } /*else if (menuItem.getItemId() == R.id.menu_settings) {
-                viewPager.setCurrentItem(2, true);
-                return true;
-            }*/
+            }
             return false;
         });
     }
@@ -82,23 +88,21 @@ public class DashboardActivity extends RootActivity {
     public void setUpViewPager() {
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(2);
         viewPager.addOnPageChangeListener(new PagerChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                bnvDashboard.setSelectedItemId(position == 0 ? R.id.menu_movies
-                        : /*position == 1 ?*/ R.id.menu_spoilers /*: R.id.menu_settings*/);
+                boolean onMovies = position == 0;
+                ViewUtils.toggleViewVisibility(true, onMovies, tabLayout, mcvSearchBar);
+                bnvDashboard.setSelectedItemId(onMovies ? R.id.menu_movies : R.id.menu_spoilers);
             }
         });
 
         moviesFragment = new MoviesFragment();
         viewPagerAdapter.addFragment(moviesFragment, getResString(R.string.movies));
 
-        spoilersFragment = new SpoilersFragment();
-        viewPagerAdapter.addFragment(spoilersFragment, getResString(R.string.spoilers));
-
-//        settingsFragment = new SettingsFragment();
-//        viewPagerAdapter.addFragment(settingsFragment, getResString(R.string.settings));
+        spoilersNewFragment = new SpoilersNewFragment();
+        viewPagerAdapter.addFragment(spoilersNewFragment, getResString(R.string.spoilers));
 
         viewPager.setAdapter(viewPagerAdapter);
     }
@@ -111,7 +115,24 @@ public class DashboardActivity extends RootActivity {
             super.onClick(v);
     }
 
+    public void switchMoviesFragment(boolean switchToWatchList) {
+
+    }
+
     public TabLayout getTabLayout() {
         return tabLayout;
+    }
+
+    public void closeDrawer() {
+        drawerLayout.closeDrawer(GravityCompat.START);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (viewPager.getCurrentItem() == 1) {
+            ViewUtils.showViews(bnvDashboard);
+            bnvDashboard.setSelectedItemId(R.id.menu_movies);
+        } else
+            super.onBackPressed();
     }
 }

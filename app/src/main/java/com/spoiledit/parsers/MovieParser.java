@@ -2,7 +2,7 @@ package com.spoiledit.parsers;
 
 import android.os.AsyncTask;
 
-import com.spoiledit.models.MovieModel;
+import com.spoiledit.models.MovieDetailsModel;
 import com.spoiledit.models.MoviePopularModel;
 import com.spoiledit.models.MovieRecentModel;
 import com.spoiledit.models.MovieUpcomingModel;
@@ -16,6 +16,58 @@ import java.util.List;
 
 public class MovieParser {
     public static final String TAG = MovieParser.class.getCanonicalName();
+
+
+
+    public static class DetailsParser extends AsyncTask<JSONObject, Void, MovieDetailsModel> {
+        public static final String TAG = PopularsParser.class.getCanonicalName();
+
+        @Override
+        protected MovieDetailsModel doInBackground(JSONObject... jsonObjects) {
+            MovieDetailsModel movieDetailsModel = new MovieDetailsModel();
+            try {
+                JSONObject dataObject = jsonObjects[0].optJSONObject("data");
+
+                JSONObject movieObject = dataObject.optJSONObject("moviedata");
+                movieDetailsModel.setId(movieObject.optInt("id"));
+                movieDetailsModel.setTitle(movieObject.optString("title"));
+                movieDetailsModel.setReleaseDate(movieObject.optString("release_date"));
+                movieDetailsModel.setGenresStr(movieObject.optString("genres"));
+
+                movieDetailsModel.setRunTime(movieObject.optString("runtime"));
+                movieDetailsModel.setYoutubeId(movieObject.optString("youtube_id"));
+                movieDetailsModel.setPosterPath(movieObject.optString("poster_path"));
+                movieDetailsModel.setOverview(movieObject.optString("overview"));
+                movieDetailsModel.setVoteAverage(Math.round((float) movieObject.optDouble("vote_average")));
+
+                JSONObject directorsObject = movieObject.optJSONObject("director");
+                List<String> directors = new ArrayList<>();
+                if (directorsObject != null) {
+                    Iterator<String> iterator = directorsObject.keys();
+                    while (iterator.hasNext())
+                        directors.add(directorsObject.optString(iterator.next()));
+                }
+                movieDetailsModel.setDirectors(directors.toArray(new String[0]));
+
+                JSONObject castsObject = movieObject.optJSONObject("stars");
+                List<String> casts = new ArrayList<>();
+                if (castsObject != null) {
+                    Iterator<String> iterator = castsObject.keys();
+                    while (iterator.hasNext())
+                        casts.add(castsObject.optString(iterator.next()));
+                }
+                movieDetailsModel.setCasts(casts.toArray(new String[0]));
+                movieDetailsModel.setPgNames(movieObject.optString("pg_names"));
+                movieDetailsModel.setMidCreditScene(dataObject.optJSONObject("midcreditscene").optString("value"));
+                movieDetailsModel.setPostCreditScene(dataObject.optJSONObject("getstinger").optString("value"));
+                movieDetailsModel.setBuyNowLink(dataObject.optString("byenow"));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return movieDetailsModel;
+        }
+    }
 
 
 
@@ -166,58 +218,54 @@ public class MovieParser {
         protected List<MovieUpcomingModel> doInBackground(JSONObject... jsonObjects) {
             List<MovieUpcomingModel> movieUpcomingModels = new ArrayList<>();
             try {
-                JSONObject dataObject = jsonObjects[0].optJSONObject("data");
-                if (dataObject != null) {
+                JSONArray dataArray = jsonObjects[0].optJSONArray("data");
+                if (dataArray != null) {
 
-                    JSONArray dataArray = dataObject.optJSONArray("data");
-                    if (dataArray != null) {
+                    int l = dataArray.length();
+                    for (int i = 0; i < l; i++) {
 
-                        int l = dataArray.length();
-                        for (int i = 0; i < l; i++) {
+                        JSONObject movieObject = dataArray.optJSONObject(i);
+                        MovieUpcomingModel upcomingModel = new MovieUpcomingModel();
+                        upcomingModel.setId(movieObject.optInt("id"));
 
-                            JSONObject movieObject = dataArray.optJSONObject(i);
-                            MovieUpcomingModel upcomingModel = new MovieUpcomingModel();
-                            upcomingModel.setId(movieObject.optInt("id"));
-
-                            JSONObject castsObject = movieObject.optJSONObject("stars");
-                            List<String> casts = new ArrayList<>();
-                            if (castsObject != null) {
-                                Iterator<String> iterator = castsObject.keys();
-                                while (iterator.hasNext())
-                                    casts.add(iterator.next());
-                            }
-                            upcomingModel.setCasts(casts.toArray(new String[0]));
-
-                            JSONObject directorsObject = movieObject.optJSONObject("director");
-                            List<String> directors = new ArrayList<>();
-                            if (directorsObject != null) {
-                                Iterator<String> iterator = directorsObject.keys();
-                                while (iterator.hasNext())
-                                    directors.add(iterator.next());
-                            }
-                            upcomingModel.setDirectors(directors.toArray(new String[0]));
-
-                            JSONArray genreArray = movieObject.optJSONArray("genres");
-                            if (genreArray != null) {
-                                String[] genres = new String[genreArray.length()];
-                                for (int j = 0; j < genreArray.length(); j++)
-                                    genres[j] = genreArray.optString(j);
-                                upcomingModel.setGenres(genres);
-                            } else
-                                upcomingModel.setGenres(new String[0]);
-
-                            upcomingModel.setOverview(movieObject.optString("overview"));
-                            upcomingModel.setPgNames(movieObject.optString("pg_names"));
-                            upcomingModel.setPopularity(movieObject.optInt("popularity"));
-                            upcomingModel.setPosterPath(movieObject.optString("poster_path"));
-                            upcomingModel.setReleaseDate(movieObject.optString("release_date"));
-                            upcomingModel.setRunTime(movieObject.optString("runtime"));
-                            upcomingModel.setTitle(movieObject.optString("title"));
-                            upcomingModel.setTotalPages(movieObject.optInt("total_pages"));
-                            upcomingModel.setVoteAverage(movieObject.optInt("vote_average"));
-
-                            movieUpcomingModels.add(upcomingModel);
+                        JSONObject castsObject = movieObject.optJSONObject("stars");
+                        List<String> casts = new ArrayList<>();
+                        if (castsObject != null) {
+                            Iterator<String> iterator = castsObject.keys();
+                            while (iterator.hasNext())
+                                casts.add(iterator.next());
                         }
+                        upcomingModel.setCasts(casts.toArray(new String[0]));
+
+                        JSONObject directorsObject = movieObject.optJSONObject("director");
+                        List<String> directors = new ArrayList<>();
+                        if (directorsObject != null) {
+                            Iterator<String> iterator = directorsObject.keys();
+                            while (iterator.hasNext())
+                                directors.add(iterator.next());
+                        }
+                        upcomingModel.setDirectors(directors.toArray(new String[0]));
+
+                        JSONArray genreArray = movieObject.optJSONArray("genres");
+                        if (genreArray != null) {
+                            String[] genres = new String[genreArray.length()];
+                            for (int j = 0; j < genreArray.length(); j++)
+                                genres[j] = genreArray.optString(j);
+                            upcomingModel.setGenres(genres);
+                        } else
+                            upcomingModel.setGenres(new String[0]);
+
+                        upcomingModel.setOverview(movieObject.optString("overview"));
+                        upcomingModel.setPgNames(movieObject.optString("pg_names"));
+                        upcomingModel.setPopularity(movieObject.optInt("popularity"));
+                        upcomingModel.setPosterPath(movieObject.optString("poster_path"));
+                        upcomingModel.setReleaseDate(movieObject.optString("release_date"));
+                        upcomingModel.setRunTime(movieObject.optString("runtime"));
+                        upcomingModel.setTitle(movieObject.optString("title"));
+                        upcomingModel.setTotalPages(movieObject.optInt("total_pages"));
+                        upcomingModel.setVoteAverage(movieObject.optInt("vote_average"));
+
+                        movieUpcomingModels.add(upcomingModel);
                     }
                 }
             } catch (Exception e) {

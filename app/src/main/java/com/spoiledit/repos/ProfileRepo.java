@@ -2,149 +2,165 @@ package com.spoiledit.repos;
 
 import android.content.Context;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.android.volley.VolleyError;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Urls;
+import com.spoiledit.models.ProfileModel;
 import com.spoiledit.networks.VolleyProvider;
+import com.spoiledit.parsers.MovieParser;
 import com.spoiledit.parsers.UserParser;
 import com.spoiledit.utils.NetworkUtils;
 import com.spoiledit.utils.PreferenceUtils;
+import com.spoiledit.utils.StringUtils;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ProfileRepo extends RootRepo {
     public static final String TAG = ProfileRepo.class.getCanonicalName();
 
-    private Context context;
+    private MutableLiveData<ProfileModel> profileModelMutable;
 
-    public ProfileRepo(Context context) {
-        this.context = context;
+    public ProfileRepo() {
+        init();
 
-        init(context);
+        profileModelMutable = new MutableLiveData<>();
     }
 
-    public void requestLogin(String[] credentials) {
-        int api = Constants.Api.USER_LOGIN;
+    public MutableLiveData<ProfileModel> getProfileModelMutable() {
+        return profileModelMutable;
+    }
+
+    public void getProfileDetails() {
+        int api = Constants.Api.USER_PROFILE_GET;
         try {
-            apiRequestHit(api, "Requesting login...");
-            getVolleyProvider().executeMultipartRequest(
-                    Urls.USER_LOGIN.getUrl(),
-                    getParamsMap(api, credentials),
+            apiRequestHit(api, "Requesting profile details...");
+            getVolleyProvider().executeMultipartGetRequest(
+                    Urls.USER_PROFILE_GET.getUrl() + getUserModel().getId(),
                     new VolleyProvider.OnResponseListener<String>() {
                         @Override
                         public void onSuccess(String response) {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
-                                if (jsonObject.has("data")) {
-                                    PreferenceUtils.saveUserModel(context, new UserParser().execute(response).get());
-                                    apiRequestSuccess(api, "You have successfully logged in.");
-
-                                } else {
-                                    String message = jsonObject.optString("message");
-
-                                    if (jsonObject.optString("code").equals("200"))
-                                        apiRequestSuccess(api, message);
-                                    else {
-                                        if (jsonObject.optString("code").equals("invalid_email"))
-                                            message = "You have entered an un-registered username!";
-                                        else if (jsonObject.optString("code").equals("incorrect_password"))
-                                            message = "You have entered an incorrect password!";
-                                        apiRequestFailure(api, message);
-                                    }
-                                }
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                apiRequestFailure(api, NetworkUtils.getErrorString(e));
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(VolleyError volleyError) {
-                            // For invalid user creds, there is an 500 server error
-                            // hence, trying to fetch coded message from server from volley error
-                            try {
-                                JSONObject jsonObject = NetworkUtils.getErrorJson(volleyError);
-                                String message = "";
-                                if (jsonObject != null) {
-                                    message = jsonObject.optString("message");
-
-                                    if (jsonObject.optString("code").equals("200"))
-                                        apiRequestSuccess(api, message);
-                                    else {
-                                        if (jsonObject.optString("code").equals("invalid_email"))
-                                            message = "You have entered an un-registered username!";
-                                        else if (jsonObject.optString("code").equals("incorrect_password"))
-                                            message = "You have entered an incorrect password!";
-                                    }
-                                }
-                                apiRequestFailure(api, message);
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                apiRequestFailure(api, NetworkUtils.getErrorString(e));
-                            }
-                        }
-                    }, false, true);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            apiRequestFailure(api, NetworkUtils.getErrorString(e));
-        }
-    }
-
-    public void requestPassword(String[] values) {
-        int api = Constants.Api.PASSWORD_FORGOT;
-        try {
-            apiRequestHit(api, "Requesting password change...");
-            getVolleyProvider().executeMultipartRequest(
-                    Urls.PASSWORD_FORGOT.getUrl(),
-                    getParamsMap(api, values),
-                    new VolleyProvider.OnResponseListener<String>() {
-                        @Override
-                        public void onSuccess(String response) {
-                            try {
-                                JSONObject jsonObject = new JSONObject(response);
-                                if (jsonObject.optBoolean("error"))
-                                    apiRequestFailure(api, jsonObject.optString("message"));
-                                else
+                                if (isRequestSuccess(jsonObject)) {
+                                    profileModelMutable.postValue(new UserParser.ProfileParser()
+                                            .execute(jsonObject).get());
                                     apiRequestSuccess(api, jsonObject.optString("message"));
+                                } else
+                                    postError(api, jsonObject);
 
                             } catch (Exception e) {
-                                e.printStackTrace();
-                                apiRequestFailure(api, NetworkUtils.getErrorString(e));
+                                onException(api, e);
                             }
                         }
 
                         @Override
                         public void onFailure(VolleyError volleyError) {
-                            apiRequestFailure(api, NetworkUtils.getErrorString(volleyError));
+                            try {
+                                apiRequestFailure(api, getErrorFromVolleyAsJson(volleyError));
+                            } catch (Exception e) {
+                                onException(api, e);
+                            }
                         }
                     }, false, true);
 
         } catch (Exception e) {
-            e.printStackTrace();
-            apiRequestFailure(api, NetworkUtils.getErrorString(e));
+            onException(api, e);
         }
     }
 
-    private Map<String, String> getParamsMap(int api, String[] values) {
-        Map<String, String> hashMap = new HashMap<>();
+    public void updateProfile(String name, String email, String phone) {
+        int api = Constants.Api.USER_PROFILE_UPDATE;
         try {
-            if (api == Constants.Api.USER_LOGIN) {
-                hashMap.put("username", values[0]);
-                hashMap.put("password", values[1]);
+            apiRequestHit(api, "Updating details....");
+            getVolleyProvider().executeMultipartRequest(
+                    Urls.USER_PROFILE_UPDATE.getUrl(),
+                    getParams(name, email, phone),
+                    new VolleyProvider.OnResponseListener<String>() {
+                        @Override
+                        public void onSuccess(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                if (isRequestSuccess(jsonObject)) {
+                                    apiRequestSuccess(api, jsonObject.optString("message"));
+                                } else
+                                    postError(api, jsonObject);
 
-            } else if (api == Constants.Api.PASSWORD_FORGOT) {
-                hashMap.put("email", values[0]);
-            }
+                            } catch (Exception e) {
+                                onException(api, e);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(VolleyError volleyError) {
+                            try {
+                                apiRequestFailure(api, getErrorFromVolleyAsJson(volleyError));
+                            } catch (Exception e) {
+                                onException(api, e);
+                            }
+                        }
+                    }, false, true);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            onException(api, e);
         }
-        return hashMap;
+    }
+
+    public Map<String, String> getParams(String name, String email, String phone) {
+        Map<String, String> map = new HashMap<>();
+        map.put("name", name);
+        map.put("email", email);
+        map.put("phone", phone);
+
+        return map;
+    }
+
+    public void updateProfilePic(String filePath) {
+        int api = Constants.Api.USER_AVATAR_UPDATE;
+        try {
+            apiRequestHit(api, "Updating details....");
+
+            HashMap<String, String> params = new HashMap<>();
+            params.put("user_id", StringUtils.asString(getUserModel().getId()));
+
+            HashMap<String, File> files = new HashMap<>();
+            files.put("profile-pic", new File(filePath));
+
+            getVolleyProvider().executeMultipartRequest(
+                    Urls.USER_AVATAR_UPDATE.getUrl(),
+                    params, files,
+                    new VolleyProvider.OnResponseListener<String>() {
+                        @Override
+                        public void onSuccess(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                if (isRequestSuccess(jsonObject)) {
+                                    apiRequestSuccess(api, jsonObject.optString("data"));
+                                } else
+                                    postError(api, jsonObject);
+
+                            } catch (Exception e) {
+                                onException(api, e);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(VolleyError volleyError) {
+                            try {
+                                apiRequestFailure(api, getErrorFromVolleyAsJson(volleyError));
+                            } catch (Exception e) {
+                                onException(api, e);
+                            }
+                        }
+                    }, false, true);
+
+        } catch (Exception e) {
+            onException(api, e);
+        }
     }
 }

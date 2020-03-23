@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_8"
+        android:orientation="horizontal">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing_4"
+            app:cardBackgroundColor="@color/colorWhite"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="6dp">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="132dp"
+                android:contentDescription="@string/content_description"
+                android:src="@drawable/popcorn"
+                android:id="@+id/iv_poster"/>
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/spacing_8"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_4"
+                tools:text="The Aftermath"
+                android:textSize="@dimen/text_18"
+                android:maxLines="1"
+                android:fontFamily="@font/montserrat_bold"
+                android:textColor="@color/colorBlack"
+                android:id="@+id/tv_title"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_4"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/category"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:textColor="@color/colorBlack" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_4"
+                    android:layout_marginEnd="@dimen/spacing_4"
+                    android:text="@string/char_hyphen"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:textColor="@color/colorBlack" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Brief Summary"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:textColor="@color/colorBlack"
+                    android:id="@+id/tv_category"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_4"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mid_credit_scene"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:textColor="@color/colorBlack" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_4"
+                    android:layout_marginEnd="@dimen/spacing_4"
+                    android:text="@string/char_hyphen"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:textColor="@color/colorBlack" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Not Sure"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:textColor="@color/colorBlack"
+                    android:id="@+id/tv_mid_credit"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_4"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/post_credit_scene"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:textColor="@color/colorBlack" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_4"
+                    android:layout_marginEnd="@dimen/spacing_4"
+                    android:text="@string/char_hyphen"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:textColor="@color/colorBlack" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Not Sure"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:textColor="@color/colorBlack"
+                    android:id="@+id/tv_post_credit"/>
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/go_to_spoiler"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                android:id="@+id/btn_goto_spoiler" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:progressBarStyleLarge"
+        android:layout_gravity="center"
+        android:id="@+id/pb_loading" />
+</FrameLayout>

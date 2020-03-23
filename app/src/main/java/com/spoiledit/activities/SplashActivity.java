@@ -50,14 +50,14 @@ public class SplashActivity extends RootActivity {
 
     @Override
     public void addObservers() {
-        getNetworkMutable().observe(this, available -> {
-            runOnUiAfterMillis(() -> {
-                if (available)
-                    splashViewModel.requestToken();
-                else
-                    showFailure("Seems you don't have internet connectivity! Please ensure 'Internet's On'.");
-            }, 2000);
-        });
+//        getNetworkMutable().observe(this, available -> {
+//            runOnUiAfterMillis(() -> {
+//                if (available)
+//                    splashViewModel.requestToken();
+//                else
+//                    showFailure("Seems you don't have internet connectivity! Please ensure 'Internet's On'.");
+//            }, 2000);
+//        });
 
         splashViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
             if (apiStatusModel.getApi() == Constants.Api.TOKEN) {
@@ -75,8 +75,11 @@ public class SplashActivity extends RootActivity {
                             break;
                         case Status.Login.REQUIRE_SIGN_IN_NOT_CREDS:
                         case Status.Login.REQUIRE_SIGN_IN_AND_CREDS:
-                        case Status.Login.REQUIRE_SIGN_UP:
                             startActivity(new Intent(this, SignInActivity.class));
+                            finish();
+                            break;
+                        case Status.Login.REQUIRE_SIGN_UP:
+                            startActivity(new Intent(this, SignUpActivity.class));
                             finish();
                             break;
                     }
@@ -85,5 +88,10 @@ public class SplashActivity extends RootActivity {
                     showFailure(apiStatusModel.getMessage());
             }
         });
+    }
+
+    @Override
+    public void requestData() {
+        splashViewModel.requestToken();
     }
 }

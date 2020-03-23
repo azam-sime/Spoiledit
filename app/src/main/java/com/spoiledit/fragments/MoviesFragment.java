@@ -14,13 +14,9 @@ import com.google.android.material.tabs.TabLayout;
 import com.spoiledit.R;
 import com.spoiledit.activities.DashboardActivity;
 import com.spoiledit.adapters.ViewPagerAdapter;
-import com.spoiledit.repos.MoviesRepo;
-import com.spoiledit.viewmodels.MoviesViewModel;
 
 public class MoviesFragment extends RootFragment {
     public static final String TAG = MoviesFragment.class.getCanonicalName();
-
-    private MoviesViewModel moviesViewModel;
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -33,10 +29,6 @@ public class MoviesFragment extends RootFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        moviesViewModel = ViewModelProviders.of(this,
-                new MoviesViewModel.MoviesViewModelFactory(MoviesRepo.initialise()))
-                .get(MoviesViewModel.class);
     }
 
     @Nullable

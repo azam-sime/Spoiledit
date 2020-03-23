@@ -31,24 +31,24 @@ public class MultipartRequest extends StringRequest {
     private static final String FILE_BODY_KEY = "files[]";
 
     private Map<String, String> params;
-    private List<File> files;
+    private Map<String, File> files;
     private Response.Listener<String> stringListener;
     private Response.ErrorListener errorListener;
 
     private HttpEntity httpEntity;
 
-    public MultipartRequest(String serverUrl, Map<String, String> params, List<File> files,
+    public MultipartRequest(String serverUrl, Map<String, String> params, Map<String, File> files,
                             Response.Listener<String> stringListener, Response.ErrorListener errorListener) {
         this(Method.POST, serverUrl, params, files, stringListener, errorListener);
     }
 
-    public MultipartRequest(String serverUrl, List<File> files,
-                             Response.Listener<String> stringListener, Response.ErrorListener errorListener) {
+    public MultipartRequest(String serverUrl, Map<String, File> files,
+                            Response.Listener<String> stringListener, Response.ErrorListener errorListener) {
         this(Method.GET, serverUrl, null, files, stringListener, errorListener);
     }
 
-    private MultipartRequest(int method, String serverUrl, Map<String, String> params, List<File> files,
-                            Response.Listener<String> stringListener, Response.ErrorListener errorListener) {
+    private MultipartRequest(int method, String serverUrl, Map<String, String> params, Map<String, File> files,
+                             Response.Listener<String> stringListener, Response.ErrorListener errorListener) {
         super(method, serverUrl, stringListener, errorListener);
 
         this.params = params;
@@ -63,8 +63,8 @@ public class MultipartRequest extends StringRequest {
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
         if (files != null && files.size() > 0) {
-            for (int i = 0; i < files.size(); i++) {
-                builder.addPart(FILE_BODY_KEY, new FileBody(files.get(i)));
+            for (String key : files.keySet()) {
+                builder.addPart(key, new FileBody(files.get(key)));
             }
         }
 

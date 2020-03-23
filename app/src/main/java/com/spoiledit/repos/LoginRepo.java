@@ -57,42 +57,22 @@ public class LoginRepo extends RootRepo {
                                 }
 
                             } catch (Exception e) {
-                                e.printStackTrace();
-                                apiRequestFailure(api, NetworkUtils.getErrorString(e));
+                                onException(api, e);
                             }
                         }
 
                         @Override
                         public void onFailure(VolleyError volleyError) {
-                            // For invalid user creds, there is an 500 server error
-                            // hence, trying to fetch coded message from server from volley error
                             try {
-                                JSONObject jsonObject = NetworkUtils.getErrorJson(volleyError);
-                                String message = "";
-                                if (jsonObject != null) {
-                                    message = jsonObject.optString("message");
-
-                                    if (jsonObject.optString("code").equals("200"))
-                                        apiRequestSuccess(api, message);
-                                    else {
-                                        if (jsonObject.optString("code").equals("invalid_email"))
-                                            message = "You have entered an un-registered username!";
-                                        else if (jsonObject.optString("code").equals("incorrect_password"))
-                                            message = "You have entered an incorrect password!";
-                                    }
-                                }
-                                apiRequestFailure(api, message);
-
+                                apiRequestFailure(api, getErrorFromVolleyAsJson(volleyError));
                             } catch (Exception e) {
-                                e.printStackTrace();
-                                apiRequestFailure(api, NetworkUtils.getErrorString(e));
+                                onException(api, e);
                             }
                         }
                     }, false, true);
 
         } catch (Exception e) {
-            e.printStackTrace();
-            apiRequestFailure(api, NetworkUtils.getErrorString(e));
+            onException(api, e);
         }
     }
 
@@ -108,26 +88,28 @@ public class LoginRepo extends RootRepo {
                         public void onSuccess(String response) {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
-                                if (jsonObject.optBoolean("error"))
-                                    apiRequestFailure(api, jsonObject.optString("message"));
-                                else
+                                if (isRequestSuccess(jsonObject))
                                     apiRequestSuccess(api, jsonObject.optString("message"));
+                                else
+                                    postError(api, jsonObject);
 
                             } catch (Exception e) {
-                                e.printStackTrace();
-                                apiRequestFailure(api, NetworkUtils.getErrorString(e));
+                                onException(api, e);
                             }
                         }
 
                         @Override
                         public void onFailure(VolleyError volleyError) {
-                            apiRequestFailure(api, NetworkUtils.getErrorString(volleyError));
+                            try {
+                                apiRequestFailure(api, getErrorFromVolleyAsJson(volleyError));
+                            } catch (Exception e) {
+                                onException(api, e);
+                            }
                         }
                     }, false, true);
 
         } catch (Exception e) {
-            e.printStackTrace();
-            apiRequestFailure(api, NetworkUtils.getErrorString(e));
+            onException(api, e);
         }
     }
 
