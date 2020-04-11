@@ -14,9 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.spoiledit.R;
+import com.spoiledit.activities.DetailsSpoilersActivity;
 import com.spoiledit.adapters.SpoilersNewAdapter;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
+import com.spoiledit.repos.DetailsSpoilerRepo;
 import com.spoiledit.utils.LogUtils;
 import com.spoiledit.utils.ViewUtils;
 import com.spoiledit.viewmodels.DashboardViewModel;
@@ -56,10 +58,11 @@ public class SpoilersNewFragment extends RootFragment {
         RecyclerView recyclerView = view.findViewById(R.id.rv_spoilers);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        spoilersNewAdapter = new SpoilersNewAdapter(getContext(),
-                (lastSelection, currentSelection) -> {
-                    LogUtils.logInfo(TAG, spoilersNewAdapter.getItemAt(currentSelection).toString());
-                });
+        spoilersNewAdapter = new SpoilersNewAdapter(getContext(), (lastSelection, currentSelection) -> {
+            DetailsSpoilerRepo.initialise(spoilersNewAdapter.getItemAt(currentSelection).getmId());
+            startActivity(new Intent(getContext(), DetailsSpoilersActivity.class));
+            spoilersNewAdapter.removeLastSelection();
+        });
 
         recyclerView.setAdapter(spoilersNewAdapter);
         ViewUtils.addFabOffset(getContext(), recyclerView);
@@ -72,14 +75,12 @@ public class SpoilersNewFragment extends RootFragment {
         dashboardViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
             if (apiStatusModel.getApi() == Constants.Api.SPOILERS_NEW) {
                 if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
-                    showLoader(apiStatusModel.getMessage());
-
-                } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
-                    hideLoader();
-
+                    if (!swipeRefreshLayout.isRefreshing())
+                        showLoader(apiStatusModel.getMessage());
                 } else {
                     hideLoader();
-                    showFailure(false, apiStatusModel.getMessage());
+                    if (apiStatusModel.getStatus() == Status.Request.API_ERROR)
+                        showFailure(false, apiStatusModel.getMessage());
                 }
             }
         });
@@ -108,12 +109,7 @@ public class SpoilersNewFragment extends RootFragment {
 
     @Override
     public void onRefresh() {
-        requestData();
-    }
-
-    @Override
-    public void gotoNextScreen() {
-
+        dashboardViewModel.requestSpoilers();
     }
 
     @Override

@@ -12,8 +12,6 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.button.MaterialButton;
 import com.spoiledit.R;
-import com.spoiledit.activities.VerifyOtpActivity;
-import com.spoiledit.constants.App;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
 import com.spoiledit.utils.InputUtils;
@@ -29,6 +27,12 @@ public class ForgotPasswordFragment extends RootFragment {
     private EditText etEmail;
     private MaterialButton btnSubmit;
 
+    private OnVerifyOtpListener onVerifyOtpListener;
+
+    public ForgotPasswordFragment(OnVerifyOtpListener onVerifyOtpListener) {
+        this.onVerifyOtpListener = onVerifyOtpListener;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +47,7 @@ public class ForgotPasswordFragment extends RootFragment {
     }
 
     @Override
-    public void setUpToolbar(View view) {
+    public void setUpToolbar() {
 
     }
 
@@ -62,14 +66,9 @@ public class ForgotPasswordFragment extends RootFragment {
     }
 
     @Override
-    public void setData(View view) {
-
-    }
-
-    @Override
     public void addObservers() {
         loginViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
-            if (apiStatusModel.getApi() == Constants.Api.PASSWORD_FORGOT) {
+            if (apiStatusModel.getApi() == Constants.Api.OTP_FORGOT_PASSWORD) {
                 if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
                     toggleViews(false);
                     showLoader(apiStatusModel.getMessage());
@@ -82,7 +81,10 @@ public class ForgotPasswordFragment extends RootFragment {
                 } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
                     toggleViews(false);
                     hideLoader();
-                    showSuccess(false, apiStatusModel.getMessage(), this::gotoNextScreen);
+                    showSuccess(false, apiStatusModel.getMessage(), () -> {
+                        if (onVerifyOtpListener != null)
+                            onVerifyOtpListener.onOtpVerificationClicked(true, etEmail.getText().toString().trim());
+                    });
                 }
             }
         });
@@ -108,21 +110,12 @@ public class ForgotPasswordFragment extends RootFragment {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_submit) {
-            if (isRequestValid()) {
-                String[] values = new String[]{etEmail.getText().toString()};
-                loginViewModel.requestPassword(values);
-            }
+            if (isRequestValid())
+                loginViewModel.requestForgotPasswordOtp(new String[]{etEmail.getText().toString()});
         }
     }
 
-    @Override
-    public void gotoNextScreen() {
-        android.content.Intent intent = new android.content.Intent(getActivity(), VerifyOtpActivity.class);
-        intent.putExtra(App.Intent.Extra.OTP_FOR, App.Intent.Value.OTP_FOR_VERIFICATION);
-        intent.putExtra(App.Intent.Extra.OTP_SENT_TO, App.Intent.Value.OTP_SENT_TO_MAIL);
-        intent.putExtra(App.Intent.Extra.OTP_SENT_TO_ADDRESS, etEmail.getText().toString().trim());
-        startActivity(intent);
-
-        getActivity().finish();
+    public interface OnVerifyOtpListener {
+        void onOtpVerificationClicked(boolean sentToMail, String sentToAddress);
     }
 }

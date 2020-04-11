@@ -4,10 +4,8 @@ import android.content.Context;
 
 import com.android.volley.VolleyError;
 import com.spoiledit.constants.Constants;
-import com.spoiledit.constants.Status;
 import com.spoiledit.constants.Urls;
 import com.spoiledit.networks.VolleyProvider;
-import com.spoiledit.utils.NetworkUtils;
 import com.spoiledit.utils.PreferenceUtils;
 
 import org.json.JSONObject;
@@ -42,25 +40,25 @@ public class SignUpRepo extends RootRepo {
                                     PreferenceUtils.saveLoginOtp(context, jsonObject.optJSONObject("data").optString("otp"));
                                     apiRequestSuccess(api, jsonObject.optString("message"));
                                 } else
-                                    postError(api, jsonObject);
+                                    setRequestStatusFailed(api, jsonObject);
 
                             } catch (Exception e) {
-                                onException(api, e);
+                                setExceptionOccured(api, e);
                             }
                         }
 
                         @Override
                         public void onFailure(VolleyError volleyError) {
                             try {
-                                apiRequestFailure(api, getErrorFromVolleyAsJson(volleyError));
+                                apiRequestFailure(api, getMessageFromVolleyAsJson(volleyError));
                             } catch (Exception e) {
-                                onException(api, e);
+                                setExceptionOccured(api, e);
                             }
                         }
                     },false, true);
 
         } catch (Exception e) {
-            onException(api, e);
+            setExceptionOccured(api, e);
         }
     }
 
@@ -74,7 +72,7 @@ public class SignUpRepo extends RootRepo {
                 hashMap.put("name", values[2]);
                 hashMap.put("phone", values[3]);
 
-            } else if (api == Constants.Api.T_AND_C) {
+            } else if (api == Constants.Api.PROVIDER_TERMS_CONDITIONS) {
                 hashMap.put("email", values[0]);
             }
 

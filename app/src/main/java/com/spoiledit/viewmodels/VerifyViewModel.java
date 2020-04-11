@@ -19,22 +19,18 @@ public class VerifyViewModel extends ViewModel {
         return verifyRepo.getApiStatusModelMutable();
     }
 
-    public void requestOtpRegistration(String[] values) {
+    public void verifyRegistrationOtp(String[] values) {
         verifyRepo.requestOtpRegistration(values);
     }
 
-    public void requestOtpVerification(String[] values) {
+    public void verifyForgotPasswordOtp(String[] values) {
         verifyRepo.requestOtpVerification(values);
     }
 
-    public void requestUpdatePassword(String[] values) {
-        verifyRepo.requestUpdatePassword(values);
-    }
-
-    public static final class VerifyViewModelFactory implements ViewModelProvider.Factory {
+    public static final class Factory implements ViewModelProvider.Factory {
         private VerifyRepo verifyRepo;
 
-        public VerifyViewModelFactory(VerifyRepo verifyRepo) {
+        public Factory(VerifyRepo verifyRepo) {
             this.verifyRepo = verifyRepo;
         }
 

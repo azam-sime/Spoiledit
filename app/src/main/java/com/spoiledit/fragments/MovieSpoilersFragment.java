@@ -18,16 +18,15 @@ import com.spoiledit.R;
 import com.spoiledit.activities.AddSpoilerActivity;
 import com.spoiledit.activities.DetailsMovieActivity;
 import com.spoiledit.adapters.ViewPagerAdapter;
+import com.spoiledit.constants.App;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
-import com.spoiledit.models.CreateSpoilerModel;
-import com.spoiledit.utils.PreferenceUtils;
-import com.spoiledit.viewmodels.DetailsMovieViewModel;
+import com.spoiledit.viewmodels.DetailsSpoilersViewModel;
 
 public class MovieSpoilersFragment extends RootFragment {
     public static final String TAG = MovieSpoilersFragment.class.getCanonicalName();
 
-    private DetailsMovieViewModel detailsMovieViewModel;
+    private DetailsSpoilersViewModel detailsSpoilersViewModel;
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -43,13 +42,18 @@ public class MovieSpoilersFragment extends RootFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        detailsMovieViewModel = ViewModelProviders.of(getActivity()).get(DetailsMovieViewModel.class);
+        detailsSpoilersViewModel = ViewModelProviders.of(getActivity()).get(DetailsSpoilersViewModel.class);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_movie_spoilers, container, false);
+    }
+
+    @Override
+    public void setUpToolbar() {
+        setupBackIconOnly();
     }
 
     @Override
@@ -88,7 +92,7 @@ public class MovieSpoilersFragment extends RootFragment {
 
     @Override
     public void addObservers() {
-        detailsMovieViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
+        detailsSpoilersViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
             if (apiStatusModel.getApi() == Constants.Api.SPOILERS_ADD) {
                 if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
                     toggleViews(false);
@@ -114,7 +118,7 @@ public class MovieSpoilersFragment extends RootFragment {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.fab_add_spoiler) {
-            startActivityForResult(new Intent(getContext(), AddSpoilerActivity.class), DetailsMovieActivity.REQUEST_ADD_SPOILER);
+            startActivityForResult(new Intent(getContext(), AddSpoilerActivity.class), App.Intent.Request.ADD_SPOILER);
         } else
             super.onClick(v);
     }
@@ -123,10 +127,10 @@ public class MovieSpoilersFragment extends RootFragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == DetailsMovieActivity.REQUEST_ADD_SPOILER) {
+        if (requestCode == App.Intent.Request.ADD_SPOILER) {
             if (resultCode == Activity.RESULT_OK) {
                 showLoader();
-                detailsMovieViewModel.addSpoilers(data.getParcelableExtra(AddSpoilerActivity.RESULT_EXTRA_MODEL));
+                detailsSpoilersViewModel.addSpoilers(data.getParcelableExtra(AddSpoilerActivity.RESULT_EXTRA_MODEL));
             }
         }
     }

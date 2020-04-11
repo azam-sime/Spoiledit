@@ -30,21 +30,31 @@
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity android:name=".activities.SignUpActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".activities.TCAndPPActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".activities.VerifyOtpActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".activities.DashboardActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".activities.AddSpoilerActivity"
+        <activity android:name=".activities.SearchActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".activities.DetailsSpoilerActivity"
+        <activity android:name=".activities.ProviderDetailsActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity android:name=".activities.AddSpoilerActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".activities.DetailsMovieActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".activities.ProfileActivity"
+        <activity android:name=".activities.DetailsSpoilersActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".activities.SpoilerCommentsActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity android:name=".activities.ProfileActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity android:name=".activities.ProfileEditActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity android:name=".activities.MyMoviesActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity android:name=".activities.MySpoilersActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity android:name=".activities.ChangePasswordActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <provider

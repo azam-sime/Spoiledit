@@ -33,8 +33,20 @@ public class CommentsViewModel extends ViewModel {
         commentsRepo.requestComments();
     }
 
-    public void sendMessage(int commentId, String message) {
-        commentsRepo.sendComment(commentId, message);
+    public void addComment(String comment) {
+        commentsRepo.addComment(comment);
+    }
+
+    public void editComment(int commentId, String newComment) {
+        commentsRepo.editComment(commentId, newComment);
+    }
+
+    public void replyComment(int commentId, String reply) {
+        commentsRepo.replyComment(commentId, reply);
+    }
+
+    public void removeComment(int commentId) {
+        commentsRepo.removeComment(commentId);
     }
 
     public void requestSpoilerDetails(int id) {

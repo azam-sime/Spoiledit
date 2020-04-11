@@ -1,73 +1,62 @@
-package com.spoiledit.fragments;
+package com.spoiledit.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.button.MaterialButton;
 import com.spoiledit.R;
-import com.spoiledit.activities.SignInActivity;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
+import com.spoiledit.repos.ProfileRepo;
 import com.spoiledit.utils.StringUtils;
 import com.spoiledit.utils.ViewUtils;
-import com.spoiledit.viewmodels.VerifyViewModel;
+import com.spoiledit.viewmodels.ChangePasswordViewModel;
 
-public class CreatePasswordFragment extends RootFragment {
-    public static final String TAG = CreatePasswordFragment.class.getCanonicalName();
+public class ChangePasswordActivity extends RootActivity {
+    public static final String TAG = ChangePasswordActivity.class.getCanonicalName();
 
-    private VerifyViewModel verifyViewModel;
+    private ChangePasswordViewModel changePasswordViewModel;
 
     private EditText etNewPassword, etCPassword;
     private MaterialButton btnSubmit;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        verifyViewModel = ViewModelProviders.of(getActivity()).get(VerifyViewModel.class);
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_create_password, container, false);
+        changePasswordViewModel = ViewModelProviders.of(this,
+                new ChangePasswordViewModel.Factory(new ProfileRepo.ChangePasswordRepo()))
+                .get(ChangePasswordViewModel.class);
+        setContentView(R.layout.activity_change_password);
     }
 
     @Override
-    public void setUpToolbar(View view) {
-//        setupToolBar(view, "Create Password");
+    public void setUpToolBar() {
+        setupToolBar("Change Password", true);
     }
 
     @Override
-    public void initUi(View view) {
-        etNewPassword = view.findViewById(R.id.et_new_password);
-        etCPassword = view.findViewById(R.id.et_confirm_password);
+    public void initUi() {
+        etNewPassword = findViewById(R.id.et_new_password);
+        etCPassword = findViewById(R.id.et_confirm_password);
 
-        btnSubmit = view.findViewById(R.id.btn_submit);
+        btnSubmit = findViewById(R.id.btn_submit);
     }
 
     @Override
-    public void initialiseListener(View view) {
-
+    public void initialiseListener() {
         btnSubmit.setOnClickListener(this);
     }
 
     @Override
-    public void setData(View view) {
-
-    }
-
-    @Override
     public void addObservers() {
-        verifyViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
+        hideLoader();
+
+        changePasswordViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
             if (apiStatusModel.getApi() == Constants.Api.PASSWORD_UPDATE) {
                 if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
                     toggleViews(false);
@@ -81,7 +70,7 @@ public class CreatePasswordFragment extends RootFragment {
                 } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
                     toggleViews(false);
                     hideLoader();
-                    showSuccess(false, apiStatusModel.getMessage(), this::gotoNextScreen);
+                    showSuccess(false, apiStatusModel.getMessage(), this::onBackPressed);
                 }
             }
         });
@@ -90,6 +79,18 @@ public class CreatePasswordFragment extends RootFragment {
     @Override
     public void toggleViews(boolean enable) {
         ViewUtils.toggleViewAbility(enable, etNewPassword, etCPassword, btnSubmit);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.btn_submit) {
+            if (isRequestValid()) {
+                String[] values = new String[]{etNewPassword.getText().toString()};
+
+                changePasswordViewModel.requestUpdatePassword(values);
+            }
+        }
+        super.onClick(v);
     }
 
     @Override
@@ -108,22 +109,5 @@ public class CreatePasswordFragment extends RootFragment {
 
         }
         return super.isRequestValid();
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.btn_submit) {
-            if (isRequestValid()) {
-                String[] values = new String[] {etNewPassword.getText().toString()};
-
-                verifyViewModel.requestUpdatePassword(values);
-            }
-        }
-    }
-
-    @Override
-    public void gotoNextScreen() {
-        startActivity(new Intent(getActivity(), SignInActivity.class));
-        getActivity().finish();
     }
 }

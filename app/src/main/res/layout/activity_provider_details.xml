@@ -42,7 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_32"
-                android:id="@+id/tv_terms_conditions"
+                android:id="@+id/tv_provider_details"
                 android:scrollbars="vertical"/>
 
             <Space

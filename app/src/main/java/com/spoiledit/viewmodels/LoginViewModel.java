@@ -23,14 +23,14 @@ public class LoginViewModel extends ViewModel {
         loginRepo.requestLogin(credentials);
     }
 
-    public void requestPassword(String[] values) {
-        loginRepo.requestPassword(values);
+    public void requestForgotPasswordOtp(String[] values) {
+        loginRepo.requestForgotPasswordOtp(values);
     }
 
-    public static final class LoginViewModelFactory implements ViewModelProvider.Factory {
+    public static final class Factory implements ViewModelProvider.Factory {
         private LoginRepo loginRepo;
 
-        public LoginViewModelFactory(LoginRepo loginRepo) {
+        public Factory(LoginRepo loginRepo) {
             this.loginRepo = loginRepo;
         }
 

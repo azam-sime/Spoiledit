@@ -33,31 +33,7 @@ public class DetailsMovieViewModel extends ViewModel {
         return detailsMovieRepo.getApiStatusModelMutable();
     }
 
-    public MutableLiveData<List<SpoilerFullModel>> getSpoilerFullModelsMutable() {
-        return detailsMovieRepo.getSpoilerFullModelsMutable();
-    }
-
-    public MutableLiveData<List<SpoilerBriefModel>> getSpoilerBriefModelsMutable() {
-        return detailsMovieRepo.getSpoilerBriefModelsMutable();
-    }
-
-    public MutableLiveData<List<SpoilerEndingModel>> getSpoilerEndingModelsMutable() {
-        return detailsMovieRepo.getSpoilerEndingModelsMutable();
-    }
-
-    public void requestSpoilerFull() {
-        detailsMovieRepo.requestSpoilerFull();
-    }
-
-    public void requestSpoilerBrief() {
-        detailsMovieRepo.requestSpoilerBrief();
-    }
-
-    public void requestSpoilerEnding() {
-        detailsMovieRepo.requestSpoilerEnding();
-    }
-
-    public void addSpoilers(CreateSpoilerModel createSpoilerModel) {
-        detailsMovieRepo.addSpoiler(createSpoilerModel);
+    public void addToWatchList() {
+        detailsMovieRepo.addToWatchList();
     }
 }

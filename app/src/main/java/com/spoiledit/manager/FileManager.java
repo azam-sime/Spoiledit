@@ -22,7 +22,6 @@ import com.spoiledit.listeners.OnFileActionListener;
 import com.spoiledit.listeners.OnFileAttachListener;
 import com.spoiledit.listeners.OnFileSourceChoiceListener;
 import com.spoiledit.models.FileModel;
-import com.spoiledit.observable.ObservableFileList;
 import com.spoiledit.utils.AppUtils;
 import com.spoiledit.utils.DialogUtils;
 import com.spoiledit.utils.FileUtils;
@@ -248,8 +247,6 @@ public class FileManager implements OnFileSourceChoiceListener {
                 if (!StringUtils.isInvalid(imagePath)) {
                     if (observer instanceof ArrayList)
                         addFile((ArrayList<String>) observer, imagePath, true, (OnFileAttachListener) listener);
-                    else if (observer instanceof ObservableFileList)
-                        addFile((ObservableFileList) observer, imagePath, true, (OnFileAttachListener) listener);
                     else
                         addFile(imagePath, true);
                 }
@@ -261,8 +258,6 @@ public class FileManager implements OnFileSourceChoiceListener {
                         if (!StringUtils.isInvalid(imagePath)) {
                             if (observer instanceof ArrayList)
                                 addFile((ArrayList<String>) observer, imagePath, false, (OnFileAttachListener) listener);
-                            else if (observer instanceof ObservableFileList)
-                                addFile((ObservableFileList) observer, imagePath, false, (OnFileAttachListener) listener);
                             else
                                 addFile(imagePath, false);
                         }
@@ -290,16 +285,6 @@ public class FileManager implements OnFileSourceChoiceListener {
         if (!fileModelsMap.containsKey(imagePath)) {
             fileModelsMap.put(imagePath, FileUtils.toFileModel(imagePath));
             fileModelsMutable.postValue(fileModelsMap);
-        } else {
-            if (toast)
-                Toast.makeText(activity, "File already chosen.", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void addFile(ObservableFileList observableFileList, String imagePath, boolean toast,
-                         OnFileAttachListener onFileAttachListener) {
-        if (!observableFileList.contains(imagePath)) {
-            onFileAttachListener.onFileAttached(imagePath, new File(imagePath));
         } else {
             if (toast)
                 Toast.makeText(activity, "File already chosen.", Toast.LENGTH_SHORT).show();

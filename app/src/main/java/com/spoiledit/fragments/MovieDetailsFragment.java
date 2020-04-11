@@ -17,6 +17,8 @@ import androidx.lifecycle.ViewModelProviders;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.spoiledit.R;
+import com.spoiledit.constants.Constants;
+import com.spoiledit.constants.Status;
 import com.spoiledit.constants.Urls;
 import com.spoiledit.models.MovieDetailsModel;
 import com.spoiledit.viewmodels.DetailsMovieViewModel;
@@ -83,6 +85,23 @@ public class MovieDetailsFragment extends RootFragment {
     public void initialiseListener(View view) {
         btnSeeSpoiler.setOnClickListener(this);
         fabPlay.setOnClickListener(this);
+    }
+
+    @Override
+    public void addObservers() {
+        detailsMovieViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
+            if (apiStatusModel.getApi() == Constants.Api.MY_WATCHLIST_ADD) {
+                if (apiStatusModel.getStatus() == Status.Request.API_HIT)
+                    showLoader(apiStatusModel.getMessage());
+                else {
+                    hideLoader();
+                    if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS)
+                        showSuccess(true, apiStatusModel.getMessage());
+                    else
+                        showFailure(false, apiStatusModel.getMessage());
+                }
+            }
+        });
     }
 
     @Override

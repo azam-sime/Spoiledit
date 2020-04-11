@@ -7,7 +7,6 @@ import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Urls;
 import com.spoiledit.networks.VolleyProvider;
 import com.spoiledit.parsers.UserParser;
-import com.spoiledit.utils.NetworkUtils;
 import com.spoiledit.utils.PreferenceUtils;
 
 import org.json.JSONObject;
@@ -38,8 +37,8 @@ public class LoginRepo extends RootRepo {
                         public void onSuccess(String response) {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
-                                if (jsonObject.has("data")) {
-                                    PreferenceUtils.saveUserModel(context, new UserParser().execute(response).get());
+                                if (isRequestSuccess(jsonObject)) {
+                                    PreferenceUtils.saveUserModel(context, new UserParser.LoginParser().execute(response).get());
                                     apiRequestSuccess(api, "You have successfully logged in.");
 
                                 } else {
@@ -57,31 +56,31 @@ public class LoginRepo extends RootRepo {
                                 }
 
                             } catch (Exception e) {
-                                onException(api, e);
+                                setExceptionOccured(api, e);
                             }
                         }
 
                         @Override
                         public void onFailure(VolleyError volleyError) {
                             try {
-                                apiRequestFailure(api, getErrorFromVolleyAsJson(volleyError));
+                                apiRequestFailure(api, getMessageFromVolleyAsJson(volleyError));
                             } catch (Exception e) {
-                                onException(api, e);
+                                setExceptionOccured(api, e);
                             }
                         }
                     }, false, true);
 
         } catch (Exception e) {
-            onException(api, e);
+            setExceptionOccured(api, e);
         }
     }
 
-    public void requestPassword(String[] values) {
-        int api = Constants.Api.PASSWORD_FORGOT;
+    public void requestForgotPasswordOtp(String[] values) {
+        int api = Constants.Api.OTP_FORGOT_PASSWORD;
         try {
-            apiRequestHit(api, "Requesting password change...");
+            apiRequestHit(api, "Requesting otp...");
             getVolleyProvider().executeMultipartRequest(
-                    Urls.PASSWORD_FORGOT.getUrl(),
+                    Urls.OTP_FORGOT_PASSWORD.getUrl(),
                     getParamsMap(api, values),
                     new VolleyProvider.OnResponseListener<String>() {
                         @Override
@@ -91,25 +90,25 @@ public class LoginRepo extends RootRepo {
                                 if (isRequestSuccess(jsonObject))
                                     apiRequestSuccess(api, jsonObject.optString("message"));
                                 else
-                                    postError(api, jsonObject);
+                                    setRequestStatusFailed(api, jsonObject);
 
                             } catch (Exception e) {
-                                onException(api, e);
+                                setExceptionOccured(api, e);
                             }
                         }
 
                         @Override
                         public void onFailure(VolleyError volleyError) {
                             try {
-                                apiRequestFailure(api, getErrorFromVolleyAsJson(volleyError));
+                                apiRequestFailure(api, getMessageFromVolleyAsJson(volleyError));
                             } catch (Exception e) {
-                                onException(api, e);
+                                setExceptionOccured(api, e);
                             }
                         }
                     }, false, true);
 
         } catch (Exception e) {
-            onException(api, e);
+            setExceptionOccured(api, e);
         }
     }
 
@@ -120,7 +119,7 @@ public class LoginRepo extends RootRepo {
                 hashMap.put("username", values[0]);
                 hashMap.put("password", values[1]);
 
-            } else if (api == Constants.Api.PASSWORD_FORGOT) {
+            } else if (api == Constants.Api.OTP_FORGOT_PASSWORD) {
                 hashMap.put("email", values[0]);
             }
 

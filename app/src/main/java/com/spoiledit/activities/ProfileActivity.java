@@ -3,7 +3,6 @@ package com.spoiledit.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,10 +27,8 @@ public class ProfileActivity extends RootActivity {
     public static final String TAG = ProfileActivity.class.getCanonicalName();
 
     private ProfileViewModel profileViewModel;
-    private ProfileModel profileModel;
 
-    private EditText etUserName, etUserEmail, etUserPhone;
-    private TextView tvUserDob, tvUserAddress;
+    private TextView tvUserName, tvUserEmail, tvUserPhone, tvUserDob, tvUserAddress;
     private ImageView ivUserPhoto, ivAddPhoto;
     private View vWishlist, vSpoilers;
 
@@ -42,7 +39,7 @@ public class ProfileActivity extends RootActivity {
         super.onCreate(savedInstanceState);
 
         profileViewModel = ViewModelProviders.of(this,
-                new ProfileViewModel.ProfileViewModelFactory(new ProfileRepo()))
+                new ProfileViewModel.Factory(new ProfileRepo.DetailsRepo()))
                 .get(ProfileViewModel.class);
         setContentView(R.layout.activity_profile);
     }
@@ -56,10 +53,9 @@ public class ProfileActivity extends RootActivity {
     public void initUi() {
         fileManager = new FileManager(this, com.spoiledit.constants.File.From.PROFILE);
 
-        etUserName = findViewById(R.id.et_name);
-        etUserEmail = findViewById(R.id.et_email_address);
-        etUserPhone = findViewById(R.id.et_phone_number);
-
+        tvUserName = findViewById(R.id.tv_name);
+        tvUserEmail = findViewById(R.id.tv_email_address);
+        tvUserPhone = findViewById(R.id.tv_phone_number);
         tvUserDob = findViewById(R.id.tv_dob);
         tvUserAddress = findViewById(R.id.tv_address);
 
@@ -75,32 +71,27 @@ public class ProfileActivity extends RootActivity {
         vWishlist.setOnClickListener(this);
         vSpoilers.setOnClickListener(this);
         ivAddPhoto.setOnClickListener(this);
-        findViewById(R.id.btn_update).setOnClickListener(this);
     }
 
     @Override
     public void addObservers() {
         profileViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
-            if (apiStatusModel.getApi() == Constants.Api.USER_PROFILE_GET
-                    || apiStatusModel.getApi() == Constants.Api.USER_PROFILE_UPDATE
-                    || apiStatusModel.getApi() == Constants.Api.USER_AVATAR_UPDATE) {
-                if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
-                    toggleViews(false);
-                    showLoader(apiStatusModel.getMessage());
+            if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
+                toggleViews(false);
+                showLoader(apiStatusModel.getMessage());
 
-                } else if (apiStatusModel.getStatus() == Status.Request.API_ERROR) {
-                    toggleViews(true);
-                    hideLoader();
-                    showFailure(false, apiStatusModel.getMessage());
+            } else if (apiStatusModel.getStatus() == Status.Request.API_ERROR) {
+                toggleViews(true);
+                hideLoader();
+                showFailure(false, apiStatusModel.getMessage());
 
-                } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
-                    toggleViews(false);
-                    hideLoader();
+            } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
+                toggleViews(false);
+                hideLoader();
 
-                    if (apiStatusModel.getApi() == Constants.Api.USER_AVATAR_UPDATE) {
-                        PreferenceUtils.updateProfilePicPath(this, apiStatusModel.getMessage());
-                        setData();
-                    }
+                if (apiStatusModel.getApi() == Constants.Api.USER_AVATAR_UPDATE) {
+                    PreferenceUtils.updateProfilePicPath(this, apiStatusModel.getMessage());
+                    setData();
                 }
             }
         });
@@ -108,13 +99,13 @@ public class ProfileActivity extends RootActivity {
 
     @Override
     public void setData() {
-        profileModel = ProfileModel.fromUserModel(PreferenceUtils.getUserModel(this));
+        ProfileModel profileModel = ProfileModel.fromUserModel(PreferenceUtils.getUserModel(this));
 
-        etUserName.setText(profileModel.getDisplayName());
-        StringUtils.setText(etUserEmail, profileModel.getEmail(), "N/A");
-        StringUtils.setText(etUserPhone, profileModel.getPhone(), "N/A");
-        StringUtils.setText(tvUserDob, profileModel.getRegistered(), "N/A");
-        StringUtils.setText(tvUserAddress, profileModel.getActivationKey(), "N/A");
+        tvUserName.setText(profileModel.getDisplayName());
+        StringUtils.setText(tvUserEmail, profileModel.getEmail(), "N/A");
+        StringUtils.setText(tvUserPhone, profileModel.getPhone(), "N/A");
+        StringUtils.setText(tvUserDob, null, "N/A");
+        StringUtils.setText(tvUserAddress, null, "N/A");
 
         loadProfileImage(profileModel.getUrl());
     }
@@ -135,21 +126,16 @@ public class ProfileActivity extends RootActivity {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.ll_wishlist) {
+            startActivity(new Intent(this, MyMoviesActivity.class));
+            finish();
 
         } else if (v.getId() == R.id.ll_spoilers) {
+            startActivity(new Intent(this, MySpoilersActivity.class));
+            finish();
 
         } else if (v.getId() == R.id.iv_add_photo) {
             fileManager.showFileSources();
 
-        } else if (v.getId() == R.id.btn_update) {
-            if (isRequestValid()) {
-                showLoader();
-                profileViewModel.updateProfile(
-                        etUserName.getText().toString().trim(),
-                        etUserEmail.getText().toString().trim(),
-                        etUserPhone.getText().toString().trim()
-                );
-            }
         }
         super.onClick(v);
     }
@@ -187,18 +173,6 @@ public class ProfileActivity extends RootActivity {
                 updateProfilePic(fileManager.getImagePathForCamera());
             }
         }
-    }
-
-    @Override
-    public boolean isRequestValid() {
-        if (StringUtils.compareInput(etUserName, profileModel.getDisplayName())
-                && StringUtils.compareInput(etUserEmail, profileModel.getEmail())
-                && StringUtils.compareInput(etUserPhone, profileModel.getPhone())) {
-            showInterrupt("No changes found to update!", true);
-            return false;
-        }
-
-        return super.isRequestValid();
     }
 
     @Override

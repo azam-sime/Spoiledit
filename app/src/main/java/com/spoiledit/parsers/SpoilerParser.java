@@ -2,6 +2,8 @@ package com.spoiledit.parsers;
 
 import android.os.AsyncTask;
 
+import com.spoiledit.models.MovieSpoilerModel;
+import com.spoiledit.models.MySpoilerModel;
 import com.spoiledit.models.SpoilerBriefModel;
 import com.spoiledit.models.SpoilerEndingModel;
 import com.spoiledit.models.SpoilerFullModel;
@@ -54,6 +56,52 @@ public class SpoilerParser {
                 e.printStackTrace();
             }
             return spoilersNewModels;
+        }
+    }
+
+
+
+    public static class MySpoilersParser extends AsyncTask<JSONObject, Void, List<MySpoilerModel>> {
+        public static final String TAG = MySpoilersParser.class.getCanonicalName();
+
+        @Override
+        protected List<MySpoilerModel> doInBackground(JSONObject... jsonObjects) {
+            List<MySpoilerModel> mySpoilerModels = new ArrayList<>();
+            try {
+                JSONArray dataArray = jsonObjects[0].optJSONArray("result_data");
+                if (dataArray != null) {
+
+                    int l = dataArray.length();
+                    for (int i = 0; i < l; i++) {
+
+                        JSONObject spoilerObject = dataArray.optJSONObject(i);
+                        MySpoilerModel mySpoilerModel = new MySpoilerModel();
+
+                        mySpoilerModel.setUserLogin(spoilerObject.optString("user_login"));
+                        mySpoilerModel.setId(spoilerObject.optInt("id"));
+                        mySpoilerModel.setmId(spoilerObject.optInt("m_id"));
+                        mySpoilerModel.setmName(spoilerObject.optString("m_name"));
+                        mySpoilerModel.setUserId(spoilerObject.optInt("user_id"));
+                        mySpoilerModel.setSelectType(spoilerObject.optInt("select_type"));
+                        mySpoilerModel.setMidCredit(spoilerObject.optString("mid_credit"));
+                        mySpoilerModel.setStringer(spoilerObject.optString("stringer"));
+                        mySpoilerModel.setSpoiler(spoilerObject.optString("spoiler"));
+                        mySpoilerModel.setCratedOn(spoilerObject.optString("created_on"));
+                        mySpoilerModel.setDisplayName(spoilerObject.optString("display_name"));
+                        mySpoilerModel.setDate(spoilerObject.optString("date"));
+                        mySpoilerModel.setDescription(spoilerObject.optString("desciption"));
+                        mySpoilerModel.setThumbsUp(spoilerObject.optString("thumbs_up"));
+                        mySpoilerModel.setThumbsDown(spoilerObject.optString("thumbs_down"));
+                        mySpoilerModel.setAvatarUrl(spoilerObject.optString("avatar_url"));
+                        mySpoilerModel.setDarkBackground(i % 2 == 1);
+
+                        mySpoilerModels.add(mySpoilerModel);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return mySpoilerModels;
         }
     }
 

@@ -25,6 +25,8 @@ public class AddSpoilerActivity extends RootActivity {
     private EditText etSpoiler;
     private MaterialButton btnSubmit;
 
+    private CreateSpoilerModel spoilerModel;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +35,7 @@ public class AddSpoilerActivity extends RootActivity {
 
     @Override
     public void setUpToolBar() {
-
+        setupToolBar("Add Spoiler");
     }
 
     @Override
@@ -53,23 +55,55 @@ public class AddSpoilerActivity extends RootActivity {
     @Override
     public void initialiseListener() {
         btnSubmit.setOnClickListener(this);
+
+        rgSpoilerType.setOnCheckedChangeListener((group, checkedId) -> {
+            if (group.getId() == R.id.rg_spoiler_type) {
+                if (checkedId == R.id.rbtn_sp_full)
+                    spoilerModel.setSpType("1");
+                else if (checkedId == R.id.rbtn_sp_brief)
+                    spoilerModel.setSpType("2");
+                else if (checkedId == R.id.rbtn_sp_ending)
+                    spoilerModel.setSpType("3");
+            }
+        });
+
+        rgMidScene.setOnCheckedChangeListener((group, checkedId) -> {
+            if (group.getId() == R.id.rg_mid_credit) {
+                if (checkedId == R.id.rbtn_mc_yes)
+                    spoilerModel.setMidCredit("Yes");
+                else if (checkedId == R.id.rbtn_mc_no)
+                    spoilerModel.setMidCredit("No");
+                else if (checkedId == R.id.rbtn_mc_ns)
+                    spoilerModel.setMidCredit("Not Sure");
+            }
+        });
+
+        rgStringer.setOnCheckedChangeListener((group, checkedId) -> {
+            if (group.getId() == R.id.rg_stringer) {
+                if (checkedId == R.id.rbtn_pc_yes)
+                    spoilerModel.setStringer("Yes");
+                else if (checkedId == R.id.rbtn_pc_no)
+                    spoilerModel.setStringer("No");
+                else if (checkedId == R.id.rbtn_pc_ns)
+                    spoilerModel.setStringer("Not Sure");
+            }
+        });
+    }
+
+    @Override
+    public void setData() {
+        spoilerModel = new CreateSpoilerModel();
     }
 
     @Override
     public boolean isRequestValid() {
-        if (rgSpoilerType.getCheckedRadioButtonId() != R.id.rb_spoiler_full
-                && rgSpoilerType.getCheckedRadioButtonId() != R.id.rb_spoiler_brief
-                && rgSpoilerType.getCheckedRadioButtonId() != R.id.rb_spoiler_ending) {
+        if (StringUtils.isInvalid(spoilerModel.getSpType())) {
             showWarning("Please choose spoiler-type choice");
             return false;
-        } else if (rgMidScene.getCheckedRadioButtonId() != R.id.rbtn_mc_ns
-                && rgMidScene.getCheckedRadioButtonId() != R.id.rbtn_mc_yes
-                && rgMidScene.getCheckedRadioButtonId() != R.id.rbtn_mc_no) {
+        } else if (StringUtils.isInvalid(spoilerModel.getMidCredit())) {
             showWarning("Please choose mid-credit scene choice");
             return false;
-        } else if (rgStringer.getCheckedRadioButtonId() != R.id.rbtn_pc_ns
-                && rgStringer.getCheckedRadioButtonId() != R.id.rbtn_pc_yes
-                && rgStringer.getCheckedRadioButtonId() != R.id.rbtn_pc_no) {
+        } else if (StringUtils.isInvalid(spoilerModel.getStringer())) {
             showWarning("Please choose post-credit scene choice");
             return false;
         } else if (StringUtils.isInvalid(etSpoiler.getText().toString().trim())) {
@@ -86,12 +120,8 @@ public class AddSpoilerActivity extends RootActivity {
         if (v.getId() == R.id.btn_submit) {
             if (isRequestValid()) {
                 Intent data = new Intent();
-                data.putExtra(AddSpoilerActivity.RESULT_EXTRA_MODEL, new CreateSpoilerModel(
-                        ((RadioButton) findViewById(rgSpoilerType.getCheckedRadioButtonId())).getText().toString(),
-                        ((RadioButton) findViewById(rgMidScene.getCheckedRadioButtonId())).getText().toString(),
-                        ((RadioButton) findViewById(rgStringer.getCheckedRadioButtonId())).getText().toString(),
-                        etSpoiler.getText().toString().trim()
-                ));
+                spoilerModel.setSpoiler(etSpoiler.getText().toString().trim());
+                data.putExtra(AddSpoilerActivity.RESULT_EXTRA_MODEL, spoilerModel);
                 setResult(RESULT_OK, data);
                 finish();
             }

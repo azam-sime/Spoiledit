@@ -1,5 +1,6 @@
 package com.spoiledit.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -7,7 +8,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.button.MaterialButton;
@@ -15,7 +15,6 @@ import com.spoiledit.R;
 import com.spoiledit.constants.App;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
-import com.spoiledit.fragments.CreatePasswordFragment;
 import com.spoiledit.listeners.TextChangeListener;
 import com.spoiledit.repos.VerifyRepo;
 import com.spoiledit.utils.PreferenceUtils;
@@ -63,7 +62,7 @@ public class VerifyOtpActivity extends RootActivity {
         super.onCreate(savedInstanceState);
 
         verifyViewModel = ViewModelProviders.of(this,
-                new VerifyViewModel.VerifyViewModelFactory(new VerifyRepo(this))).get(VerifyViewModel.class);
+                new VerifyViewModel.Factory(new VerifyRepo(this))).get(VerifyViewModel.class);
 
         extraSentFor = getIntent().getIntExtra(App.Intent.Extra.OTP_FOR, App.Intent.Value.OTP_FOR_REGISTRATION);
         extraSentTo = getIntent().getIntExtra(App.Intent.Extra.OTP_SENT_TO, App.Intent.Value.OTP_SENT_TO_MAIL);
@@ -88,7 +87,8 @@ public class VerifyOtpActivity extends RootActivity {
 
         tvResend = findViewById(R.id.tv_resend);
         tvCountDown = findViewById(R.id.tv_count_down);
-        tvCreateNew = findViewById(R.id.tv_new_password);
+        tvCreateNew = findViewById(R.id.tv_create_password);
+        ViewUtils.toggleViewVisibility(extraSentFor != App.Intent.Value.OTP_FOR_REGISTRATION, tvCreateNew);
 
         btnSubmit = findViewById(R.id.btn_submit);
     }
@@ -179,22 +179,26 @@ public class VerifyOtpActivity extends RootActivity {
     @Override
     public void addObservers() {
         verifyViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
-            if (apiStatusModel.getApi() == Constants.Api.USER_REGISTER_OTP) {
-                if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
-                    toggleViews(false);
-                    showLoader(apiStatusModel.getMessage());
+            if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
+                toggleViews(false);
+                showLoader(apiStatusModel.getMessage());
 
-                } else if (apiStatusModel.getStatus() == Status.Request.API_ERROR) {
-                    toggleViews(true);
-                    hideLoader();
-                    showFailure(false, apiStatusModel.getMessage());
+            } else if (apiStatusModel.getStatus() == Status.Request.API_ERROR) {
+                toggleViews(true);
+                hideLoader();
+                showFailure(false, apiStatusModel.getMessage());
 
-                } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
-                    toggleViews(false);
-                    hideLoader();
+            } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
+                toggleViews(false);
+                hideLoader();
+
+                if (apiStatusModel.getApi() == Constants.Api.OTP_USER_REGISTRATION) {
                     PreferenceUtils.saveLoginStatus(this, Status.Login.REQUIRE_SIGN_IN_AND_CREDS);
-//                    showSuccess(false, apiStatusModel.getMessage(), this::gotoNextScreen);
-                    gotoNextScreen();
+                    startActivity(new android.content.Intent(this, DashboardActivity.class));
+                    finish();
+                } else if (apiStatusModel.getApi() == Constants.Api.OTP_FORGOT_PASSWORD) {
+                    startActivity(new android.content.Intent(this, SignInActivity.class));
+                    finish();
                 }
             }
         });
@@ -251,9 +255,6 @@ public class VerifyOtpActivity extends RootActivity {
         if (StringUtils.isInvalid(otp) || otp.length() < 6) {
             showWarning(false, "Please enter a valid otp!");
             return false;
-        } else if (!otp.equals(PreferenceUtils.getOtp(this))) {
-            showWarning("You have entered incorrect otp.");
-            return false;
         }
         return super.isRequestValid();
     }
@@ -265,27 +266,17 @@ public class VerifyOtpActivity extends RootActivity {
 
         } else if (v.getId() == R.id.btn_submit) {
             if (isRequestValid()) {
-                if (extraSentFor == App.Intent.Value.OTP_FOR_VERIFICATION)
-                    verifyViewModel.requestOtpVerification(new String[]{extraSentToAddress, combineOtp()});
+                if (extraSentFor == App.Intent.Value.OTP_FOR_PASSWORD_VERIFICATION)
+                    verifyViewModel.verifyForgotPasswordOtp(new String[]{extraSentToAddress, combineOtp()});
                 else
-                    verifyViewModel.requestOtpRegistration(new String[]{extraSentToAddress, combineOtp()});
+                    verifyViewModel.verifyRegistrationOtp(new String[]{extraSentToAddress, combineOtp()});
             }
 
-        } else if (v.getId() == R.id.tv_new_password) {
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            CreatePasswordFragment fragment = new CreatePasswordFragment();
-            fragmentTransaction.setCustomAnimations(R.anim.rise_from_bottom, R.anim.sink_to_bottom);
-            fragmentTransaction.add(R.id.ll_container, fragment);
-            fragmentTransaction.addToBackStack(CreatePasswordFragment.TAG);
-            fragmentTransaction.commit();
+        } else if (v.getId() == R.id.tv_create_password) {
+            startActivity(new Intent(this, ChangePasswordActivity.class));
+            finish();
 
         } else
             super.onClick(v);
-    }
-
-    @Override
-    public void gotoNextScreen() {
-        startActivity(new android.content.Intent(this, SignInActivity.class));
-        finish();
     }
 }

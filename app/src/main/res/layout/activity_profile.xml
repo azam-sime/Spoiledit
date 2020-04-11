@@ -9,52 +9,60 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorWhite">
+        android:background="@color/colorWhite" >
 
-        <include layout="@layout/toolbar_back_only" />
-
-        <LinearLayout
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            app:contentScrim="@color/colorWhite"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <FrameLayout
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal">
+                android:orientation="vertical"
+                app:layout_collapseMode="parallax">
 
-                <com.makeramen.roundedimageview.RoundedImageView
-                    android:layout_width="@dimen/size_image_user"
-                    android:layout_height="@dimen/size_image_user"
-                    android:layout_gravity="center_horizontal"
-                    android:scaleType="centerCrop"
-                    app:riv_corner_radius="@dimen/radius_image_user"
-                    app:riv_tile_mode="clamp"
-                    android:src="@drawable/app_icon_logo"
-                    android:id="@+id/riv_user"/>
-
-                <ImageView
+                <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end|bottom"
-                    android:src="@drawable/popcorn"
-                    android:id="@+id/iv_add_photo" />
-            </FrameLayout>
+                    android:layout_marginTop="?actionBarSize"
+                    android:layout_gravity="center_horizontal">
 
-            <EditText
-                android:id="@+id/et_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:inputType="textPersonName"
-                android:fontFamily="@font/montserrat_bold"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/spacing_16"
-                android:layout_marginBottom="@dimen/spacing_16"
-                android:textSize="24sp"
-                android:textColor="@color/colorBlack"
-                tools:text="Victor Smith"/>
-        </LinearLayout>
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:layout_width="@dimen/size_image_user"
+                        android:layout_height="@dimen/size_image_user"
+                        android:layout_gravity="center_horizontal"
+                        android:scaleType="centerCrop"
+                        app:riv_corner_radius="@dimen/radius_image_user"
+                        app:riv_tile_mode="clamp"
+                        android:src="@drawable/app_icon_logo"
+                        android:id="@+id/riv_user"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|bottom"
+                        android:src="@drawable/popcorn"
+                        android:id="@+id/iv_add_photo" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/spacing_16"
+                    android:layout_marginBottom="48dp"
+                    android:textSize="24sp"
+                    android:textColor="@color/colorBlack"
+                    tools:text="Victor Smith"/>
+            </LinearLayout>
+
+            <include layout="@layout/toolbar_back_only" />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <requestFocus />
@@ -62,6 +70,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:behavior_overlapTop="32dp"
         android:fillViewport="true"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
@@ -104,12 +113,11 @@
                             android:text="Email Address"
                             android:textColor="@color/colorBlack"/>
 
-                        <EditText
-                            android:id="@+id/et_email_address"
+                        <TextView
+                            android:id="@+id/tv_email_address"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
-                            android:inputType="textEmailAddress"
                             android:fontFamily="@font/montserrat_bold"
                             android:textSize="18sp"
                             android:textColor="@color/colorBlack"
@@ -141,12 +149,11 @@
                             android:text="Phone Number"
                             android:textColor="@color/colorBlack"/>
 
-                        <EditText
-                            android:id="@+id/et_phone_number"
+                        <TextView
+                            android:id="@+id/tv_phone_number"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@android:color/transparent"
-                            android:inputType="phone"
                             android:fontFamily="@font/montserrat_bold"
                             android:textSize="18sp"
                             android:textColor="@color/colorBlack"
@@ -308,13 +315,6 @@
 
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.button.MaterialButton
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_16"
-                    android:text="Update"
-                    android:id="@+id/btn_update" />
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

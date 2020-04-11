@@ -12,7 +12,7 @@ public final class Constants {
     public static final class Api {
 
         private Api() {
-            // last = 46
+            // last = 48
         }
 
         public static final String BASE_URL = "https://spoiledit.com/wp-json/wp/v2";
@@ -22,8 +22,10 @@ public final class Constants {
 
         public static final int TOKEN = 1;
 
+        public static final int OTP_FORGOT_PASSWORD = 9;
+        public static final int OTP_USER_REGISTRATION = 3;
+
         public static final int USER_REGISTER = 2;
-        public static final int USER_REGISTER_OTP = 3;
         public static final int USER_LOGIN = 4;
         public static final int USER_PROFILE_GET = 5;
         public static final int USER_PROFILE_UPDATE = 6;
@@ -31,17 +33,16 @@ public final class Constants {
         public static final int USER_AVATAR_GET = 8;
         public static final int USER_LOGOUT = 45;
 
-        public static final int PASSWORD_FORGOT = 9;
         public static final int PASSWORD_VERIFY_OTP = 10;
         public static final int PASSWORD_UPDATE = 11;
         public static final int PASSWORD_CHANGE = 12;
 
         public static final int TMDB_IMAGE_DETAILS = 13;
-        public static final int T_AND_C = 4;
-        public static final int COOKIES = 15;
 
-        public static final int SEARCH_AUTO_COMPLETE = 16;
-        public static final int SEARCH_MOVIE = 17;
+        public static final int PROVIDER_TERMS_CONDITIONS = 4;
+        public static final int PROVIDER_PRIVACY_POLICIES = 47;
+        public static final int PROVIDER_COOKIES_POLICY = 15;
+        public static final int PROVIDER_ABOUT_US = 48;
 
         public static final int SPOILERS_NEW = 18;
 
@@ -78,10 +79,17 @@ public final class Constants {
         public static final int MY_WATCHLIST_ADD = 43;
         public static final int MY_WATCHLIST_REMOVE = 44;
 
-        public static final String SEARCH_TITLE = "&type=movie&pn=1";
-        public static final String SEARCH_PERSON = "&type=person&pn=1";
-        public static final String SEARCH_KEYWORD = "&type=keyword&pn=1";
-        public static final String SEARCH_COMPANIES = "&type=company&pn=1";
+        public static final int SEARCH_AUTO_COMPLETE = 16;
+        public static final int SEARCH_MOVIE = 17;
+        public static final int SEARCH_MOVIE_BY_TITLE = 49;
+        public static final int SEARCH_MOVIE_BY_PERSON = 50;
+        public static final int SEARCH_MOVIE_BY_KEYWORD = 51;
+        public static final int SEARCH_MOVIE_BY_COMPANIES = 52;
+
+        public static final String SEARCH_TITLE_ADDON = "&type=movie&pn=1";
+        public static final String SEARCH_PERSON_ADDON = "&type=person&pn=1";
+        public static final String SEARCH_KEYWORD_ADDON = "&type=keyword&pn=1";
+        public static final String SEARCH_COMPANIES_ADDON = "&type=company&pn=1";
     }
 
     public static final class Broadcast {

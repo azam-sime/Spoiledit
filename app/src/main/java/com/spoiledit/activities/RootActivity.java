@@ -20,6 +20,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.spoiledit.R;
+import com.spoiledit.models.UserModel;
 import com.spoiledit.utils.AppUtils;
 import com.spoiledit.utils.DialogUtils;
 import com.spoiledit.utils.ExecutorUtils;
@@ -150,6 +151,18 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        connectivityManager.registerNetworkCallback(
+                new NetworkRequest.Builder()
+                        .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                        .addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
+                        .build(), networkCallback
+        );
+    }
+
     public void setupToolBar(String title) {
         setupToolBar(title, false);
     }
@@ -160,7 +173,7 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
 
     public void setupToolBar(String title, boolean showPopcorn) {
         if (tvToolbar != null)
-            StringUtils.setText(tvToolbar, title);
+            tvToolbar.setText(title == null ? "" : title);
 
         if (ivPopcorn != null) {
             ivPopcorn.setVisibility(showPopcorn ? View.VISIBLE : View.GONE);
@@ -173,18 +186,6 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
 
     public void onPopcornClick() {
 
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        connectivityManager.registerNetworkCallback(
-                new NetworkRequest.Builder()
-                        .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-                        .addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
-                        .build(), networkCallback
-        );
     }
 
     public MutableLiveData<Boolean> getNetworkMutable() {
@@ -204,7 +205,7 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
     }
 
     public void showLoader(String message) {
-        if (StringUtils.isInvalid(message))
+        if (!StringUtils.isInvalid(message))
             showInterrupt(message, false);
 
         if (progressBar != null)

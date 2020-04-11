@@ -6,6 +6,8 @@ import com.spoiledit.models.MovieDetailsModel;
 import com.spoiledit.models.MoviePopularModel;
 import com.spoiledit.models.MovieRecentModel;
 import com.spoiledit.models.MovieUpcomingModel;
+import com.spoiledit.models.MyMovieModel;
+import com.spoiledit.models.SearchMovieModel;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -66,6 +68,115 @@ public class MovieParser {
                 e.printStackTrace();
             }
             return movieDetailsModel;
+        }
+    }
+
+
+
+    public static class MyMoviesParser extends AsyncTask<JSONObject, Void, List<MyMovieModel>> {
+        public static final String TAG = MyMoviesParser.class.getCanonicalName();
+
+        @Override
+        protected List<MyMovieModel> doInBackground(JSONObject... jsonObjects) {
+            List<MyMovieModel> myMovieModels = new ArrayList<>();
+            try {
+                JSONArray dataArray = jsonObjects[0].optJSONArray("data");
+                for (int i = 0; i < dataArray.length(); i++) {
+                    JSONObject jsonObject = dataArray.optJSONObject(i);
+                    JSONObject dataObject = jsonObject.optJSONObject("data");
+
+                    MyMovieModel myMovieModel = new MyMovieModel();
+                    myMovieModel.setId(jsonObject.optInt("movie_id"));
+                    myMovieModel.setTitle(jsonObject.optString("movie_name"));
+                    myMovieModel.setOverview(dataObject.optString("overview"));
+                    myMovieModel.setPosterPath(dataObject.optString("poster_path"));
+                    myMovieModel.setVoteAverage(dataObject.optInt("vote_average"));
+                    myMovieModel.setDarkBackground(i % 2 == 0);
+
+                    myMovieModels.add(myMovieModel);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return myMovieModels;
+        }
+    }
+
+/*{"status":"200","page":"1","error":"false","data":{"page":1,"total_results":1,"total_pages":1,
+"results":[{"popularity":1.7030000000000000692779167366097681224346160888671875,"id":277751,"video":false,
+"vote_count":4,"vote_average":4.29999999999999982236431605997495353221893310546875,"title":"Maine Dil Tujhko Diya",
+"release_date":"2002-08-23","original_language":"hi","original_title":"Maine Dil Tujhko Diya","genre_ids":[],
+"backdrop_path":null,"adult":false,"overview":"Ayesha (Sameera Reddy) is the elder daughter of rich business tycoon Mr.
+Verma (Kabir Bedi), an overprotective father who's kept his two daughters away from modern influences.
+Ayesha goes to college and comes in contact with Ajay (Sohail Khan), the leader of a group called Aryans,
+responsible for handling the security at the college. Ajay's soft-spoken nature and humble,
+down-to-earth attitude soon make Ayesha his most ardent admirer.","poster_path":null}]}}*/
+
+    public static class SearchParser extends AsyncTask<JSONObject, Void, List<SearchMovieModel>> {
+        public static final String TAG = PopularsParser.class.getCanonicalName();
+
+        @Override
+        protected List<SearchMovieModel> doInBackground(JSONObject... jsonObjects) {
+            List<SearchMovieModel> searchMovieModels = new ArrayList<>();
+            try {
+                JSONObject dataObject = jsonObjects[0].optJSONObject("data");
+                if (dataObject != null) {
+
+                    JSONArray resultArray = dataObject.optJSONArray("results");
+                    if (resultArray != null) {
+
+                        int l = resultArray.length();
+                        for (int i = 0; i < l; i++) {
+
+                            JSONObject movieObject = resultArray.optJSONObject(i);
+                            SearchMovieModel searchMovieModel = new SearchMovieModel();
+                            searchMovieModel.setId(movieObject.optInt("id"));
+
+                            JSONObject castsObject = movieObject.optJSONObject("stars");
+                            List<String> casts = new ArrayList<>();
+                            if (castsObject != null) {
+                                Iterator<String> iterator = castsObject.keys();
+                                while (iterator.hasNext())
+                                    casts.add(iterator.next());
+                            }
+                            searchMovieModel.setCasts(casts.toArray(new String[0]));
+
+                            JSONObject directorsObject = movieObject.optJSONObject("director");
+                            List<String> directors = new ArrayList<>();
+                            if (directorsObject != null) {
+                                Iterator<String> iterator = directorsObject.keys();
+                                while (iterator.hasNext())
+                                    directors.add(iterator.next());
+                            }
+                            searchMovieModel.setDirectors(directors.toArray(new String[0]));
+
+                            JSONArray genreArray = movieObject.optJSONArray("genres");
+                            if (genreArray != null) {
+                                String[] genres = new String[genreArray.length()];
+                                for (int j = 0; j < genreArray.length(); j++)
+                                    genres[j] = genreArray.optString(j);
+                                searchMovieModel.setGenres(genres);
+                            } else
+                                searchMovieModel.setGenres(new String[0]);
+
+                            searchMovieModel.setOverview(movieObject.optString("overview"));
+                            searchMovieModel.setPgNames(movieObject.optString("pg_names"));
+                            searchMovieModel.setPopularity(movieObject.optInt("popularity"));
+                            searchMovieModel.setPosterPath(movieObject.optString("poster_path"));
+                            searchMovieModel.setReleaseDate(movieObject.optString("release_date"));
+                            searchMovieModel.setRunTime(movieObject.optString("runtime"));
+                            searchMovieModel.setTitle(movieObject.optString("title"));
+                            searchMovieModel.setTotalPages(movieObject.optInt("total_pages"));
+                            searchMovieModel.setVoteAverage(movieObject.optInt("vote_average"));
+
+                            searchMovieModels.add(searchMovieModel);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return searchMovieModels;
         }
     }
 

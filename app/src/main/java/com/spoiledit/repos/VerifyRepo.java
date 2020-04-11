@@ -26,11 +26,11 @@ public class VerifyRepo extends RootRepo {
     }
 
     public void requestOtpRegistration(String[] values) {
-        int api = Constants.Api.USER_REGISTER_OTP;
+        int api = Constants.Api.OTP_USER_REGISTRATION;
         try {
             apiRequestHit(api, "Registering otp...");
             getVolleyProvider().executeMultipartRequest(
-                    Urls.USER_REGISTER_OTP.getUrl(),
+                    Urls.OTP_USER_REGISTRATION.getUrl(),
                     getParamsMap(api, values),
                     new VolleyProvider.OnResponseListener<String>() {
                         @Override
@@ -68,7 +68,7 @@ public class VerifyRepo extends RootRepo {
         try {
             apiRequestHit(api, "Confirming otp...");
             getVolleyProvider().executeMultipartRequest(
-                    Urls.USER_REGISTER_OTP.getUrl(),
+                    Urls.OTP_USER_REGISTRATION.getUrl(),
                     getParamsMap(api, values),
                     new VolleyProvider.OnResponseListener<String>() {
                         @Override
@@ -101,46 +101,10 @@ public class VerifyRepo extends RootRepo {
         }
     }
 
-    public void requestUpdatePassword(String[] values) {
-        int api = Constants.Api.PASSWORD_UPDATE;
-        try {
-            apiRequestHit(api, "Requesting password change...");
-            getVolleyProvider().executeMultipartRequest(
-                    Urls.PASSWORD_UPDATE.getUrl(),
-                    getParamsMap(api, values),
-                    new VolleyProvider.OnResponseListener<String>() {
-                        @Override
-                        public void onSuccess(String response) {
-                            try {
-                                JSONObject jsonObject = new JSONObject(response);
-                                if (jsonObject.optBoolean("error"))
-                                    apiRequestFailure(api, jsonObject.optString("message"));
-                                else {
-                                    apiRequestSuccess(api, jsonObject.optString("message"));
-                                }
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                apiRequestFailure(api, NetworkUtils.getErrorString(e));
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(VolleyError volleyError) {
-                            apiRequestFailure(api, NetworkUtils.getErrorString(volleyError));
-                        }
-                    }, false, true);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            apiRequestFailure(api, NetworkUtils.getErrorString(e));
-        }
-    }
-
     private Map<String, String> getParamsMap(int api, String[] values) {
         Map<String, String> hashMap = new HashMap<>();
         try {
-            if (api == Constants.Api.USER_REGISTER_OTP) {
+            if (api == Constants.Api.OTP_USER_REGISTRATION) {
                 hashMap.put("email", values[0]);
                 hashMap.put("otp", values[1]);
 

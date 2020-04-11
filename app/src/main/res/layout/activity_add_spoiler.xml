@@ -57,7 +57,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/full_spoiler"
                     android:textSize="@dimen/text_12"
-                    android:id="@+id/rb_spoiler_full" />
+                    android:id="@+id/rbtn_sp_full" />
 
                 <RadioButton
                     android:layout_width="0dp"
@@ -67,14 +67,14 @@
                     android:textSize="@dimen/text_12"
                     android:layout_marginStart="@dimen/spacing_8"
                     android:layout_marginEnd="@dimen/spacing_8"
-                    android:id="@+id/rb_spoiler_brief" />
+                    android:id="@+id/rbtn_sp_brief" />
 
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/just_ending"
                     android:textSize="@dimen/text_12"
-                    android:id="@+id/rb_spoiler_ending" />
+                    android:id="@+id/rbtn_sp_ending" />
             </RadioGroup>
 
             <TextView

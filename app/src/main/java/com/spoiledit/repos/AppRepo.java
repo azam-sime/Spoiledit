@@ -6,8 +6,6 @@ import com.android.volley.VolleyError;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Urls;
 import com.spoiledit.networks.VolleyProvider;
-import com.spoiledit.parsers.UserParser;
-import com.spoiledit.utils.NetworkUtils;
 
 import org.json.JSONObject;
 
@@ -47,25 +45,25 @@ public class AppRepo extends RootRepo {
                                 if (isRequestSuccess(jsonObject))
                                     apiRequestSuccess(api, jsonObject.optString("data"));
                                 else
-                                    postError(api, jsonObject);
+                                    setRequestStatusFailed(api, jsonObject);
 
                             } catch (Exception e) {
-                                onException(api, e);
+                                setExceptionOccured(api, e);
                             }
                         }
 
                         @Override
                         public void onFailure(VolleyError volleyError) {
                             try {
-                                apiRequestFailure(api, getErrorFromVolleyAsJson(volleyError));
+                                apiRequestFailure(api, getMessageFromVolleyAsJson(volleyError));
                             } catch (Exception e) {
-                                onException(api, e);
+                                setExceptionOccured(api, e);
                             }
                         }
                     }, false, false);
 
         } catch (Exception e) {
-            onException(api, e);
+            setExceptionOccured(api, e);
         }
     }
 }

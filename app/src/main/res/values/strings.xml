@@ -39,7 +39,7 @@
     <string name="create_password_prompt">Please provide your mail to update password</string>
     <string name="hint_old_password">* Old Password</string>
     <string name="hint_new_password">* New Password</string>
-    <string name="change_password_prompt">Enter last password you remember and continue</string>
+    <string name="change_password_prompt">Enter new password and continue</string>
     <string name="new_user">New user?</string>
     <string name="signup">Sign Up</string>
     <string name="terms_and_conditions">Terms and conditions</string>
@@ -73,7 +73,7 @@
     <string name="my_spoilers">My Spoilers</string>
     <string name="my_watchlist">My Watchlist</string>
     <string name="change_password">Change Password</string>
-    <string name="privacy_policy">Privacy Policy</string>
+    <string name="privacy_policies">Privacy Policies</string>
     <string name="about_us">About Us</string>
     <string name="faq">FAQ</string>
     <string name="contact_us">Contact Us</string>
@@ -95,4 +95,5 @@
     <string name="comment">Comment</string>
     <string name="type_your_message">Type your message</string>
     <string name="reply">Reply</string>
+    <string name="cookies_policy">Cookies Policy</string>
 </resources>

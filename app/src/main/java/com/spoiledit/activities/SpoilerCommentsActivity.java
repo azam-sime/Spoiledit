@@ -2,11 +2,8 @@ package com.spoiledit.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputFilter;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,17 +12,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.android.material.button.MaterialButton;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.spoiledit.R;
-import com.spoiledit.adapters.MoviesPopularAdapter;
 import com.spoiledit.adapters.SpoilerCommentsAdapter;
 import com.spoiledit.constants.App;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.File;
 import com.spoiledit.constants.Status;
 import com.spoiledit.manager.FileManager;
-import com.spoiledit.models.CreateSpoilerModel;
+import com.spoiledit.models.CommentModel;
 import com.spoiledit.models.MovieSpoilerModel;
 import com.spoiledit.utils.StringUtils;
 import com.spoiledit.utils.ViewUtils;
@@ -41,6 +36,9 @@ public class SpoilerCommentsActivity extends RootActivity {
     private EditText etComment;
     private SpoilerCommentsAdapter commentsAdapter;
     private FileManager fileManager;
+
+    private boolean reply = false;
+    private int commentId = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,12 +93,23 @@ public class SpoilerCommentsActivity extends RootActivity {
         RecyclerView recyclerView = findViewById(R.id.rv_comments);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        commentsAdapter = new SpoilerCommentsAdapter(this,
-                (lastSelection, currentSelection) -> {
-                    commentsViewModel.requestSpoilerDetails(
-                            commentsAdapter.getItemAt(currentSelection).getId()
-                    );
-                });
+        commentsAdapter = new SpoilerCommentsAdapter(this, new SpoilerCommentsAdapter.OnCommentActionListener() {
+            @Override
+            public void onReplyComment(CommentModel commentModel) {
+                reply = true;
+                commentId = commentModel.getId();
+            }
+
+            @Override
+            public void onLikeComment(CommentModel commentModel) {
+
+            }
+
+            @Override
+            public void onDislikeComment(CommentModel commentModel) {
+
+            }
+        });
 
         recyclerView.setAdapter(commentsAdapter);
         ViewUtils.addFabOffset(this, recyclerView);
@@ -113,18 +122,19 @@ public class SpoilerCommentsActivity extends RootActivity {
         commentsViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
             if (apiStatusModel.getApi() == Constants.Api.MOVIE_COMMENTS) {
                 if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
-                    toggleViews(false);
                     showLoader(apiStatusModel.getMessage());
 
-                } else if (apiStatusModel.getStatus() == Status.Request.API_ERROR) {
-                    toggleViews(true);
+                } else {
                     hideLoader();
-                    showFailure(false, apiStatusModel.getMessage());
-
-                } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
-                    toggleViews(false);
-                    hideLoader();
+                    if (apiStatusModel.getStatus() == Status.Request.API_ERROR)
+                        showFailure(false, apiStatusModel.getMessage());
                 }
+            } else if (apiStatusModel.getApi() == Constants.Api.MOVIE_COMMENT_ADD
+                    || apiStatusModel.getApi() == Constants.Api.MOVIE_COMMENT_EDIT
+                    || apiStatusModel.getApi() == Constants.Api.MOVIE_COMMENT_REPLY
+                    || apiStatusModel.getApi() == Constants.Api.MOVIE_COMMENT_DELETE) {
+                if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS)
+                    requestData();
             }
         });
 
@@ -136,18 +146,13 @@ public class SpoilerCommentsActivity extends RootActivity {
 
     @Override
     public void requestData() {
+        showLoader();
         commentsViewModel.requestComments();
     }
 
     @Override
     public void onRefresh() {
-        showLoader();
-        requestData();
-    }
-
-    @Override
-    public boolean isRequestValid() {
-        return super.isRequestValid();
+        commentsViewModel.requestComments();
     }
 
     @Override
@@ -159,9 +164,21 @@ public class SpoilerCommentsActivity extends RootActivity {
     public void onClick(View v) {
         if (v.getId() == R.id.iv_add_files)
             fileManager.showFileSources();
-        if (v.getId() == R.id.iv_send) {
-            if (!StringUtils.isInvalid(etComment))
-                commentsViewModel.sendMessage(0, etComment.getText().toString().trim());
+        else if (v.getId() == R.id.tv_comment) {
+            reply = false;
+            commentId = 0;
+            etComment.setText("");
+        } else if (v.getId() == R.id.iv_send) {
+            if (!StringUtils.isInvalid(etComment)) {
+                if (reply)
+                    commentsViewModel.replyComment(commentId, etComment.getText().toString().trim());
+                else
+                    commentsViewModel.addComment(etComment.getText().toString().trim());
+
+                reply = false;
+                commentId = 0;
+                etComment.setText("");
+            }
         } else
             super.onClick(v);
     }

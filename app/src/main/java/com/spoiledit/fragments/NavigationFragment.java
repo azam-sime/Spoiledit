@@ -1,25 +1,41 @@
 package com.spoiledit.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.spoiledit.R;
+import com.spoiledit.activities.ChangePasswordActivity;
 import com.spoiledit.activities.DashboardActivity;
+import com.spoiledit.activities.MyMoviesActivity;
+import com.spoiledit.activities.MySpoilersActivity;
 import com.spoiledit.activities.ProfileActivity;
-import com.spoiledit.activities.TCAndPPActivity;
+import com.spoiledit.activities.ProfileEditActivity;
+import com.spoiledit.activities.ProviderDetailsActivity;
 import com.spoiledit.constants.App;
+import com.spoiledit.models.UserModel;
+import com.spoiledit.viewmodels.DashboardViewModel;
 
 public class NavigationFragment extends RootFragment {
     public static final String TAG = NavigationFragment.class.getCanonicalName();
 
+    private DashboardViewModel dashboardViewModel;
     private TextView tvUserLabel, tvUserName;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        dashboardViewModel = ViewModelProviders.of(getActivity()).get(DashboardViewModel.class);
+    }
 
     @Nullable
     @Override
@@ -43,60 +59,71 @@ public class NavigationFragment extends RootFragment {
         view.findViewById(R.id.ll_change_password).setOnClickListener(this);
         view.findViewById(R.id.ll_tc).setOnClickListener(this);
         view.findViewById(R.id.ll_pp).setOnClickListener(this);
+        view.findViewById(R.id.ll_cp).setOnClickListener(this);
         view.findViewById(R.id.ll_about_us).setOnClickListener(this);
-        view.findViewById(R.id.ll_faqs).setOnClickListener(this);
-        view.findViewById(R.id.ll_contact_us).setOnClickListener(this);
         view.findViewById(R.id.ll_logout).setOnClickListener(this);
     }
 
     @Override
     public void setData(View view) {
-        tvUserLabel.setText(getUserModel().getDisplayName().substring(0, 1));
-        tvUserName.setText(getUserModel().getDisplayName());
+        UserModel userModel = getUserModel();
+
+        tvUserLabel.setText(userModel.getDisplayName().substring(0, 1));
+        tvUserName.setText(userModel.getDisplayName());
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == App.Intent.Request.USER_PROFILE_EDIT && resultCode == Activity.RESULT_OK)
+            setData(getView());
     }
 
     @Override
     public void onClick(View v) {
-        ((DashboardActivity) getActivity()).closeDrawer();
-
         if (v.getId() == R.id.v_edit_profile) {
-            getContext().startActivity(new android.content.Intent(getContext(), ProfileActivity.class));
+            getActivity().startActivityForResult(
+                    new android.content.Intent(getContext(), ProfileEditActivity.class), App.Intent.Request.USER_PROFILE_EDIT);
 
         } else if (v.getId() == R.id.ll_my_account) {
-
+            getContext().startActivity(new android.content.Intent(getContext(), ProfileActivity.class));
 
         } else if (v.getId() == R.id.ll_my_spoilers) {
-
+            getContext().startActivity(new android.content.Intent(getContext(), MySpoilersActivity.class));
 
         } else if (v.getId() == R.id.ll_my_watchlist) {
-
+            getContext().startActivity(new android.content.Intent(getContext(), MyMoviesActivity.class));
 
         } else if (v.getId() == R.id.ll_change_password) {
-
+            getContext().startActivity(new android.content.Intent(getContext(), ChangePasswordActivity.class));
 
         } else if (v.getId() == R.id.ll_tc) {
-            android.content.Intent intent = new android.content.Intent(getContext(), TCAndPPActivity.class);
-            intent.putExtra(App.Intent.Extra.TC_AND_PP, App.Intent.Value.FOR_TC);
-            intent.putExtra(App.Intent.Extra.TC_AND_PP_DISPLAY_ONLY, true);
+            android.content.Intent intent = new android.content.Intent(getContext(), ProviderDetailsActivity.class);
+            intent.putExtra(App.Intent.Extra.PROVIDER_DETAILS, App.Intent.Value.FOR_TC);
+            intent.putExtra(App.Intent.Extra.PROVIDER_DETAILS_DISPLAY_ONLY, true);
             getContext().startActivity(intent);
 
         } else if (v.getId() == R.id.ll_pp) {
-            android.content.Intent intent = new android.content.Intent(getContext(), TCAndPPActivity.class);
-            intent.putExtra(App.Intent.Extra.TC_AND_PP, App.Intent.Value.FOR_PP);
-            intent.putExtra(App.Intent.Extra.TC_AND_PP_DISPLAY_ONLY, true);
+            android.content.Intent intent = new android.content.Intent(getContext(), ProviderDetailsActivity.class);
+            intent.putExtra(App.Intent.Extra.PROVIDER_DETAILS, App.Intent.Value.FOR_PP);
+            intent.putExtra(App.Intent.Extra.PROVIDER_DETAILS_DISPLAY_ONLY, true);
+            getContext().startActivity(intent);
+
+        } else if (v.getId() == R.id.ll_cp) {
+            android.content.Intent intent = new android.content.Intent(getContext(), ProviderDetailsActivity.class);
+            intent.putExtra(App.Intent.Extra.PROVIDER_DETAILS, App.Intent.Value.FOR_CP);
+            intent.putExtra(App.Intent.Extra.PROVIDER_DETAILS_DISPLAY_ONLY, true);
             getContext().startActivity(intent);
 
         } else if (v.getId() == R.id.ll_about_us) {
-
-
-        } else if (v.getId() == R.id.ll_faqs) {
-
-
-        } else if (v.getId() == R.id.ll_contact_us) {
-
+            android.content.Intent intent = new android.content.Intent(getContext(), ProviderDetailsActivity.class);
+            intent.putExtra(App.Intent.Extra.PROVIDER_DETAILS, App.Intent.Value.FOR_AU);
+            intent.putExtra(App.Intent.Extra.PROVIDER_DETAILS_DISPLAY_ONLY, true);
+            getContext().startActivity(intent);
 
         } else if (v.getId() == R.id.ll_logout) {
-
+            dashboardViewModel.requestLogout();
 
         }
     }

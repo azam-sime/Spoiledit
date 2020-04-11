@@ -5,23 +5,27 @@ import com.android.volley.Request;
 public enum Urls {
     TOKEN(Constants.Api.TOKEN, Constants.Api.BASE_URL + "/authorization?oth=gS56999pPixuB9jA38eh858lznm4bRdn", Request.Method.GET)
 
+    , OTP_USER_REGISTRATION(Constants.Api.OTP_USER_REGISTRATION, Constants.Api.BASE_URL + "/otp-register", Request.Method.POST)
+    , OTP_FORGOT_PASSWORD(Constants.Api.OTP_FORGOT_PASSWORD, Constants.Api.BASE_URL + "/forgot-password", Request.Method.POST)
+
     , USER_REGISTER(Constants.Api.USER_REGISTER, Constants.Api.USER_URL + "/register", Request.Method.GET)
-    , USER_REGISTER_OTP(Constants.Api.USER_REGISTER_OTP, Constants.Api.BASE_URL + "/otp-register", Request.Method.POST)
     , USER_LOGIN(Constants.Api.USER_LOGIN, Constants.Api.BASE_URL + "/sp-login", Request.Method.POST)
     , USER_PROFILE_GET(Constants.Api.USER_PROFILE_GET, Constants.Api.USER_URL + "/", Request.Method.GET)
     , USER_PROFILE_UPDATE(Constants.Api.USER_PROFILE_UPDATE, Constants.Api.USER_URL + "/", Request.Method.POST)
     , USER_AVATAR_UPDATE(Constants.Api.USER_AVATAR_UPDATE, Constants.Api.BASE_URL + "/profile-picture", Request.Method.POST)
     , USER_AVATAR_GET(Constants.Api.USER_AVATAR_GET, Constants.Api.USER_URL + "/", Request.Method.GET)
-    , USER_LOGOUT(Constants.Api.USER_LOGOUT, Constants.Api.BASE_URL + "/logout", Request.Method.GET)
+    , USER_LOGOUT(Constants.Api.USER_LOGOUT, Constants.Api.BASE_URL + "/logout/", Request.Method.GET)
 
-    , PASSWORD_FORGOT(Constants.Api.PASSWORD_FORGOT, Constants.Api.BASE_URL + "/forgot-password", Request.Method.POST)
     , PASSWORD_VERIFY_OTP(Constants.Api.PASSWORD_VERIFY_OTP, Constants.Api.BASE_URL + "/checkotp-password", Request.Method.POST)
     , PASSWORD_UPDATE(Constants.Api.PASSWORD_UPDATE, Constants.Api.BASE_URL + "/update-password", Request.Method.POST)
     , PASSWORD_CHANGE(Constants.Api.PASSWORD_CHANGE, Constants.Api.USER_URL + "/", Request.Method.POST)
 
     , TMDB_IMAGE_DETAILS(Constants.Api.TMDB_IMAGE_DETAILS, Constants.Api.BASE_URL + "/tmdb-image-path", Request.Method.GET)
-    , T_AND_C(Constants.Api.T_AND_C, Constants.Api.BASE_URL + "/pages/9", Request.Method.GET)
-    , COOKIES(Constants.Api.COOKIES, Constants.Api.BASE_URL + "/pages/7", Request.Method.GET)
+
+    , PROVIDER_TERMS_CONDITIONS(Constants.Api.PROVIDER_TERMS_CONDITIONS, Constants.Api.BASE_URL + "/pages/9", Request.Method.GET)
+    , PROVIDER_PRIVACY_POLICIES(Constants.Api.PROVIDER_PRIVACY_POLICIES, Constants.Api.BASE_URL + "/pages/8", Request.Method.GET)
+    , PROVIDER_COOKIES_POLICY(Constants.Api.PROVIDER_COOKIES_POLICY, Constants.Api.BASE_URL + "/pages/7", Request.Method.GET)
+    , PROVIDER_ABOUT_US(Constants.Api.PROVIDER_ABOUT_US, Constants.Api.BASE_URL + "/pages/6", Request.Method.GET)
 
     , SEARCH_AUTO_COMPLETE(Constants.Api.SEARCH_AUTO_COMPLETE, Constants.Api.BASE_URL + "/movies-autocomplete", Request.Method.POST)
     , SEARCH_MOVIE(Constants.Api.SEARCH_MOVIE, Constants.Api.BASE_URL + "/movies-search-results?query=", Request.Method.GET)

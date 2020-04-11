@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/spacing_4">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_8"
+        android:orientation="horizontal">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing_4"
+            app:cardBackgroundColor="@color/colorWhite"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="6dp">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="132dp"
+                android:contentDescription="@string/content_description"
+                android:src="@drawable/popcorn"
+                android:id="@+id/iv_poster"/>
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/spacing_8"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/spacing_4"
+                    tools:text="The Aftermath"
+                    android:textSize="@dimen/text_18"
+                    android:maxLines="1"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textColor="@color/colorBlack"
+                    android:id="@+id/tv_title"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/arrow_left"
+                    android:tint="@color/colorAccent"
+                    android:rotation="90"
+                    android:id="@+id/iv_remove"/>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_4"
+                android:layout_marginBottom="@dimen/spacing_4"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/size_rating_star"
+                    android:layout_height="@dimen/size_rating_star"
+                    android:layout_margin="@dimen/spacing_4"
+                    android:contentDescription="@string/content_description"
+                    android:src="@drawable/star_grey"
+                    android:id="@+id/iv_rate_1"/>
+
+                <ImageView
+                    android:layout_width="@dimen/size_rating_star"
+                    android:layout_height="@dimen/size_rating_star"
+                    android:layout_margin="@dimen/spacing_4"
+                    android:contentDescription="@string/content_description"
+                    android:src="@drawable/star_grey"
+                    android:id="@+id/iv_rate_2"/>
+
+                <ImageView
+                    android:layout_width="@dimen/size_rating_star"
+                    android:layout_height="@dimen/size_rating_star"
+                    android:layout_margin="@dimen/spacing_4"
+                    android:contentDescription="@string/content_description"
+                    android:src="@drawable/star_grey"
+                    android:id="@+id/iv_rate_3"/>
+
+                <ImageView
+                    android:layout_width="@dimen/size_rating_star"
+                    android:layout_height="@dimen/size_rating_star"
+                    android:layout_margin="@dimen/spacing_4"
+                    android:contentDescription="@string/content_description"
+                    android:src="@drawable/star_grey"
+                    android:id="@+id/iv_rate_4"/>
+
+                <ImageView
+                    android:layout_width="@dimen/size_rating_star"
+                    android:layout_height="@dimen/size_rating_star"
+                    android:layout_margin="@dimen/spacing_4"
+                    android:contentDescription="@string/content_description"
+                    android:src="@drawable/star_grey"
+                    android:id="@+id/iv_rate_5"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_4"
+                tools:text="The surviving Resistance faces the First Order once again as the jurney."
+                android:maxLines="2"
+                android:fontFamily="@font/montserrat_medium"
+                android:id="@+id/tv_overview"/>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/view_details"
+                    android:fontFamily="@font/montserrat_semi_bold"
+                    android:textSize="@dimen/text_14"
+                    android:textColor="@color/colorBlack" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="@dimen/spacing_8"
+                    android:src="@drawable/arrow_circle_right" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:progressBarStyleLarge"
+        android:layout_gravity="center"
+        android:id="@+id/pb_loading" />
+</FrameLayout>

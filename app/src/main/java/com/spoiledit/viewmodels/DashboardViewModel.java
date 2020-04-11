@@ -53,6 +53,10 @@ public class DashboardViewModel extends ViewModel {
         return dashboardRepo.getSpoilerModelsMutable();
     }
 
+    public MutableLiveData<List<String>> getSearchValues() {
+        return dashboardRepo.getSearchValues();
+    }
+
     public void requestSpoilers() {
         dashboardRepo.requestSpoilers();
     }
@@ -61,10 +65,18 @@ public class DashboardViewModel extends ViewModel {
         dashboardRepo.requestMovieDetails(movieId);
     }
 
-    public static final class DashboardViewModelFactory implements ViewModelProvider.Factory {
+    public void requestSearchAutoCompleteValues(String searchValue) {
+        dashboardRepo.requestSearchAutoCompleteValues(searchValue);
+    }
+
+    public void requestLogout() {
+        dashboardRepo.requestLogout();
+    }
+
+    public static final class Factory implements ViewModelProvider.Factory {
         private DashboardRepo dashboardRepo;
 
-        public DashboardViewModelFactory(DashboardRepo dashboardRepo) {
+        public Factory(DashboardRepo dashboardRepo) {
             this.dashboardRepo = dashboardRepo;
         }
 

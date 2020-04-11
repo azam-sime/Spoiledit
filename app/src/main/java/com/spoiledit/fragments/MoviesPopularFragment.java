@@ -72,20 +72,24 @@ public class MoviesPopularFragment extends RootFragment {
     @Override
     public void addObservers() {
         dashboardViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
-            if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
-                if (apiStatusModel.getApi() != Constants.Api.MOVIES_DETAILS)
-                    showLoader(apiStatusModel.getMessage());
-
-            } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
-                hideLoader();
-                if (apiStatusModel.getApi() == Constants.Api.MOVIES_DETAILS) {
-                    popularAdapter.removeLastSelection();
-                    startActivity(new Intent(getContext(), DetailsMovieActivity.class));
+            if (apiStatusModel.getApi() == Constants.Api.MOVIES_UPCOMING) {
+                if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
+                    if (!swipeRefreshLayout.isRefreshing())
+                        showLoader(apiStatusModel.getMessage());
+                } else {
+                    hideLoader();
+                    if (apiStatusModel.getStatus() == Status.Request.API_ERROR)
+                        showFailure(false, apiStatusModel.getMessage());
                 }
 
-            } else {
-                hideLoader();
-                showFailure(false, apiStatusModel.getMessage());
+            } else if (apiStatusModel.getApi() == Constants.Api.MOVIES_DETAILS) {
+                if (apiStatusModel.getStatus() != Status.Request.API_HIT) {
+                    popularAdapter.removeLastSelection();
+                    if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS)
+                        startActivity(new Intent(getContext(), DetailsMovieActivity.class));
+                    else
+                        showFailure(false, apiStatusModel.getMessage());
+                }
             }
         });
 
@@ -108,7 +112,7 @@ public class MoviesPopularFragment extends RootFragment {
 
     @Override
     public void onRefresh() {
-        requestData();
+        dashboardViewModel.requestMoviesPopular();
     }
 
     @Override

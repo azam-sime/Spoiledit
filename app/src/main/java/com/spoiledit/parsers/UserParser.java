@@ -10,58 +10,118 @@ import org.json.JSONObject;
 
 import java.util.Iterator;
 
-public class UserParser extends AsyncTask<String, Void, UserModel> {
-    @Override
-    protected UserModel doInBackground(String... strings) {
+public class UserParser {
+
+    public static class LoginParser extends AsyncTask<String, Void, UserModel> {
+        @Override
+        protected UserModel doInBackground(String... strings) {
+            try {
+                JSONObject resultObject = new JSONObject(strings[0]).optJSONObject("results");
+                UserModel userModel = parseDetailsObject(resultObject.optJSONObject("data"));
+                parseCapsObject(userModel, resultObject.optJSONObject("caps"));
+                parseRolesArray(userModel, resultObject.optJSONArray("roles"));
+                parseAllCapsObject(userModel, resultObject.optJSONObject("allcaps"));
+                parseFilterObject(userModel, resultObject.optJSONObject("filter"));
+
+                return userModel;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    public static final class EditParser extends AsyncTask<JSONObject, Void, UserModel> {
+
+        @Override
+        protected UserModel doInBackground(JSONObject... jsonObjects) {
+            try {
+                JSONObject dataObject = jsonObjects[0].optJSONObject("data");
+                UserModel userModel = parseDetailsObject(dataObject.optJSONObject("data"));
+                parseCapsObject(userModel, dataObject.optJSONObject("caps"));
+                parseRolesArray(userModel, dataObject.optJSONArray("roles"));
+                parseAllCapsObject(userModel, dataObject.optJSONObject("allcaps"));
+                parseFilterObject(userModel, dataObject.optJSONObject("filter"));
+
+                return userModel;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    public static final class DetailsParser extends AsyncTask<JSONObject, Void, ProfileModel> {
+
+        @Override
+        protected ProfileModel doInBackground(JSONObject... jsonObjects) {
+            try {
+                JSONObject dataObject = jsonObjects[0].optJSONObject("data");
+                UserModel userModel = parseDetailsObject(dataObject.optJSONObject("data"));
+                parseCapsObject(userModel, dataObject.optJSONObject("caps"));
+                parseRolesArray(userModel, dataObject.optJSONArray("roles"));
+                parseAllCapsObject(userModel, dataObject.optJSONObject("allcaps"));
+                parseFilterObject(userModel, dataObject.optJSONObject("filter"));
+
+                return ProfileModel.fromUserModel(userModel);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    private static UserModel parseDetailsObject(JSONObject jsonObject) {
         UserModel userModel = new UserModel();
-        try {
-            JSONObject jsonObject = new JSONObject(strings[0]);
 
-            JSONObject dataObject = jsonObject.optJSONObject("data");
-            userModel.setId(dataObject.optInt("ID"));
-            userModel.setLogin(dataObject.optString("user_login"));
-            userModel.setPassword(dataObject.optString("user_pass"));
-            userModel.setNiceName(dataObject.optString("user_nicename"));
-            userModel.setEmail(dataObject.optString("user_email"));
-            userModel.setPhone(dataObject.optString("user_phone"));
-            userModel.setUrl(dataObject.optString("user_url"));
-            userModel.setRegistered(dataObject.optString("user_registered"));
-            userModel.setActivationKey(dataObject.optString("user_activation_key"));
-            userModel.setStatus(dataObject.optString("user_status"));
-            userModel.setDisplayName(dataObject.optString("display_name"));
+        if (jsonObject != null) {
+            userModel.setId(jsonObject.optInt("ID"));
+            userModel.setLogin(jsonObject.optString("user_login"));
+            userModel.setPassword(jsonObject.optString("user_pass"));
+            userModel.setNiceName(jsonObject.optString("user_nicename"));
+            userModel.setEmail(jsonObject.optString("user_email"));
+            userModel.setUrl(jsonObject.optString("user_url"));
+            userModel.setRegistered(jsonObject.optString("user_registered"));
+            userModel.setActivationKey(jsonObject.optString("user_activation_key"));
+            userModel.setStatus(jsonObject.optString("user_status"));
+            userModel.setDisplayName(jsonObject.optString("display_name"));
+//            userModel.setUsername(dataObject.optString("username"));
+            userModel.setPhone(jsonObject.has("phone") ?
+                    jsonObject.optString("phone") : jsonObject.optString("phone_number"));
+        }
 
-            JSONObject capsObject = jsonObject.optJSONObject("caps");
+        return userModel;
+    }
+
+    private static void parseCapsObject(UserModel userModel, JSONObject capsObject) {
+        if (capsObject != null) {
             for (Iterator<String> iterator = capsObject.keys(); iterator.hasNext(); ) {
                 String key = iterator.next();
                 if (capsObject.optBoolean(key))
                     userModel.setCapKey(key);
             }
+        }
+    }
 
-            JSONArray rolesArray = jsonObject.optJSONArray("roles");
+    private static void parseRolesArray(UserModel userModel, JSONArray rolesArray) {
+        if (rolesArray != null) {
             int l = rolesArray.length();
             String[] roles = new String[l];
             for (int i = 0; i < l; i++) {
                 roles[i] = rolesArray.optString(i);
             }
             userModel.setRoles(roles);
-
-            JSONObject allcapsObject = jsonObject.optJSONObject("allcaps");
-
-            JSONObject filterObject = jsonObject.optJSONObject("filter");
-
-            return userModel;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
         }
     }
 
-    public static final class ProfileParser extends AsyncTask<JSONObject, Void, ProfileModel> {
+    private static void parseAllCapsObject(UserModel userModel, JSONObject allCapsObject) {
 
-        @Override
-        protected ProfileModel doInBackground(JSONObject... jsonObjects) {
-            return null;
-        }
+    }
+
+    private static void parseFilterObject(UserModel userModel, JSONObject filterObject) {
+
     }
 }

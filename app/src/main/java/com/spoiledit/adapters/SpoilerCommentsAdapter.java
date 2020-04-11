@@ -12,8 +12,6 @@ import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.spoiledit.R;
-import com.spoiledit.constants.Urls;
-import com.spoiledit.listeners.OnItemSelectionListener;
 import com.spoiledit.models.CommentModel;
 import com.spoiledit.utils.ViewUtils;
 import com.squareup.picasso.Picasso;
@@ -26,13 +24,13 @@ public class SpoilerCommentsAdapter extends RootSelectionAdapter {
 
     private Context context;
     private List<CommentModel> commentModels;
-    private OnItemSelectionListener onItemSelectionListener;
+    private OnCommentActionListener onCommentActionListener;
     private int lastSelection;
 
-    public SpoilerCommentsAdapter(Context context, OnItemSelectionListener onItemSelectionListener) {
+    public SpoilerCommentsAdapter(Context context, OnCommentActionListener onCommentActionListener) {
         this.context = context;
         commentModels = new ArrayList<>();
-        this.onItemSelectionListener = onItemSelectionListener;
+        this.onCommentActionListener = onCommentActionListener;
         lastSelection = -1;
     }
 
@@ -105,10 +103,10 @@ public class SpoilerCommentsAdapter extends RootSelectionAdapter {
 
             ViewUtils.changeProgressMode(commentModel.isSelected(), viewHolder.loadingBar);
 
-            viewHolder.tvSpoiler.setText(commentModel.getComment());
+            viewHolder.tvComment.setText(commentModel.getComment());
             viewHolder.tvDate.setText(commentModel.getCommentDate());
-            viewHolder.tvSpoiler.setText("(" + commentModel.getLikes() + ")");
-            viewHolder.tvDate.setText("(" + commentModel.getDislikes() + ")");
+            viewHolder.tvThumbsUp.setText("(" + commentModel.getLikes() + ")");
+            viewHolder.tvThumbsDown.setText("(" + commentModel.getDislikes() + ")");
 
             Picasso.get()
                     .load(commentModel.getAvatarUrl())
@@ -127,7 +125,7 @@ public class SpoilerCommentsAdapter extends RootSelectionAdapter {
     public class CommentViewHolder extends RecyclerView.ViewHolder {
         private ImageView ivUser;
         private ContentLoadingProgressBar loadingBar;
-        private TextView tvSpoiler, tvDate, tvThumbsUp, tvThumbsDown;
+        private TextView tvComment, tvDate, tvReply, tvThumbsUp, tvThumbsDown;
 
         public CommentViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -136,18 +134,37 @@ public class SpoilerCommentsAdapter extends RootSelectionAdapter {
 
             loadingBar = itemView.findViewById(R.id.pb_loading);
 
-            tvSpoiler = itemView.findViewById(R.id.tv_spoiler);
+            tvComment = itemView.findViewById(R.id.tv_comment);
             tvDate = itemView.findViewById(R.id.tv_date);
-            tvThumbsDown = itemView.findViewById(R.id.tv_thumbs_down);
+            tvReply = itemView.findViewById(R.id.tv_reply);
             tvThumbsUp = itemView.findViewById(R.id.tv_thumbs_up);
+            tvThumbsDown = itemView.findViewById(R.id.tv_thumbs_down);
 
-            itemView.setOnClickListener(v -> {
-                if (onItemSelectionListener != null) {
-                    final int finalLastPosition = lastSelection;
-                    notifySelection(getAdapterPosition());
-                    onItemSelectionListener.onItemSelected(finalLastPosition, getAdapterPosition());
+            tvReply.setOnClickListener(v -> {
+                if (onCommentActionListener != null) {
+                    onCommentActionListener.onReplyComment(commentModels.get(getAdapterPosition()));
+                }
+            });
+
+            tvThumbsUp.setOnClickListener(v -> {
+                if (onCommentActionListener != null) {
+                    onCommentActionListener.onLikeComment(commentModels.get(getAdapterPosition()));
+                }
+            });
+
+            tvThumbsDown.setOnClickListener(v -> {
+                if (onCommentActionListener != null) {
+                    onCommentActionListener.onDislikeComment(commentModels.get(getAdapterPosition()));
                 }
             });
         }
+    }
+
+    public interface OnCommentActionListener {
+        void onReplyComment(CommentModel commentModel);
+
+        void onLikeComment(CommentModel commentModel);
+
+        void onDislikeComment(CommentModel commentModel);
     }
 }

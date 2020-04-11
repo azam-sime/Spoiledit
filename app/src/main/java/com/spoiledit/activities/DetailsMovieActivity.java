@@ -20,13 +20,13 @@ import com.spoiledit.models.MovieSpoilerModel;
 import com.spoiledit.repos.CommentsRepo;
 import com.spoiledit.utils.ViewUtils;
 import com.spoiledit.viewmodels.DetailsMovieViewModel;
+import com.spoiledit.viewmodels.DetailsSpoilersViewModel;
 
 public class DetailsMovieActivity extends RootActivity {
     public static final String TAG = DetailsMovieActivity.class.getCanonicalName();
 
-    public static final int REQUEST_ADD_SPOILER = 1234;
-
     private DetailsMovieViewModel detailsMovieViewModel;
+    private DetailsSpoilersViewModel detailsSpoilersViewModel;
 
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
@@ -42,6 +42,7 @@ public class DetailsMovieActivity extends RootActivity {
         super.onCreate(savedInstanceState);
 
         detailsMovieViewModel = ViewModelProviders.of(this).get(DetailsMovieViewModel.class);
+        detailsSpoilersViewModel = ViewModelProviders.of(this).get(DetailsSpoilersViewModel.class);
         setContentView(R.layout.activity_movie_details);
     }
 
@@ -69,7 +70,7 @@ public class DetailsMovieActivity extends RootActivity {
                 return true;
 
             } else if (menuItem.getItemId() == R.id.menu_add_watchlist) {
-                Toast.makeText(this, "Implementing soon...", Toast.LENGTH_SHORT).show();
+                detailsMovieViewModel.addToWatchList();
                 return true;
 
             } else if (menuItem.getItemId() == R.id.menu_view_spoilers) {

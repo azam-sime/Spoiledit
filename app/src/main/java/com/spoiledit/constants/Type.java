@@ -45,4 +45,15 @@ public final class Type {
         public static final int RECENTS = 2;
         public static final int UPCOMINGS = 3;
     }
+
+    public static final class Search {
+        private Search() {
+
+        }
+
+        public static final int MOVIES_BY_TITLE = 1;
+        public static final int MOVIES_BY_PERSON = 2;
+        public static final int MOVIES_BY_KEYWORD = 3;
+        public static final int MOVIES_BY_COMPANIES = 4;
+    }
 }

@@ -23,10 +23,10 @@ public class SignUpViewModel extends ViewModel {
         signUpRepo.requestSignUp(credentials);
     }
 
-    public static final class SignUpViewModelFactory implements ViewModelProvider.Factory {
+    public static final class Factory implements ViewModelProvider.Factory {
         private SignUpRepo signUpRepo;
 
-        public SignUpViewModelFactory(SignUpRepo signUpRepo) {
+        public Factory(SignUpRepo signUpRepo) {
             this.signUpRepo = signUpRepo;
         }
 

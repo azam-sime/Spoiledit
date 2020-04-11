@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.spoiledit.R;
+import com.spoiledit.constants.App;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
 import com.spoiledit.fragments.ForgotPasswordFragment;
@@ -25,7 +26,7 @@ import com.spoiledit.viewmodels.LoginViewModel;
 
 import java.util.regex.Pattern;
 
-public class SignInActivity extends RootActivity {
+public class SignInActivity extends RootActivity implements ForgotPasswordFragment.OnVerifyOtpListener {
     public static final String TAG = SignInActivity.class.getCanonicalName();
 
     private LoginViewModel loginViewModel;
@@ -35,13 +36,16 @@ public class SignInActivity extends RootActivity {
     private MaterialButton btnLogin;
     private TextView tvForgot, tvSignUp;
 
+    private ForgotPasswordFragment forgotPasswordFragment;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         loginViewModel = ViewModelProviders.of(this,
-                new LoginViewModel.LoginViewModelFactory(new LoginRepo(this)))
+                new LoginViewModel.Factory(new LoginRepo(this)))
                 .get(LoginViewModel.class);
+
         setContentView(R.layout.activity_sign_in);
     }
 
@@ -52,6 +56,8 @@ public class SignInActivity extends RootActivity {
 
     @Override
     public void initUi() {
+        forgotPasswordFragment = new ForgotPasswordFragment(this);
+
         etUsername = findViewById(R.id.et_username);
         etPassword = findViewById(R.id.et_password);
 
@@ -66,9 +72,7 @@ public class SignInActivity extends RootActivity {
     @Override
     public void initialiseListener() {
         tvForgot.setOnClickListener(this);
-
         btnLogin.setOnClickListener(this);
-
         tvSignUp.setOnClickListener(this);
     }
 
@@ -105,11 +109,10 @@ public class SignInActivity extends RootActivity {
                 } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
                     toggleViews(false);
                     hideLoader();
-                    PreferenceUtils.saveLoginStatus(this,
-                            cbRemember.isChecked() ? Status.Login.REQUIRE_NOTHING
-                                    : Status.Login.REQUIRE_SIGN_IN_NOT_CREDS);
-//                    showSuccess(false, apiStatusModel.getMessage(), this::gotoNextScreen);
-                    gotoNextScreen();
+                    PreferenceUtils.saveLoginStatus(this, cbRemember.isChecked() ? Status.Login.REQUIRE_NOTHING
+                            : Status.Login.REQUIRE_SIGN_IN_NOT_CREDS);
+                    startActivity(new Intent(this, DashboardActivity.class));
+                    finish();
                 }
             }
         });
@@ -130,9 +133,10 @@ public class SignInActivity extends RootActivity {
 
         } else if (!Pattern.matches(Patterns.EMAIL_ADDRESS.pattern(), etUsername.getText().toString())) {
             showWarning("Username doesn't match a valid email format.");
-            etPassword.requestFocus();
-            etPassword.setSelection(etPassword.getText().length());
+            etUsername.requestFocus();
+            etUsername.setSelection(etUsername.getText().length());
             return false;
+
         } else if (StringUtils.isInvalid(etPassword.getText().toString())) {
             showWarning("Please enter a valid password.");
             etPassword.requestFocus();
@@ -146,7 +150,7 @@ public class SignInActivity extends RootActivity {
     public void onClick(View v) {
         if (v.getId() == R.id.btn_login) {
             if (isRequestValid()) {
-                String[] credentials = new String[] {etUsername.getText().toString(),
+                String[] credentials = new String[]{etUsername.getText().toString(),
                         etPassword.getText().toString()};
                 PreferenceUtils.saveCredentials(this, credentials);
                 loginViewModel.requestLogin(credentials);
@@ -156,13 +160,12 @@ public class SignInActivity extends RootActivity {
         } else if (v.getId() == R.id.tv_sign_up) {
             startActivity(new Intent(this, SignUpActivity.class));
             finish();
-            return;
 
+            return;
         } else if (v.getId() == R.id.tv_forgot_password) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            ForgotPasswordFragment fragment = new ForgotPasswordFragment();
             fragmentTransaction.setCustomAnimations(R.anim.rise_from_bottom, R.anim.sink_to_bottom);
-            fragmentTransaction.add(R.id.ll_container, fragment);
+            fragmentTransaction.add(R.id.ll_container, forgotPasswordFragment);
             fragmentTransaction.addToBackStack(ForgotPasswordFragment.TAG);
             fragmentTransaction.commit();
             return;
@@ -171,8 +174,14 @@ public class SignInActivity extends RootActivity {
     }
 
     @Override
-    public void gotoNextScreen() {
-        startActivity(new Intent(this, DashboardActivity.class));
-        finish();
+    public void onOtpVerificationClicked(boolean sentToMail, String sentToAddress) {
+        getSupportFragmentManager().beginTransaction().remove(forgotPasswordFragment);
+
+        android.content.Intent intent = new android.content.Intent(this, VerifyOtpActivity.class);
+        intent.putExtra(App.Intent.Extra.OTP_FOR, App.Intent.Value.OTP_FOR_PASSWORD_VERIFICATION);
+        intent.putExtra(App.Intent.Extra.OTP_SENT_TO, sentToMail ? App.Intent.Value.OTP_SENT_TO_MAIL
+                : App.Intent.Value.OTP_SENT_TO_PHONE);
+        intent.putExtra(App.Intent.Extra.OTP_SENT_TO_ADDRESS, sentToAddress);
+        startActivity(intent);
     }
 }

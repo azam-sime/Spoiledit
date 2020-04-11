@@ -26,8 +26,11 @@ import com.spoiledit.utils.ViewUtils;
 
 public abstract class RootFragment extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
-    private UserModel userModel;
     private ContentLoadingProgressBar progressBar;
+
+    private TextView tvToolbar;
+    private ImageView ivBack, ivPopcorn;
+
     private Snackbar snackbar;
     private boolean fragmentVisibleToUser = false;
 
@@ -43,12 +46,14 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        userModel = PreferenceUtils.getUserModel(getContext());
-        progressBar = view.findViewById(R.id.pb_loading);
+        tvToolbar = view.findViewById(R.id.tv_toolbar);
+        ivBack = view.findViewById(R.id.iv_back);
+        ivPopcorn = view.findViewById(R.id.iv_popcorn);
 
+        progressBar = view.findViewById(R.id.pb_loading);
         tvNoData = view.findViewById(R.id.tv_error);
 
-        setUpToolbar(view);
+        setUpToolbar();
         initUi(view);
         initialiseListener(view);
 
@@ -64,7 +69,7 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
         setData(view);
     }
 
-    public void setUpToolbar(View view) {
+    public void setUpToolbar() {
 
     }
 
@@ -97,7 +102,7 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
         if (v.getId() == R.id.iv_back)
             getActivity().onBackPressed();
         else if (v.getId() == R.id.iv_popcorn)
-            showInterrupt("Will be soon implmented...", true);
+            onPopcornClick();
     }
 
     @Override
@@ -105,14 +110,29 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
 
     }
 
-    public void setupToolBar(View view, String title) {
-        TextView tvToolbar = view.findViewById(R.id.tv_toolbar);
-        tvToolbar.setText(title);
+    public void setupToolBar(String title) {
+        setupToolBar(title, false);
+    }
 
-        ImageView ivBack = view.findViewById(R.id.iv_back);
-        ivBack.setOnClickListener(this);
-        ImageView ivPopcorn = view.findViewById(R.id.iv_popcorn);
-        ivPopcorn.setOnClickListener(this);
+    public void setupBackIconOnly() {
+        setupToolBar(null, false);
+    }
+
+    public void setupToolBar(String title, boolean showPopcorn) {
+        if (tvToolbar != null)
+            StringUtils.setText(tvToolbar, title);
+
+        if (ivPopcorn != null) {
+            ivPopcorn.setVisibility(showPopcorn ? View.VISIBLE : View.GONE);
+            ivPopcorn.setOnClickListener(this);
+        }
+
+        if (ivBack != null)
+            ivBack.setOnClickListener(this);
+    }
+
+    public void onPopcornClick() {
+
     }
 
     public boolean isRequestValid() {
@@ -153,17 +173,19 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
     }
 
     public void showInterrupt(String message, boolean definite, String actionText, Runnable action) {
-        if (snackbar == null) {
-            snackbar = Snackbar.make(getActivity().findViewById(R.id.root), message,
-                    definite ? Snackbar.LENGTH_LONG : Snackbar.LENGTH_INDEFINITE);
-        } else {
-            snackbar.setText(message);
-            snackbar.setDuration(definite ? Snackbar.LENGTH_LONG : Snackbar.LENGTH_INDEFINITE);
+        if (isFragmentVisibleToUser()) {
+            if (snackbar == null) {
+                snackbar = Snackbar.make(getActivity().findViewById(R.id.root), message,
+                        definite ? Snackbar.LENGTH_LONG : Snackbar.LENGTH_INDEFINITE);
+            } else {
+                snackbar.setText(message);
+                snackbar.setDuration(definite ? Snackbar.LENGTH_LONG : Snackbar.LENGTH_INDEFINITE);
+            }
+            if (action != null) {
+                snackbar.setAction(actionText, v -> action.run());
+            }
+            snackbar.show();
         }
-        if (action != null) {
-            snackbar.setAction(actionText, v -> action.run());
-        }
-        snackbar.show();
     }
 
     public void showFailure(String message) {
@@ -191,44 +213,50 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
     }
 
     public void showFailure(boolean soft, String message, Runnable action) {
-        if (action != null) {
-            if (soft)
-                showInterrupt(message, true, "Okay", action);
-            else
-                DialogUtils.showFailure(getActivity(), message, action);
-        } else {
-            if (soft)
-                showInterrupt(message, true);
-            else
-                DialogUtils.showFailure(getActivity(), message);
+        if (isFragmentVisibleToUser()) {
+            if (action != null) {
+                if (soft)
+                    showInterrupt(message, true, "Okay", action);
+                else
+                    DialogUtils.showFailure(getActivity(), message, action);
+            } else {
+                if (soft)
+                    showInterrupt(message, true);
+                else
+                    DialogUtils.showFailure(getActivity(), message);
+            }
         }
     }
 
     public void showWarning(boolean soft, String message, Runnable action) {
-        if (action != null) {
-            if (soft)
-                showInterrupt(message, true, "Change", action);
-            else
-                DialogUtils.showWarning(getActivity(), message, action);
-        } else {
-            if (soft)
-                showInterrupt(message, true);
-            else
-                DialogUtils.showWarning(getActivity(), message);
+        if (isFragmentVisibleToUser()) {
+            if (action != null) {
+                if (soft)
+                    showInterrupt(message, true, "Change", action);
+                else
+                    DialogUtils.showWarning(getActivity(), message, action);
+            } else {
+                if (soft)
+                    showInterrupt(message, true);
+                else
+                    DialogUtils.showWarning(getActivity(), message);
+            }
         }
     }
 
     public void showSuccess(boolean soft, String message, Runnable action) {
-        if (action != null) {
-            if (soft)
-                showInterrupt(message, true, "Proceed", action);
-            else
-                DialogUtils.showSuccess(getActivity(), message, action);
-        } else {
-            if (soft)
-                showInterrupt(message, true);
-            else
-                DialogUtils.showSuccess(getActivity(), message);
+        if (isFragmentVisibleToUser()) {
+            if (action != null) {
+                if (soft)
+                    showInterrupt(message, true, "Proceed", action);
+                else
+                    DialogUtils.showSuccess(getActivity(), message, action);
+            } else {
+                if (soft)
+                    showInterrupt(message, true);
+                else
+                    DialogUtils.showSuccess(getActivity(), message);
+            }
         }
     }
 
@@ -264,7 +292,7 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
     }
 
     UserModel getUserModel() {
-        return userModel;
+        return PreferenceUtils.getUserModel(getContext());
     }
 
     RecyclerView.AdapterDataObserver getAdapterDataObserver() {

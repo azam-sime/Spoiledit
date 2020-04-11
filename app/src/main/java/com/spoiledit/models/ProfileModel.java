@@ -10,6 +10,9 @@ public class ProfileModel extends UserModel {
         profileModel.setCaps(userModel.getCaps());
         profileModel.setDisplayName(userModel.getDisplayName());
         profileModel.setEmail(userModel.getEmail());
+        profileModel.setPhone(userModel.getPhone());
+        profileModel.setAddress(userModel.getAddress());
+        profileModel.setDob(userModel.getDob());
         profileModel.setId(userModel.getId());
         profileModel.setLogin(userModel.getLogin());
         profileModel.setNiceName(userModel.getNiceName());
@@ -28,6 +31,9 @@ public class ProfileModel extends UserModel {
         userModel.setCaps(this.getCaps());
         userModel.setDisplayName(this.getDisplayName());
         userModel.setEmail(this.getEmail());
+        userModel.setPhone(this.getPhone());
+        userModel.setAddress(this.getAddress());
+        userModel.setDob(this.getDob());
         userModel.setId(this.getId());
         userModel.setLogin(this.getLogin());
         userModel.setNiceName(this.getNiceName());

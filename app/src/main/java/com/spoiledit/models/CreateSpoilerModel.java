@@ -3,32 +3,35 @@ package com.spoiledit.models;
 import android.os.Parcel;
 
 public class CreateSpoilerModel extends RootModel {
-    private String spoilerType;
-    private String midCreditExists;
-    private String postCreditExists;
+    private String spType;
+    private String midCredit;
+    private String stringer;
     private String spoiler;
 
-    public CreateSpoilerModel(String spoilerType, String midCreditExists, String postCreditExists, String spoiler) {
-        this.spoilerType = spoilerType;
-        this.midCreditExists = midCreditExists;
-        this.postCreditExists = postCreditExists;
+    public CreateSpoilerModel() {
+    }
+
+    public CreateSpoilerModel(String spType, String midCredit, String stringer, String spoiler) {
+        this.spType = spType;
+        this.midCredit = midCredit;
+        this.stringer = stringer;
         this.spoiler = spoiler;
     }
 
     protected CreateSpoilerModel(Parcel in) {
         super(in);
-        spoilerType = in.readString();
-        midCreditExists = in.readString();
-        postCreditExists = in.readString();
+        spType = in.readString();
+        midCredit = in.readString();
+        stringer = in.readString();
         spoiler = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
-        dest.writeString(spoilerType);
-        dest.writeString(midCreditExists);
-        dest.writeString(postCreditExists);
+        dest.writeString(spType);
+        dest.writeString(midCredit);
+        dest.writeString(stringer);
         dest.writeString(spoiler);
     }
 
@@ -49,28 +52,28 @@ public class CreateSpoilerModel extends RootModel {
         }
     };
 
-    public String getSpoilerType() {
-        return spoilerType;
+    public String getSpType() {
+        return spType;
     }
 
-    public void setSpoilerType(String spoilerType) {
-        this.spoilerType = spoilerType;
+    public void setSpType(String spType) {
+        this.spType = spType;
     }
 
-    public String getMidCreditExists() {
-        return midCreditExists;
+    public String getMidCredit() {
+        return midCredit;
     }
 
-    public void setMidCreditExists(String midCreditExists) {
-        this.midCreditExists = midCreditExists;
+    public void setMidCredit(String midCredit) {
+        this.midCredit = midCredit;
     }
 
-    public String getPostCreditExists() {
-        return postCreditExists;
+    public String getStringer() {
+        return stringer;
     }
 
-    public void setPostCreditExists(String postCreditExists) {
-        this.postCreditExists = postCreditExists;
+    public void setStringer(String stringer) {
+        this.stringer = stringer;
     }
 
     public String getSpoiler() {
@@ -84,9 +87,9 @@ public class CreateSpoilerModel extends RootModel {
     @Override
     public String toString() {
         return "CreateSpoilerModel{" +
-                "spoilerType=" + spoilerType +
-                ", midCreditExists=" + midCreditExists +
-                ", postCreditExists=" + postCreditExists +
+                "spoilerType=" + spType +
+                ", midCreditExists=" + midCredit +
+                ", postCreditExists=" + stringer +
                 ", spoiler='" + spoiler + '\'' +
                 '}';
     }

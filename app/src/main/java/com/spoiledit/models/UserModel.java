@@ -10,6 +10,8 @@ public class UserModel extends RootModel {
     private String niceName;
     private String email;
     private String phone;
+    private String address;
+    private String dob;
     private String url;
     private String registered;
     private String activationKey;
@@ -31,6 +33,8 @@ public class UserModel extends RootModel {
         niceName = in.readString();
         email = in.readString();
         phone = in.readString();
+        address = in.readString();
+        dob = in.readString();
         url = in.readString();
         registered = in.readString();
         activationKey = in.readString();
@@ -50,6 +54,8 @@ public class UserModel extends RootModel {
         dest.writeString(niceName);
         dest.writeString(email);
         dest.writeString(phone);
+        dest.writeString(address);
+        dest.writeString(dob);
         dest.writeString(url);
         dest.writeString(registered);
         dest.writeString(activationKey);
@@ -116,6 +122,22 @@ public class UserModel extends RootModel {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getDob() {
+        return dob;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
     }
 
     public String getUrl() {
@@ -190,6 +212,8 @@ public class UserModel extends RootModel {
                 ", niceName='" + niceName + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                ", dob='" + dob + '\'' +
                 ", url='" + url + '\'' +
                 ", registered='" + registered + '\'' +
                 ", activationKey='" + activationKey + '\'' +

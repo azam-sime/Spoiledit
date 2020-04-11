@@ -230,7 +230,34 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/spacing_32"
-                    android:text="@string/privacy_policy"
+                    android:text="@string/privacy_policies"
+                    android:textColor="@color/colorWhite" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/spacing_8"
+                android:paddingBottom="@dimen/spacing_8"
+                android:paddingStart="@dimen/spacing_32"
+                android:paddingEnd="@dimen/spacing_32"
+                android:gravity="center_vertical"
+                android:id="@+id/ll_cp">
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="@dimen/spacing_8"
+                    app:riv_mutate_background="true"
+                    android:background="@color/colorWhite"
+                    app:riv_oval="true"
+                    android:src="@drawable/menu_tv_pp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_32"
+                    android:text="@string/cookies_policy"
                     android:textColor="@color/colorWhite" />
             </LinearLayout>
             <LinearLayout
@@ -258,60 +285,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/spacing_32"
                     android:text="@string/about_us"
-                    android:textColor="@color/colorWhite" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="@dimen/spacing_8"
-                android:paddingBottom="@dimen/spacing_8"
-                android:paddingStart="@dimen/spacing_32"
-                android:paddingEnd="@dimen/spacing_32"
-                android:gravity="center_vertical"
-                android:id="@+id/ll_faqs">
-
-                <com.makeramen.roundedimageview.RoundedImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:padding="@dimen/spacing_8"
-                    app:riv_mutate_background="true"
-                    android:background="@color/colorWhite"
-                    app:riv_oval="true"
-                    android:src="@drawable/menu_faq"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/spacing_32"
-                    android:text="@string/faq"
-                    android:textColor="@color/colorWhite" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="@dimen/spacing_8"
-                android:paddingBottom="@dimen/spacing_8"
-                android:paddingStart="@dimen/spacing_32"
-                android:paddingEnd="@dimen/spacing_32"
-                android:gravity="center_vertical"
-                android:id="@+id/ll_contact_us">
-
-                <com.makeramen.roundedimageview.RoundedImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:padding="@dimen/spacing_8"
-                    app:riv_mutate_background="true"
-                    android:background="@color/colorWhite"
-                    app:riv_oval="true"
-                    android:src="@drawable/menu_contact_us"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/spacing_32"
-                    android:text="@string/contact_us"
                     android:textColor="@color/colorWhite" />
             </LinearLayout>
             <LinearLayout

@@ -204,7 +204,7 @@
                         android:fontFamily="@font/montserrat_bold"
                         android:textSize="@dimen/text_14"
                         android:textColor="@color/colorBlack"
-                        android:id="@+id/tv_new_password"/>
+                        android:id="@+id/tv_create_password"/>
 
                     <ImageView
                         android:layout_width="16dp"

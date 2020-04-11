@@ -39,7 +39,7 @@ public class SignUpActivity extends RootActivity {
         super.onCreate(savedInstanceState);
 
         signUpViewModel = ViewModelProviders.of(this,
-                new SignUpViewModel.SignUpViewModelFactory(new SignUpRepo(this)))
+                new SignUpViewModel.Factory(new SignUpRepo(this)))
                 .get(SignUpViewModel.class);
         setContentView(R.layout.activity_sign_up);
     }
@@ -51,7 +51,7 @@ public class SignUpActivity extends RootActivity {
 
     @Override
     public void initUi() {
-        etName = findViewById(R.id.et_name);
+        etName = findViewById(R.id.tv_name);
         etPhone = findViewById(R.id.et_phone);
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
@@ -183,9 +183,9 @@ public class SignUpActivity extends RootActivity {
             }
 
         } else if (v.getId() == R.id.tv_t_and_c) {
-            android.content.Intent intent = new android.content.Intent(this, TCAndPPActivity.class);
-            intent.putExtra(App.Intent.Extra.TC_AND_PP, App.Intent.Value.FOR_TC);
-            intent.putExtra(App.Intent.Extra.TC_AND_PP_DISPLAY_ONLY, false);
+            android.content.Intent intent = new android.content.Intent(this, ProviderDetailsActivity.class);
+            intent.putExtra(App.Intent.Extra.PROVIDER_DETAILS, App.Intent.Value.FOR_TC);
+            intent.putExtra(App.Intent.Extra.PROVIDER_DETAILS_DISPLAY_ONLY, false);
             startActivityForResult(intent, App.Intent.Result.IS_TC_AGREED);
 
         } else if (v.getId() == R.id.tv_sign_in) {

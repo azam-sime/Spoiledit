@@ -44,13 +44,21 @@ public final class App {
         private Intent() {
         }
 
+        public static  final class Request {
+            public static final int USER_PROFILE_EDIT = 1;
+            public static final int ADD_SPOILER = 2;
+
+            private Request() {
+            }
+        }
+
         public static  final class Extra {
             public static final String OTP_FOR = Constants.APP_ID + ".otp_for";
             public static final String OTP_SENT_TO = Constants.APP_ID + ".otp_sent_to";
             public static final String OTP_SENT_TO_ADDRESS = Constants.APP_ID + ".otp_sent_to_address";
 
-            public static final String TC_AND_PP = Constants.APP_ID + ".tc_and_pp";
-            public static final String TC_AND_PP_DISPLAY_ONLY = Constants.APP_ID + ".tc_and_pp_display_only";
+            public static final String PROVIDER_DETAILS = Constants.APP_ID + ".tc_and_pp";
+            public static final String PROVIDER_DETAILS_DISPLAY_ONLY = Constants.APP_ID + ".tc_and_pp_display_only";
 
             private Extra() {
             }
@@ -58,12 +66,14 @@ public final class App {
 
         public static  final class Value {
             public static final int OTP_FOR_REGISTRATION = 1;
-            public static final int OTP_FOR_VERIFICATION = 2;
+            public static final int OTP_FOR_PASSWORD_VERIFICATION = 2;
             public static final int OTP_SENT_TO_PHONE = 3;
             public static final int OTP_SENT_TO_MAIL = 4;
 
             public static final int FOR_TC = 5;
             public static final int FOR_PP = 6;
+            public static final int FOR_CP = 7;
+            public static final int FOR_AU = 8;
 
             private Value() {
             }

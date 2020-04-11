@@ -4,11 +4,15 @@ import android.os.Parcel;
 
 public class CommentModel extends RootSelectionModel {
     private int userId;
+    private int movieId;
+    private int spoilerId;
+    private int parentCommentId;
+    private String userName;
     private String avatarUrl;
     private String comment;
     private String commentDate;
-    private String likes;
-    private String dislikes;
+    private int likes;
+    private int dislikes;
 
     public CommentModel() {
     }
@@ -16,22 +20,30 @@ public class CommentModel extends RootSelectionModel {
     protected CommentModel(Parcel in) {
         super(in);
         userId = in.readInt();
+        movieId = in.readInt();
+        spoilerId = in.readInt();
+        parentCommentId = in.readInt();
+        userName = in.readString();
         avatarUrl = in.readString();
         comment = in.readString();
         commentDate = in.readString();
-        likes = in.readString();
-        dislikes = in.readString();
+        likes = in.readInt();
+        dislikes = in.readInt();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeInt(userId);
+        dest.writeInt(movieId);
+        dest.writeInt(spoilerId);
+        dest.writeInt(parentCommentId);
+        dest.writeString(userName);
         dest.writeString(avatarUrl);
         dest.writeString(comment);
         dest.writeString(commentDate);
-        dest.writeString(likes);
-        dest.writeString(dislikes);
+        dest.writeInt(likes);
+        dest.writeInt(dislikes);
     }
 
     @Override
@@ -59,6 +71,38 @@ public class CommentModel extends RootSelectionModel {
         this.userId = userId;
     }
 
+    public int getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(int movieId) {
+        this.movieId = movieId;
+    }
+
+    public int getSpoilerId() {
+        return spoilerId;
+    }
+
+    public void setSpoilerId(int spoilerId) {
+        this.spoilerId = spoilerId;
+    }
+
+    public int getParentCommentId() {
+        return parentCommentId;
+    }
+
+    public void setParentCommentId(int parentCommentId) {
+        this.parentCommentId = parentCommentId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public String getAvatarUrl() {
         return avatarUrl;
     }
@@ -83,19 +127,19 @@ public class CommentModel extends RootSelectionModel {
         this.commentDate = commentDate;
     }
 
-    public String getLikes() {
+    public int getLikes() {
         return likes;
     }
 
-    public void setLikes(String likes) {
+    public void setLikes(int likes) {
         this.likes = likes;
     }
 
-    public String getDislikes() {
+    public int getDislikes() {
         return dislikes;
     }
 
-    public void setDislikes(String dislikes) {
+    public void setDislikes(int dislikes) {
         this.dislikes = dislikes;
     }
 
@@ -103,6 +147,10 @@ public class CommentModel extends RootSelectionModel {
     public String toString() {
         return "CommentModel{" +
                 "userId=" + userId +
+                ", movieId='" + movieId + '\'' +
+                ", spoilerId='" + spoilerId + '\'' +
+                ", parentCommentId='" + parentCommentId + '\'' +
+                ", userName='" + userName + '\'' +
                 ", avatarUrl='" + avatarUrl + '\'' +
                 ", comment='" + comment + '\'' +
                 ", commentDate='" + commentDate + '\'' +

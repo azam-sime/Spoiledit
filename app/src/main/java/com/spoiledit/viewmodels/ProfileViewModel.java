@@ -7,47 +7,42 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.spoiledit.models.ApiStatusModel;
 import com.spoiledit.models.ProfileModel;
-import com.spoiledit.repos.LoginRepo;
 import com.spoiledit.repos.ProfileRepo;
 
 public class ProfileViewModel extends ViewModel {
-    private ProfileRepo profileRepo;
+    private ProfileRepo.DetailsRepo detailsRepo;
 
-    public ProfileViewModel(ProfileRepo profileRepo) {
-        this.profileRepo = profileRepo;
+    public ProfileViewModel(ProfileRepo.DetailsRepo detailsRepo) {
+        this.detailsRepo = detailsRepo;
     }
 
     public MutableLiveData<ApiStatusModel> getApiStatusModelMutable() {
-        return profileRepo.getApiStatusModelMutable();
+        return detailsRepo.getApiStatusModelMutable();
     }
 
     public MutableLiveData<ProfileModel> getProfileModelMutable() {
-        return profileRepo.getProfileModelMutable();
+        return detailsRepo.getProfileModelMutable();
     }
 
     public void requestProfileDetails() {
-        profileRepo.getProfileDetails();
-    }
-
-    public void updateProfile(String name, String email, String phone) {
-        profileRepo.updateProfile(name, email, phone);
+        detailsRepo.getProfileDetails();
     }
 
     public void updateProfilePic(String filePath) {
-        profileRepo.updateProfilePic(filePath);
+        detailsRepo.updateProfilePic(filePath);
     }
 
-    public static final class ProfileViewModelFactory implements ViewModelProvider.Factory {
-        private ProfileRepo profileRepo;
+    public static final class Factory implements ViewModelProvider.Factory {
+        private ProfileRepo.DetailsRepo detailsRepo;
 
-        public ProfileViewModelFactory(ProfileRepo profileRepo) {
-            this.profileRepo = profileRepo;
+        public Factory(ProfileRepo.DetailsRepo detailsRepo) {
+            this.detailsRepo = detailsRepo;
         }
 
         @NonNull
         @Override
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            return (T) new ProfileViewModel(profileRepo);
+            return (T) new ProfileViewModel(detailsRepo);
         }
     }
 }

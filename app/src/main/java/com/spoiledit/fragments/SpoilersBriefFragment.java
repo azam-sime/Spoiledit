@@ -14,17 +14,17 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.spoiledit.R;
 import com.spoiledit.activities.DetailsMovieActivity;
+import com.spoiledit.activities.DetailsSpoilersActivity;
 import com.spoiledit.adapters.SpoilerBriefAdapter;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
-import com.spoiledit.utils.LogUtils;
 import com.spoiledit.utils.ViewUtils;
-import com.spoiledit.viewmodels.DetailsMovieViewModel;
+import com.spoiledit.viewmodels.DetailsSpoilersViewModel;
 
 public class SpoilersBriefFragment extends RootFragment {
     public static final String TAG = SpoilersBriefFragment.class.getCanonicalName();
 
-    private DetailsMovieViewModel detailsMovieViewModel;
+    private DetailsSpoilersViewModel detailsSpoilersViewModel;
     private SpoilerBriefAdapter spoilerBriefAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -32,7 +32,7 @@ public class SpoilersBriefFragment extends RootFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        detailsMovieViewModel = ViewModelProviders.of(getActivity()).get(DetailsMovieViewModel.class);
+        detailsSpoilersViewModel = ViewModelProviders.of(getActivity()).get(DetailsSpoilersViewModel.class);
     }
 
     @Nullable
@@ -56,12 +56,17 @@ public class SpoilersBriefFragment extends RootFragment {
         RecyclerView recyclerView = view.findViewById(R.id.rv_spoilers_brief);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        spoilerBriefAdapter = new SpoilerBriefAdapter(getContext(),
-                (lastSelection, currentSelection) -> {
-                    ((DetailsMovieActivity) getActivity()).gotoCommentsActivity(
-                            spoilerBriefAdapter.getItemAt(currentSelection));
-                    spoilerBriefAdapter.removeLastSelection();
-                });
+        spoilerBriefAdapter = new SpoilerBriefAdapter(getContext(), (lastSelection, currentSelection) -> {
+            if (getActivity() instanceof DetailsMovieActivity) {
+                ((DetailsMovieActivity) getActivity()).gotoCommentsActivity(
+                        spoilerBriefAdapter.getItemAt(currentSelection));
+                spoilerBriefAdapter.removeLastSelection();
+            } else if (getActivity() instanceof DetailsSpoilersActivity) {
+                ((DetailsSpoilersActivity) getActivity()).gotoCommentsActivity(
+                        spoilerBriefAdapter.getItemAt(currentSelection));
+                spoilerBriefAdapter.removeLastSelection();
+            }
+        });
 
         recyclerView.setAdapter(spoilerBriefAdapter);
         ViewUtils.addFabOffset(getContext(), recyclerView);
@@ -71,7 +76,7 @@ public class SpoilersBriefFragment extends RootFragment {
 
     @Override
     public void addObservers() {
-        detailsMovieViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
+        detailsSpoilersViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
             if (apiStatusModel.getApi() == Constants.Api.MOVIE_SPOILERS_BRIEF) {
                 if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
                     showLoader(apiStatusModel.getMessage());
@@ -87,7 +92,7 @@ public class SpoilersBriefFragment extends RootFragment {
             }
         });
 
-        detailsMovieViewModel.getSpoilerBriefModelsMutable().observe(this, spoilerBriefModels -> {
+        detailsSpoilersViewModel.getSpoilerBriefModelsMutable().observe(this, spoilerBriefModels -> {
             if (spoilerBriefModels != null)
                 spoilerBriefAdapter.setItems(spoilerBriefModels);
         });
@@ -101,7 +106,7 @@ public class SpoilersBriefFragment extends RootFragment {
 
     @Override
     public void requestData() {
-        detailsMovieViewModel.requestSpoilerBrief();
+        detailsSpoilersViewModel.requestSpoilerBrief();
     }
 
     @Override
