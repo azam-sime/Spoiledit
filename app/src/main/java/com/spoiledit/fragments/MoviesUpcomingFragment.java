@@ -60,7 +60,7 @@ public class MoviesUpcomingFragment extends RootFragment {
         upcomingAdapter = new MoviesUpcomingAdapter(getContext(),
                 (lastSelection, currentSelection) -> {
                     dashboardViewModel.requestMovieDetails(
-                            upcomingAdapter.getItemAt(currentSelection).getId()
+                            upcomingAdapter.getItemAt(currentSelection).getId(), 3
                     );
                 });
 
@@ -83,7 +83,8 @@ public class MoviesUpcomingFragment extends RootFragment {
                         showFailure(false, apiStatusModel.getMessage());
                 }
 
-            } else if (apiStatusModel.getApi() == Constants.Api.MOVIES_DETAILS) {
+            } else if (apiStatusModel.getApi() == Constants.Api.MOVIES_DETAILS
+                    && apiStatusModel.getFromScreen() == 3) {
                 if (apiStatusModel.getStatus() != Status.Request.API_HIT) {
                     upcomingAdapter.removeLastSelection();
                     if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS)

@@ -176,8 +176,8 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
             tvToolbar.setText(title == null ? "" : title);
 
         if (ivPopcorn != null) {
-            ivPopcorn.setVisibility(showPopcorn ? View.VISIBLE : View.GONE);
-            ivPopcorn.setOnClickListener(this);
+            ivPopcorn.setVisibility(showPopcorn ? View.VISIBLE : View.INVISIBLE);
+            ivPopcorn.setOnClickListener(showPopcorn ? this : null);
         }
 
         if (ivBack != null)
@@ -209,6 +209,14 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
             showInterrupt(message, false);
 
         if (progressBar != null)
+            progressBar.show();
+    }
+
+    public void showLoader(boolean showProgress, String message) {
+        if (!StringUtils.isInvalid(message))
+            showInterrupt(message, false);
+
+        if (showProgress && progressBar != null)
             progressBar.show();
     }
 

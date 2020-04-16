@@ -63,7 +63,7 @@ public class DetailsMovieActivity extends RootActivity {
             if (menuItem.getItemId() == R.id.menu_buy_now) {
                 if (autoSet) {
                     autoSet = false;
-                    return false;
+                    return true;
                 }
 
                 openLinkInWeb(detailsMovieViewModel.getMovieDetailsModel().getBuyNowLink());
@@ -95,8 +95,8 @@ public class DetailsMovieActivity extends RootActivity {
                 Log.i(TAG, "onPageSelected: ");
 
                 autoSet = true;
-                bnvMovie.setSelectedItemId(position == 2 ? R.id.menu_view_spoilers : R.id.menu_buy_now);
-                ViewUtils.toggleViewVisibility(position != 2, bnvMovie);
+                bnvMovie.setSelectedItemId(position == 1 ? R.id.menu_view_spoilers : R.id.menu_buy_now);
+                ViewUtils.toggleViewVisibility(position == 0, bnvMovie);
             }
         });
 
@@ -117,6 +117,10 @@ public class DetailsMovieActivity extends RootActivity {
     public void gotoCommentsActivity(MovieSpoilerModel movieSpoilerModel) {
         CommentsRepo.initialise(movieSpoilerModel);
         startActivity(new Intent(this, SpoilerCommentsActivity.class));
+    }
+
+    public void scrollToViewSpoilers() {
+        viewPager.setCurrentItem(1, true);
     }
 
     @Override

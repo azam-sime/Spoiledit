@@ -1,5 +1,6 @@
 package com.spoiledit.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -42,7 +43,7 @@ public class MyMoviesActivity extends RootActivity {
 
     @Override
     public void setUpToolBar() {
-        setupToolBar("My Watchlist", true);
+        setupToolBar("My Watchlist", false);
     }
 
     @Override
@@ -61,7 +62,9 @@ public class MyMoviesActivity extends RootActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         moviesAdapter = new MyMoviesAdapter(this, (lastSelection, currentSelection) -> {
-
+            myMoviesViewModel.requestMovieDetails(
+                    moviesAdapter.getItemAt(currentSelection).getId()
+            );
         }, position -> {
 
         });
@@ -79,17 +82,21 @@ public class MyMoviesActivity extends RootActivity {
         myMoviesViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
             if (apiStatusModel.getApi() == Constants.Api.MY_WATCHLIST) {
                 if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
-                    toggleViews(false);
-                    showLoader(apiStatusModel.getMessage());
-
-                } else if (apiStatusModel.getStatus() == Status.Request.API_ERROR) {
-                    toggleViews(true);
+                    if (!swipeRefreshLayout.isRefreshing())
+                        showLoader(apiStatusModel.getMessage());
+                } else {
                     hideLoader();
-                    showFailure(false, apiStatusModel.getMessage());
+                    if (apiStatusModel.getStatus() == Status.Request.API_ERROR)
+                        showFailure(false, apiStatusModel.getMessage());
+                }
 
-                } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
-                    toggleViews(false);
-                    hideLoader();
+            } else if (apiStatusModel.getApi() == Constants.Api.MOVIES_DETAILS) {
+                if (apiStatusModel.getStatus() != Status.Request.API_HIT) {
+                    moviesAdapter.removeLastSelection();
+                    if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS)
+                        startActivity(new Intent(this, DetailsMovieActivity.class));
+                    else
+                        showFailure(false, apiStatusModel.getMessage());
                 }
             }
         });

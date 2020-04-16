@@ -126,7 +126,8 @@ public class MyMoviesAdapter extends RootSelectionAdapter {
                     .load(Urls.MOVIE_IMAGES.getUrl() + movieModel.getPosterPath())
                     .resize(80, 132)
                     .centerCrop()
-                    .error(context.getResources().getDrawable(R.drawable.popcorn))
+                    .placeholder(R.drawable.ic_placeholder)
+//                    .error(context.getResources().getDrawable(R.drawable.popcorn))
                     .into(viewHolder.ivPoster);
         }
     }

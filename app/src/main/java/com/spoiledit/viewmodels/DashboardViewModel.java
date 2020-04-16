@@ -61,8 +61,8 @@ public class DashboardViewModel extends ViewModel {
         dashboardRepo.requestSpoilers();
     }
 
-    public void requestMovieDetails(int movieId) {
-        dashboardRepo.requestMovieDetails(movieId);
+    public void requestMovieDetails(int movieId, int fromTab) {
+        dashboardRepo.requestMovieDetails(movieId, fromTab);
     }
 
     public void requestSearchAutoCompleteValues(String searchValue) {

@@ -109,8 +109,8 @@ public class SignInActivity extends RootActivity implements ForgotPasswordFragme
                 } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
                     toggleViews(false);
                     hideLoader();
-                    PreferenceUtils.saveLoginStatus(this, cbRemember.isChecked() ? Status.Login.REQUIRE_NOTHING
-                            : Status.Login.REQUIRE_SIGN_IN_NOT_CREDS);
+                    PreferenceUtils.saveLoginStatus(this,
+                            cbRemember.isChecked() ? Status.Login.REQUIRE_NOTHING : Status.Login.REQUIRE_SIGN_IN_NOT_CREDS);
                     startActivity(new Intent(this, DashboardActivity.class));
                     finish();
                 }

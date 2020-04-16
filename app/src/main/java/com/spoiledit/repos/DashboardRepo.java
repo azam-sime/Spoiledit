@@ -23,17 +23,6 @@ import java.util.Map;
 public class DashboardRepo extends RootRepo {
     public static final String TAG = DashboardRepo.class.getCanonicalName();
 
-    public static DashboardRepo dashboardRepo;
-
-    public static synchronized DashboardRepo initialise() {
-        synchronized (TAG) {
-            if (dashboardRepo == null)
-                dashboardRepo = new DashboardRepo();
-        }
-
-        return dashboardRepo;
-    }
-
     private MutableLiveData<List<MoviePopularModel>> moviePopularModelsMutable;
     private MutableLiveData<List<MovieRecentModel>> movieRecentModelsMutable;
     private MutableLiveData<List<MovieUpcomingModel>> movieUpcomingModelsMutable;
@@ -41,7 +30,7 @@ public class DashboardRepo extends RootRepo {
 
     private MutableLiveData<List<String>> searchValues;
 
-    private DashboardRepo() {
+    public DashboardRepo() {
         init();
 
         moviePopularModelsMutable = new MutableLiveData<>();
@@ -224,7 +213,7 @@ public class DashboardRepo extends RootRepo {
         }
     }
 
-    public void requestMovieDetails(int movieId) {
+    public void requestMovieDetails(int movieId, int fromTab) {
         int api = Constants.Api.MOVIES_DETAILS;
         try {
             apiRequestHit(api, "Requesting movie details...");
@@ -239,7 +228,7 @@ public class DashboardRepo extends RootRepo {
                                     DetailsMovieRepo.initialise(
                                             new MovieParser.DetailsParser().execute(jsonObject).get()
                                     );
-                                    apiRequestSuccess(api, jsonObject.optString("message"));
+                                    apiRequestSuccess(fromTab, api, jsonObject.optString("message"));
                                 } else
                                     setRequestStatusFailed(api, jsonObject);
 

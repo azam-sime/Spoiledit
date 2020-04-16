@@ -4,8 +4,10 @@ import android.content.Context;
 
 import com.android.volley.VolleyError;
 import com.spoiledit.constants.Constants;
+import com.spoiledit.constants.Status;
 import com.spoiledit.constants.Urls;
 import com.spoiledit.networks.VolleyProvider;
+import com.spoiledit.parsers.UserParser;
 import com.spoiledit.utils.NetworkUtils;
 import com.spoiledit.utils.PreferenceUtils;
 
@@ -37,17 +39,14 @@ public class VerifyRepo extends RootRepo {
                         public void onSuccess(String response) {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
-                                if (jsonObject.optBoolean("error"))
-                                    apiRequestFailure(api, jsonObject.optString("message"));
-                                else {
-                                    PreferenceUtils.saveInt(context, PreferenceUtils.USER_ID,
-                                            jsonObject.optInt("user_id"));
+                                if (isRequestSuccess(jsonObject)) {
+                                    PreferenceUtils.saveUserModel(context, new UserParser.VerificationParser().execute(jsonObject).get());
                                     apiRequestSuccess(api, jsonObject.optString("message"));
-                                }
+                                } else
+                                    setRequestStatusFailed(api, jsonObject);
 
                             } catch (Exception e) {
-                                e.printStackTrace();
-                                apiRequestFailure(api, NetworkUtils.getErrorString(e));
+                                setExceptionOccured(api, e);
                             }
                         }
 

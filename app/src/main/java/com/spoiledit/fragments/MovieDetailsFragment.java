@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.spoiledit.R;
+import com.spoiledit.activities.DetailsMovieActivity;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
 import com.spoiledit.constants.Urls;
@@ -139,6 +140,7 @@ public class MovieDetailsFragment extends RootFragment {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_see_spoiler) {
+            ((DetailsMovieActivity) getActivity()).scrollToViewSpoilers();
 
         } else if (v.getId() == R.id.fab_play) {
             watchYoutubeVideo(detailsMovieViewModel.getMovieDetailsModel().getYoutubeId());

@@ -68,6 +68,7 @@ public class MovieSpoilersFragment extends RootFragment {
 
     @Override
     public void initialiseListener(View view) {
+        view.findViewById(R.id.iv_back).setOnClickListener(this);
         fabAddNewSpoiler.setOnClickListener(this);
     }
 
@@ -119,6 +120,8 @@ public class MovieSpoilersFragment extends RootFragment {
     public void onClick(View v) {
         if (v.getId() == R.id.fab_add_spoiler) {
             startActivityForResult(new Intent(getContext(), AddSpoilerActivity.class), App.Intent.Request.ADD_SPOILER);
+        } else if (v.getId() == R.id.iv_back) {
+            getActivity().onBackPressed();
         } else
             super.onClick(v);
     }

@@ -64,6 +64,8 @@ public class SpoilerCommentsActivity extends RootActivity {
 
     @Override
     public void initialiseListener() {
+        swipeRefreshLayout.setOnRefreshListener(this);
+
         findViewById(R.id.iv_add_files).setOnClickListener(this);
         findViewById(R.id.iv_send).setOnClickListener(this);
         findViewById(R.id.tv_comment).setOnClickListener(this);
@@ -122,9 +124,10 @@ public class SpoilerCommentsActivity extends RootActivity {
         commentsViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
             if (apiStatusModel.getApi() == Constants.Api.MOVIE_COMMENTS) {
                 if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
-                    showLoader(apiStatusModel.getMessage());
+                    showLoader(!swipeRefreshLayout.isRefreshing(), apiStatusModel.getMessage());
 
                 } else {
+                    swipeRefreshLayout.setRefreshing(false);
                     hideLoader();
                     if (apiStatusModel.getStatus() == Status.Request.API_ERROR)
                         showFailure(false, apiStatusModel.getMessage());

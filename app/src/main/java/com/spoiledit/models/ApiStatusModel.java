@@ -3,6 +3,7 @@ package com.spoiledit.models;
 import android.os.Parcel;
 
 public class ApiStatusModel extends RootModel {
+    private int fromScreen;
     private int api;
     private int status;
     private String message;
@@ -17,8 +18,16 @@ public class ApiStatusModel extends RootModel {
         this.message = message;
     }
 
+    public ApiStatusModel(int fromScreen, int api, int status, String message) {
+        this.fromScreen = fromScreen;
+        this.api = api;
+        this.status = status;
+        this.message = message;
+    }
+
 
     protected ApiStatusModel(Parcel in) {
+        fromScreen = in.readInt();
         api = in.readInt();
         status = in.readInt();
         message = in.readString();
@@ -26,6 +35,7 @@ public class ApiStatusModel extends RootModel {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(fromScreen);
         dest.writeInt(api);
         dest.writeInt(status);
         dest.writeString(message);
@@ -47,6 +57,14 @@ public class ApiStatusModel extends RootModel {
             return new ApiStatusModel[size];
         }
     };
+
+    public int getFromScreen() {
+        return fromScreen;
+    }
+
+    public void setFromScreen(int fromScreen) {
+        this.fromScreen = fromScreen;
+    }
 
     public int getApi() {
         return api;
@@ -75,7 +93,8 @@ public class ApiStatusModel extends RootModel {
     @Override
     public String toString() {
         return "ApiStatusModel{" +
-                "api=" + api +
+                "fromScreen=" + fromScreen +
+                ", api=" + api +
                 ", status='" + status + '\'' +
                 ", message='" + message + '\'' +
                 '}';

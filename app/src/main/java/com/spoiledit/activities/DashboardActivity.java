@@ -17,6 +17,7 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.tabs.TabLayout;
@@ -47,6 +48,7 @@ public class DashboardActivity extends RootActivity {
     private DashboardViewModel dashboardViewModel;
 
     private AppBarLayout appBarLayout;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
     private TabLayout tabLayout;
     private BottomNavigationView bnvDashboard;
 
@@ -64,7 +66,7 @@ public class DashboardActivity extends RootActivity {
         super.onCreate(savedInstanceState);
 
         dashboardViewModel = ViewModelProviders.of(this,
-                new DashboardViewModel.Factory(DashboardRepo.initialise()))
+                new DashboardViewModel.Factory(new DashboardRepo()))
                 .get(DashboardViewModel.class);
 
         setContentView(R.layout.activity_dashboard);
@@ -78,6 +80,7 @@ public class DashboardActivity extends RootActivity {
     @Override
     public void initUi() {
         appBarLayout = findViewById(R.id.abl_dashboard);
+        collapsingToolbarLayout = findViewById(R.id.ctl_dashboard);
         tabLayout = findViewById(R.id.tl_dashboard);
         bnvDashboard = findViewById(R.id.bnv_dashboard);
 
@@ -118,22 +121,22 @@ public class DashboardActivity extends RootActivity {
         bnvDashboard.setOnNavigationItemSelectedListener(menuItem -> {
             if (menuItem.getItemId() == R.id.menu_movies) {
                 ViewUtils.hideViews(llNavigationCont);
-                appBarLayout.setExpanded(true, false);
                 ViewUtils.showViews(tabLayout, mcvSearchBar);
+                appBarLayout.setExpanded(true, true);
 //                viewPager.setCurrentItem(0, true);
                 switchBetweenFragments(true);
 
                 return true;
             } else if (menuItem.getItemId() == R.id.menu_spoilers) {
                 ViewUtils.hideViews(llNavigationCont);
-                appBarLayout.setExpanded(true, false);
-                ViewUtils.invisibleViews(tabLayout, mcvSearchBar);
+                ViewUtils.hideViews(tabLayout, mcvSearchBar);
+                appBarLayout.setExpanded(false, true);
+
 //                viewPager.setCurrentItem(1, true);
                 switchBetweenFragments(false);
 
                 return true;
             } else if (menuItem.getItemId() == R.id.menu_settings) {
-                appBarLayout.setExpanded(false, false);
                 ViewUtils.showViews(llNavigationCont);
 
                 return true;

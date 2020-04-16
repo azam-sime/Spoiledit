@@ -143,5 +143,44 @@ public class MyRepo {
             params.put("user_id", String.valueOf(getUserModel().getId()));
             return params;
         }
+
+        public void requestMovieDetails(int movieId) {
+            int api = Constants.Api.MOVIES_DETAILS;
+            try {
+                apiRequestHit(api, "Requesting movie details...");
+                getVolleyProvider().executeMultipartGetRequest(
+                        Urls.MOVIE_DETAILS.getUrl() + movieId,
+                        new VolleyProvider.OnResponseListener<String>() {
+                            @Override
+                            public void onSuccess(String response) {
+                                try {
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    if (isRequestSuccess(jsonObject)) {
+                                        DetailsMovieRepo.initialise(
+                                                new MovieParser.DetailsParser().execute(jsonObject).get()
+                                        );
+                                        apiRequestSuccess(api, jsonObject.optString("message"));
+                                    } else
+                                        setRequestStatusFailed(api, jsonObject);
+
+                                } catch (Exception e) {
+                                    setExceptionOccured(api, e);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(VolleyError volleyError) {
+                                try {
+                                    apiRequestFailure(api, getMessageFromVolleyAsJson(volleyError));
+                                } catch (Exception e) {
+                                    setExceptionOccured(api, e);
+                                }
+                            }
+                        }, false, true);
+
+            } catch (Exception e) {
+                setExceptionOccured(api, e);
+            }
+        }
     }
 }

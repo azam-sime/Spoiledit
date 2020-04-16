@@ -15,7 +15,8 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            android:id="@+id/ctl_dashboard">
 
             <com.makeramen.roundedimageview.RoundedImageView
                 android:layout_width="match_parent"
@@ -27,22 +28,21 @@
                 app:riv_corner_radius_bottom_left="24dp"
                 app:riv_corner_radius_bottom_right="24dp" />
 
-            <LinearLayout
+            <com.google.android.material.appbar.MaterialToolbar
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:orientation="vertical"
+                app:contentInsetStart="0dp"
                 app:layout_collapseMode="pin">
 
-                <com.google.android.material.appbar.MaterialToolbar
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="?actionBarSize"
-                    android:animateLayoutChanges="true"
-                    app:contentInsetStart="0dp">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="?actionBarSize"
                         android:orientation="horizontal">
 
                         <ImageView
@@ -54,37 +54,54 @@
                             android:src="@drawable/arrow_left"
                             android:visibility="gone"/>
 
-                        <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/mcv_searchbar"
+                        <FrameLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_margin="@dimen/spacing_8"
                             android:layout_weight="1"
-                            app:cardBackgroundColor="@color/colorWhite"
-                            app:cardCornerRadius="4dp">
+                            android:animateLayoutChanges="true">
 
-                            <LinearLayout
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/mcv_searchbar"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:gravity="center_vertical"
-                                android:padding="@dimen/spacing_8">
+                                android:layout_margin="@dimen/spacing_8"
+                                app:cardBackgroundColor="@color/colorWhite"
+                                app:cardCornerRadius="4dp"
+                                android:visibility="visible">
 
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:contentDescription="@string/content_description"
-                                    android:padding="@dimen/spacing_4"
-                                    android:src="@drawable/search" />
-
-                                <EditText
-                                    android:id="@+id/et_search"
+                                <LinearLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:background="@android:color/transparent"
-                                    android:hint="@string/search"
-                                    android:textSize="@dimen/text_14" />
-                            </LinearLayout>
-                        </com.google.android.material.card.MaterialCardView>
+                                    android:layout_height="match_parent"
+                                    android:gravity="center_vertical"
+                                    android:padding="@dimen/spacing_8">
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:contentDescription="@string/content_description"
+                                        android:padding="@dimen/spacing_4"
+                                        android:src="@drawable/search" />
+
+                                    <EditText
+                                        android:id="@+id/et_search"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:background="@android:color/transparent"
+                                        android:hint="@string/search"
+                                        android:textSize="@dimen/text_14" />
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <TextView
+                                android:id="@+id/tv_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:text="New Spoilers"
+                                android:textColor="@color/colorWhite"
+                                android:fontFamily="@font/montserrat_medium"
+                                android:textSize="@dimen/text_18"
+                                android:gravity="center" />
+                        </FrameLayout>
 
                         <ImageView
                             android:id="@+id/iv_popcorn"
@@ -94,22 +111,22 @@
                             android:padding="@dimen/spacing_8"
                             android:src="@drawable/popcorn" />
                     </LinearLayout>
-                </com.google.android.material.appbar.MaterialToolbar>
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tl_dashboard"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    app:tabBackground="@android:color/transparent"
-                    app:tabIndicator="@android:color/transparent"
-                    app:tabMode="fixed"
-                    app:tabSelectedTextColor="@color/colorWhite"
-                    app:tabTextAppearance="@style/TabTextApperance"
-                    app:tabTextColor="@color/colorBlack">
+                    <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/tl_dashboard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        app:tabBackground="@android:color/transparent"
+                        app:tabIndicator="@android:color/transparent"
+                        app:tabMode="fixed"
+                        app:tabSelectedTextColor="@color/colorWhite"
+                        app:tabTextAppearance="@style/TabTextApperance"
+                        app:tabTextColor="@color/colorBlack">
 
-                </com.google.android.material.tabs.TabLayout>
-            </LinearLayout>
+                    </com.google.android.material.tabs.TabLayout>
+                </LinearLayout>
+            </com.google.android.material.appbar.MaterialToolbar>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

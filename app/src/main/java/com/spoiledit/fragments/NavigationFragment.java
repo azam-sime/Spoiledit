@@ -58,7 +58,7 @@ public class NavigationFragment extends RootFragment {
         view.findViewById(R.id.ll_my_watchlist).setOnClickListener(this);
         view.findViewById(R.id.ll_change_password).setOnClickListener(this);
         view.findViewById(R.id.ll_tc).setOnClickListener(this);
-        view.findViewById(R.id.ll_pp).setOnClickListener(this);
+//        view.findViewById(R.id.ll_pp).setOnClickListener(this);
         view.findViewById(R.id.ll_cp).setOnClickListener(this);
         view.findViewById(R.id.ll_about_us).setOnClickListener(this);
         view.findViewById(R.id.ll_logout).setOnClickListener(this);
@@ -104,13 +104,13 @@ public class NavigationFragment extends RootFragment {
             intent.putExtra(App.Intent.Extra.PROVIDER_DETAILS_DISPLAY_ONLY, true);
             getContext().startActivity(intent);
 
-        } else if (v.getId() == R.id.ll_pp) {
+        } /*else if (v.getId() == R.id.ll_pp) {
             android.content.Intent intent = new android.content.Intent(getContext(), ProviderDetailsActivity.class);
             intent.putExtra(App.Intent.Extra.PROVIDER_DETAILS, App.Intent.Value.FOR_PP);
             intent.putExtra(App.Intent.Extra.PROVIDER_DETAILS_DISPLAY_ONLY, true);
             getContext().startActivity(intent);
 
-        } else if (v.getId() == R.id.ll_cp) {
+        }*/ else if (v.getId() == R.id.ll_cp) {
             android.content.Intent intent = new android.content.Intent(getContext(), ProviderDetailsActivity.class);
             intent.putExtra(App.Intent.Extra.PROVIDER_DETAILS, App.Intent.Value.FOR_CP);
             intent.putExtra(App.Intent.Extra.PROVIDER_DETAILS_DISPLAY_ONLY, true);

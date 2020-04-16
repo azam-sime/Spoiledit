@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/content_description"
-        android:src="@drawable/app_label_logo"
+        android:src="@drawable/app_label_logo_2"
         android:layout_gravity="center"/>
 
     <LinearLayout

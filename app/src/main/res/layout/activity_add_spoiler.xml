@@ -178,21 +178,20 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="100dp" />
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/height_button"
+                android:layout_gravity="bottom"
+                app:cornerRadius="24dp"
+                android:text="@string/submit"
+                android:fontFamily="@font/montserrat_bold"
+                android:textAllCaps="false"
+                android:textSize="@dimen/text_16"
+                android:id="@+id/btn_submit"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <com.google.android.material.button.MaterialButton
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_button"
-        android:layout_gravity="bottom"
-        android:layout_margin="@dimen/margin_top_between_children"
-        app:cornerRadius="24dp"
-        android:text="@string/submit"
-        android:fontFamily="@font/montserrat_bold"
-        android:textAllCaps="false"
-        android:textSize="@dimen/text_16"
-        android:id="@+id/btn_submit"/>
-
     <include layout="@layout/layout_loading" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

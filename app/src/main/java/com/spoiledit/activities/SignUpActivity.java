@@ -206,6 +206,11 @@ public class SignUpActivity extends RootActivity {
 
     @Override
     public void gotoNextScreen() {
+        PreferenceUtils.saveCredentials(this, new String[]{
+                etEmail.getText().toString().trim(),
+                etPassword.getText().toString().trim()
+        });
+        PreferenceUtils.saveLoginStatus(this, Status.Login.REQUIRE_SIGN_IN_AND_CREDS);
         android.content.Intent intent = new android.content.Intent(this, VerifyOtpActivity.class);
         intent.putExtra(App.Intent.Extra.OTP_FOR, App.Intent.Value.OTP_FOR_REGISTRATION);
         intent.putExtra(App.Intent.Extra.OTP_SENT_TO, App.Intent.Value.OTP_SENT_TO_MAIL);

@@ -314,3 +314,6 @@ public class SearchRepo extends RootRepo {
         }
     }
 }
+/*{"status":"200","page":"1","error":"false","data":{"page":1,"total_results":1,"total_pages":1,"results":[{"popularity":0.59999999999999997779553950749686919152736663818359375,"known_for_department":"Acting","gender":0,"id":2317671,"profile_path":null,"adult":false,"known_for":[],"name":"John Rabe"}]}}*/
+/*{"status":"200","page":"1","error":"false","data":{"page":1,"results":[{"name":"independence day","id":235503}],"total_pages":1,"total_results":1}}*/
+/*{"status":"200","page":"1","error":"false","data":{"page":1,"results":[{"id":62511,"logo_path":null,"name":"Independence Day Productions","origin_country":""}],"total_pages":1,"total_results":1}}*/

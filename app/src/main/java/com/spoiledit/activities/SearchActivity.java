@@ -1,6 +1,7 @@
 package com.spoiledit.activities;
 
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 
@@ -65,7 +66,7 @@ public class SearchActivity extends RootActivity {
 
     @Override
     public void initialiseListener() {
-        findViewById(R.id.iv_menu).setOnClickListener(this);
+        findViewById(R.id.iv_back).setOnClickListener(this);
 
         etSearch.addTextChangedListener(new TextChangeListener() {
             @Override
@@ -164,5 +165,13 @@ public class SearchActivity extends RootActivity {
         movieFragmentPerson.requestData();
         movieFragmentKeyword.requestData();
         movieFragmentCompanies.requestData();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.iv_back)
+            onBackPressed();
+        else
+            super.onClick(v);
     }
 }

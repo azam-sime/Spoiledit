@@ -32,6 +32,26 @@ public class UserParser {
         }
     }
 
+    public static class VerificationParser extends AsyncTask<JSONObject, Void, UserModel> {
+        @Override
+        protected UserModel doInBackground(JSONObject... jsonObjects) {
+            try {
+                JSONObject dataObject = jsonObjects[0].optJSONObject("data");
+                UserModel userModel = parseDetailsObject(dataObject.optJSONObject("data"));
+                parseCapsObject(userModel, dataObject.optJSONObject("caps"));
+                parseRolesArray(userModel, dataObject.optJSONArray("roles"));
+                parseAllCapsObject(userModel, dataObject.optJSONObject("allcaps"));
+                parseFilterObject(userModel, dataObject.optJSONObject("filter"));
+
+                return userModel;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
     public static final class EditParser extends AsyncTask<JSONObject, Void, UserModel> {
 
         @Override

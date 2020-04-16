@@ -59,7 +59,7 @@ public class MoviesPopularFragment extends RootFragment {
         popularAdapter = new MoviesPopularAdapter(getContext(),
                 (lastSelection, currentSelection) -> {
                     dashboardViewModel.requestMovieDetails(
-                            popularAdapter.getItemAt(currentSelection).getId()
+                            popularAdapter.getItemAt(currentSelection).getId(), 1
                     );
                 });
 
@@ -82,7 +82,8 @@ public class MoviesPopularFragment extends RootFragment {
                         showFailure(false, apiStatusModel.getMessage());
                 }
 
-            } else if (apiStatusModel.getApi() == Constants.Api.MOVIES_DETAILS) {
+            } else if (apiStatusModel.getApi() == Constants.Api.MOVIES_DETAILS
+                    && apiStatusModel.getFromScreen() == 1) {
                 if (apiStatusModel.getStatus() != Status.Request.API_HIT) {
                     popularAdapter.removeLastSelection();
                     if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS)

@@ -88,7 +88,8 @@ public class VerifyOtpActivity extends RootActivity {
         tvResend = findViewById(R.id.tv_resend);
         tvCountDown = findViewById(R.id.tv_count_down);
         tvCreateNew = findViewById(R.id.tv_create_password);
-        ViewUtils.toggleViewVisibility(extraSentFor != App.Intent.Value.OTP_FOR_REGISTRATION, tvCreateNew);
+        ViewUtils.toggleViewVisibility(extraSentFor != App.Intent.Value.OTP_FOR_REGISTRATION,
+                tvCreateNew, findViewById(R.id.iv_create_new));
 
         btnSubmit = findViewById(R.id.btn_submit);
     }
@@ -193,7 +194,7 @@ public class VerifyOtpActivity extends RootActivity {
                 hideLoader();
 
                 if (apiStatusModel.getApi() == Constants.Api.OTP_USER_REGISTRATION) {
-                    PreferenceUtils.saveLoginStatus(this, Status.Login.REQUIRE_SIGN_IN_AND_CREDS);
+                    PreferenceUtils.saveLoginStatus(this, Status.Login.REQUIRE_NOTHING);
                     startActivity(new android.content.Intent(this, DashboardActivity.class));
                     finish();
                 } else if (apiStatusModel.getApi() == Constants.Api.OTP_FORGOT_PASSWORD) {

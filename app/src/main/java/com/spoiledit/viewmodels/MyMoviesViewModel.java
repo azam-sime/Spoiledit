@@ -30,6 +30,10 @@ public class MyMoviesViewModel extends ViewModel {
         myMoviesRepo.requestMyMovies();
     }
 
+    public void requestMovieDetails(int movieId) {
+        myMoviesRepo.requestMovieDetails(movieId);
+    }
+
     public static class Factory implements ViewModelProvider.Factory {
         private MyRepo.MyMoviesRepo myMoviesRepo;
 

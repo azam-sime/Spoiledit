@@ -62,6 +62,10 @@ public abstract class RootRepo {
         setApiStatus(new ApiStatusModel(api, Status.Request.API_SUCCESS, message));
     }
 
+    public void apiRequestSuccess(int fromScreen, int api, String message) {
+        setApiStatus(new ApiStatusModel(fromScreen, api, Status.Request.API_SUCCESS, message));
+    }
+
     public void apiRequestFailure(int api, String message) {
         setApiStatus(new ApiStatusModel(api, Status.Request.API_ERROR, message));
     }

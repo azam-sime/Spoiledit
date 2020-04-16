@@ -35,7 +35,7 @@ public class MySpoilersActivity extends RootActivity {
 
     @Override
     public void setUpToolBar() {
-        setupToolBar("My Spoilers", true);
+        setupToolBar("My Spoilers", false);
     }
 
     @Override

@@ -59,7 +59,7 @@ public class MoviesRecentFragment extends RootFragment {
         recentAdapter = new MoviesRecentAdapter(getContext(),
                 (lastSelection, currentSelection) -> {
                     dashboardViewModel.requestMovieDetails(
-                            recentAdapter.getItemAt(currentSelection).getId()
+                            recentAdapter.getItemAt(currentSelection).getId(), 2
                     );
                 });
 
@@ -82,7 +82,8 @@ public class MoviesRecentFragment extends RootFragment {
                         showFailure(false, apiStatusModel.getMessage());
                 }
 
-            } else if (apiStatusModel.getApi() == Constants.Api.MOVIES_DETAILS) {
+            } else if (apiStatusModel.getApi() == Constants.Api.MOVIES_DETAILS
+                    && apiStatusModel.getFromScreen() == 2) {
                 if (apiStatusModel.getStatus() != Status.Request.API_HIT) {
                     recentAdapter.removeLastSelection();
                     if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS)
