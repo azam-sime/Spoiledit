@@ -116,7 +116,8 @@ public class SpoilersNewAdapter extends RootSelectionAdapter {
                     .load(spoilersNewModel.getPosterPath())
                     .resize(80, 132)
                     .centerCrop()
-                    .error(context.getResources().getDrawable(R.drawable.popcorn))
+                    .placeholder(R.drawable.ic_placeholder)
+                    .error(R.drawable.ic_placeholder)
                     .into(viewHolder.ivPoster);
         }
     }

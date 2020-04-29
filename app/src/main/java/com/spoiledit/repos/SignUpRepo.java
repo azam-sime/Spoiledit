@@ -37,7 +37,8 @@ public class SignUpRepo extends RootRepo {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
                                 if (isRequestSuccess(jsonObject)) {
-                                    PreferenceUtils.saveLoginOtp(context, jsonObject.optJSONObject("data").optString("otp"));
+                                    PreferenceUtils.saveOtp(context,
+                                            jsonObject.optJSONObject("data").optString("otp"));
                                     apiRequestSuccess(api, jsonObject.optString("message"));
                                 } else
                                     setRequestStatusFailed(api, jsonObject);

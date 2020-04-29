@@ -74,7 +74,7 @@ public class DashboardActivity extends RootActivity {
 
     @Override
     public void setUpToolBar() {
-
+        setupPopcornIconOnly();
     }
 
     @Override
@@ -150,7 +150,6 @@ public class DashboardActivity extends RootActivity {
         dashboardViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
             if (apiStatusModel.getApi() == Constants.Api.USER_LOGOUT) {
                 PreferenceUtils.clearPreferences(this);
-                PreferenceUtils.saveLoginStatus(this, Status.Login.REQUIRE_SIGN_IN_AND_CREDS);
                 startActivity(new Intent(this, SplashActivity.class));
                 finish();
 

@@ -36,14 +36,16 @@
                         android:scaleType="centerCrop"
                         app:riv_corner_radius="@dimen/radius_image_user"
                         app:riv_tile_mode="clamp"
-                        android:src="@drawable/app_icon_logo"
+                        android:src="@drawable/ic_placeholder"
                         android:id="@+id/riv_user"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end|bottom"
-                        android:src="@drawable/popcorn"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:src="@drawable/prof_change"
                         android:id="@+id/iv_add_photo" />
                 </FrameLayout>
 
@@ -259,7 +261,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Wishlist is empty"
-                            android:textColor="@color/colorBlack"/>
+                            android:textColor="@color/colorBlack"
+                            android:visibility="gone"/>
                     </LinearLayout>
 
                     <ImageView
@@ -294,8 +297,9 @@
                             android:id="@+id/tv_spoilers_status"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            tools:text="(176)"
-                            android:textColor="@color/colorBlack"/>
+                            tools:text="Spoilers are empty"
+                            android:textColor="@color/colorBlack"
+                            android:visibility="gone"/>
                     </LinearLayout>
 
                     <ImageView

@@ -2,7 +2,6 @@ package com.spoiledit.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
@@ -66,23 +65,24 @@ public class SplashActivity extends RootActivity {
                     LogUtils.logInfo(TAG, apiStatusModel.getMessage());
 
                 } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
-                    PreferenceUtils.saveString(this, PreferenceUtils.KEY_TOKEN, apiStatusModel.getMessage());
+                    PreferenceUtils.saveString(this, PreferenceUtils.KEY_BEARER_TOKEN, apiStatusModel.getMessage());
 
-                    switch (PreferenceUtils.loginStatus(this)) {
-                        case Status.Login.REQUIRE_NOTHING:
-                            startActivity(new Intent(this, DashboardActivity.class));
-                            finish();
-                            break;
-                        case Status.Login.REQUIRE_SIGN_IN_NOT_CREDS:
-                        case Status.Login.REQUIRE_SIGN_IN_AND_CREDS:
-                            startActivity(new Intent(this, SignInActivity.class));
-                            finish();
-                            break;
-                        case Status.Login.REQUIRE_SIGN_UP:
-                            startActivity(new Intent(this, SignUpActivity.class));
-                            finish();
-                            break;
-                    }
+                    startActivity(new Intent(this, DashboardActivity.class));
+                    finish();
+//                    switch (PreferenceUtils.loginStatus(this)) {
+//                        case Status.Login.REQUIRE_NOTHING:
+//                            startActivity(new Intent(this, DashboardActivity.class));
+//                            finish();
+//                            break;
+//                        case Status.Login.REQUIRE_REGISTER:
+//                            startActivity(new Intent(this, SignUpActivity.class));
+//                            finish();
+//                            break;
+//                        case Status.Login.REQUIRE_LOGIN:
+//                            startActivity(new Intent(this, SignInActivity.class));
+//                            finish();
+//                            break;
+//                    }
 
                 } else
                     showFailure(apiStatusModel.getMessage());

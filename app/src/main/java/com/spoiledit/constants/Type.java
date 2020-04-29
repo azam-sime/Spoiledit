@@ -55,5 +55,6 @@ public final class Type {
         public static final int MOVIES_BY_PERSON = 2;
         public static final int MOVIES_BY_KEYWORD = 3;
         public static final int MOVIES_BY_COMPANIES = 4;
+        public static final int MOVIES_FROM_KEYWORD = 5;
     }
 }

@@ -1,16 +1,10 @@
 package com.spoiledit.viewmodels;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.spoiledit.models.ApiStatusModel;
-import com.spoiledit.models.MoviePopularModel;
-import com.spoiledit.models.MovieRecentModel;
-import com.spoiledit.models.MovieUpcomingModel;
-import com.spoiledit.models.SearchMovieModel;
-import com.spoiledit.models.SpoilersNewModel;
+import com.spoiledit.models.SearchModel;
 import com.spoiledit.repos.SearchRepo;
 
 import java.util.List;
@@ -34,20 +28,24 @@ public class SearchViewModel extends ViewModel {
         return searchRepo.getSearchValues();
     }
 
-    public MutableLiveData<List<SearchMovieModel>> getMoviesByTitleMutable() {
+    public MutableLiveData<List<SearchModel>> getMoviesByTitleMutable() {
         return searchRepo.getMoviesByTitleMutable();
     }
 
-    public MutableLiveData<List<SearchMovieModel>> getMoviesByPersonMutable() {
+    public MutableLiveData<List<SearchModel>> getMoviesByPersonMutable() {
         return searchRepo.getMoviesByPersonMutable();
     }
 
-    public MutableLiveData<List<SearchMovieModel>> getMoviesByKeywordMutable() {
+    public MutableLiveData<List<SearchModel>> getMoviesByKeywordMutable() {
         return searchRepo.getMoviesByKeywordMutable();
     }
 
-    public MutableLiveData<List<SearchMovieModel>> getMoviesByCompaniesMutable() {
+    public MutableLiveData<List<SearchModel>> getMoviesByCompaniesMutable() {
         return searchRepo.getMoviesByCompaniesMutable();
+    }
+
+    public MutableLiveData<List<SearchModel>> getMoviesFromKeywordMutable() {
+        return searchRepo.getMoviesFromKeywordMutable();
     }
 
     public void requestSearchAutoCompleteValues(String searchValue) {
@@ -70,7 +68,19 @@ public class SearchViewModel extends ViewModel {
         searchRepo.requestMoviesByCompanies();
     }
 
-    public void requestMovieDetails(int movieId) {
-        searchRepo.requestMovieDetails(movieId);
+    public void requestMovieDetails(int movieId, int fromTab) {
+        searchRepo.requestMovieDetails(movieId, fromTab);
+    }
+
+    public void requestKeywordDetails(int keywordId) {
+        searchRepo.requestKeywordDetails(keywordId);
+    }
+
+    public void requestPersonDetails(int personId) {
+        searchRepo.requestPersonDetails(personId);
+    }
+
+    public void requestCompanyDetails(int companyId) {
+        searchRepo.requestCompanyDetails(companyId);
     }
 }

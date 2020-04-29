@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.spoiledit.R;
 import com.spoiledit.models.CommentModel;
+import com.spoiledit.utils.StringUtils;
 import com.spoiledit.utils.ViewUtils;
 import com.squareup.picasso.Picasso;
 
@@ -105,15 +106,29 @@ public class SpoilerCommentsAdapter extends RootSelectionAdapter {
 
             viewHolder.tvComment.setText(commentModel.getComment());
             viewHolder.tvDate.setText(commentModel.getCommentDate());
-            viewHolder.tvThumbsUp.setText("(" + commentModel.getLikes() + ")");
-            viewHolder.tvThumbsDown.setText("(" + commentModel.getDislikes() + ")");
 
-            Picasso.get()
-                    .load(commentModel.getAvatarUrl())
-                    .resize(40, 40)
-                    .centerCrop()
-                    .error(context.getResources().getDrawable(R.drawable.popcorn))
-                    .into(viewHolder.ivUser);
+            StringUtils.setText(viewHolder.tvLikes, "(" + commentModel.getLikes() + ")");
+            StringUtils.setText(viewHolder.tvDislikes, "(" + commentModel.getDislikes() + ")");
+
+            viewHolder.tvLikes.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    commentModel.getLikes() == 0 ? R.drawable.thumbs_up_none : R.drawable.thumbs_up,
+                    0, 0, 0
+            );
+
+            viewHolder.tvDislikes.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    commentModel.getDislikes() == 0 ? R.drawable.thumbs_down_none : R.drawable.thumbs_down,
+                    0, 0, 0
+            );
+
+            if (!StringUtils.isInvalid(commentModel.getAvatarUrl())) {
+                Picasso.get()
+                        .load(commentModel.getAvatarUrl())
+                        .resize(40, 40)
+                        .centerCrop()
+                        .placeholder(R.drawable.ic_placeholder)
+                        .error(R.drawable.ic_placeholder)
+                        .into(viewHolder.ivUser);
+            }
         }
     }
 
@@ -125,7 +140,7 @@ public class SpoilerCommentsAdapter extends RootSelectionAdapter {
     public class CommentViewHolder extends RecyclerView.ViewHolder {
         private ImageView ivUser;
         private ContentLoadingProgressBar loadingBar;
-        private TextView tvComment, tvDate, tvReply, tvThumbsUp, tvThumbsDown;
+        private TextView tvComment, tvDate, tvReply, tvLikes, tvDislikes;
 
         public CommentViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -137,8 +152,8 @@ public class SpoilerCommentsAdapter extends RootSelectionAdapter {
             tvComment = itemView.findViewById(R.id.tv_comment);
             tvDate = itemView.findViewById(R.id.tv_date);
             tvReply = itemView.findViewById(R.id.tv_reply);
-            tvThumbsUp = itemView.findViewById(R.id.tv_thumbs_up);
-            tvThumbsDown = itemView.findViewById(R.id.tv_thumbs_down);
+            tvLikes = itemView.findViewById(R.id.tv_thumbs_up);
+            tvDislikes = itemView.findViewById(R.id.tv_thumbs_down);
 
             tvReply.setOnClickListener(v -> {
                 if (onCommentActionListener != null) {
@@ -146,13 +161,13 @@ public class SpoilerCommentsAdapter extends RootSelectionAdapter {
                 }
             });
 
-            tvThumbsUp.setOnClickListener(v -> {
+            tvLikes.setOnClickListener(v -> {
                 if (onCommentActionListener != null) {
                     onCommentActionListener.onLikeComment(commentModels.get(getAdapterPosition()));
                 }
             });
 
-            tvThumbsDown.setOnClickListener(v -> {
+            tvDislikes.setOnClickListener(v -> {
                 if (onCommentActionListener != null) {
                     onCommentActionListener.onDislikeComment(commentModels.get(getAdapterPosition()));
                 }

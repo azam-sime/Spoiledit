@@ -264,7 +264,7 @@ public class DashboardRepo extends RootRepo {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
                                 if (isRequestSuccess(jsonObject)) {
-                                    searchValues.postValue(new SearchParser().execute(jsonObject).get());
+                                    searchValues.postValue(new SearchParser.QueryParser().execute(jsonObject).get());
                                     apiRequestSuccess(api, jsonObject.optString("message"));
                                 } else
                                     setRequestStatusFailed(api, jsonObject);

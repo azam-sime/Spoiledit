@@ -124,7 +124,7 @@ public class MoviesUpcomingAdapter extends RootSelectionAdapter {
                     .resize(80, 132)
                     .centerCrop()
                     .placeholder(R.drawable.ic_placeholder)
-//                    .error(context.getResources().getDrawable(R.drawable.popcorn))
+                    .error(R.drawable.ic_placeholder)
                     .into(viewHolder.ivPoster);
         }
     }

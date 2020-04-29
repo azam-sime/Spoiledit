@@ -194,11 +194,11 @@ public class VerifyOtpActivity extends RootActivity {
                 hideLoader();
 
                 if (apiStatusModel.getApi() == Constants.Api.OTP_USER_REGISTRATION) {
-                    PreferenceUtils.saveLoginStatus(this, Status.Login.REQUIRE_NOTHING);
-                    startActivity(new android.content.Intent(this, DashboardActivity.class));
+                    PreferenceUtils.saveLoggedIn(this, true);
+                    setResult(RESULT_OK);
                     finish();
+
                 } else if (apiStatusModel.getApi() == Constants.Api.OTP_FORGOT_PASSWORD) {
-                    startActivity(new android.content.Intent(this, SignInActivity.class));
                     finish();
                 }
             }

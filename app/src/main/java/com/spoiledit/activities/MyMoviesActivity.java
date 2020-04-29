@@ -66,7 +66,7 @@ public class MyMoviesActivity extends RootActivity {
                     moviesAdapter.getItemAt(currentSelection).getId()
             );
         }, position -> {
-
+            showInterrupt("Coming Soon", true);
         });
 
         recyclerView.setAdapter(moviesAdapter);

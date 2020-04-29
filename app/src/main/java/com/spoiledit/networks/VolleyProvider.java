@@ -22,7 +22,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -89,7 +88,7 @@ public class VolleyProvider {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("Authorization", "Bearer " + PreferenceUtils.getString(context, PreferenceUtils.KEY_TOKEN));
+                headers.put("Authorization", "Bearer " + PreferenceUtils.getString(context, PreferenceUtils.KEY_BEARER_TOKEN));
                 return headers;
             }
 
@@ -132,7 +131,7 @@ public class VolleyProvider {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("Authorization", "Bearer " + PreferenceUtils.getString(context, PreferenceUtils.KEY_TOKEN));
+                headers.put("Authorization", "Bearer " + PreferenceUtils.getString(context, PreferenceUtils.KEY_BEARER_TOKEN));
                 return headers;
             }
         };
@@ -169,7 +168,7 @@ public class VolleyProvider {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("Authorization", "Bearer " + PreferenceUtils.getString(context, PreferenceUtils.KEY_TOKEN));
+                headers.put("Authorization", "Bearer " + PreferenceUtils.getString(context, PreferenceUtils.KEY_BEARER_TOKEN));
                 return headers;
             }
 
@@ -212,7 +211,7 @@ public class VolleyProvider {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("Authorization", "Bearer " + PreferenceUtils.getString(context, PreferenceUtils.KEY_TOKEN));
+                headers.put("Authorization", "Bearer " + PreferenceUtils.getString(context, PreferenceUtils.KEY_BEARER_TOKEN));
                 return headers;
             }
         };
@@ -249,7 +248,7 @@ public class VolleyProvider {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("Authorzation", PreferenceUtils.getString(context, PreferenceUtils.KEY_TOKEN));
+                headers.put("Authorzation", PreferenceUtils.getString(context, PreferenceUtils.KEY_BEARER_TOKEN));
                 return headers;
             }
 
@@ -296,7 +295,7 @@ public class VolleyProvider {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("Authorization", PreferenceUtils.getString(context, PreferenceUtils.KEY_TOKEN));
+                headers.put("Authorization", PreferenceUtils.getString(context, PreferenceUtils.KEY_BEARER_TOKEN));
                 return headers;
             }
         };
@@ -337,7 +336,7 @@ public class VolleyProvider {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
-                headers.put("Authorization", PreferenceUtils.getString(context, PreferenceUtils.KEY_TOKEN));
+                headers.put("Authorization", PreferenceUtils.getString(context, PreferenceUtils.KEY_BEARER_TOKEN));
                 return headers;
             }
         };

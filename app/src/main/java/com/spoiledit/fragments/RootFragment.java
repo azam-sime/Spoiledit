@@ -1,6 +1,7 @@
 package com.spoiledit.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,13 +15,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.spoiledit.R;
+import com.spoiledit.activities.RootActivity;
 import com.spoiledit.models.UserModel;
 import com.spoiledit.utils.AppUtils;
 import com.spoiledit.utils.DialogUtils;
 import com.spoiledit.utils.ExecutorUtils;
 import com.spoiledit.utils.InputUtils;
 import com.spoiledit.utils.NetworkUtils;
-import com.spoiledit.utils.PreferenceUtils;
 import com.spoiledit.utils.StringUtils;
 import com.spoiledit.utils.ViewUtils;
 
@@ -132,7 +133,7 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
     }
 
     public void onPopcornClick() {
-
+        ((RootActivity) getActivity()).onPopcornClick();
     }
 
     public boolean isRequestValid() {
@@ -260,6 +261,10 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
         }
     }
 
+    public void showNotLoginError() {
+        ((RootActivity) getActivity()).showNotLoginError();
+    }
+
 
     public void hideLoader() {
         if (snackbar != null && snackbar.isShown())
@@ -283,7 +288,7 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
             ViewUtils.toggleViewVisibility(show, tvNoData);
     }
 
-    String getResString(int resId) {
+    public String getResString(int resId) {
         return AppUtils.getString(getContext(), resId);
     }
 
@@ -291,11 +296,15 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
         return NetworkUtils.isNetworkAvailable();
     }
 
-    UserModel getUserModel() {
-        return PreferenceUtils.getUserModel(getContext());
+    public boolean loggedIn() {
+        return ((RootActivity) getActivity()).loggedIn();
     }
 
-    RecyclerView.AdapterDataObserver getAdapterDataObserver() {
+    public UserModel getUserModel() {
+        return ((RootActivity) getActivity()).getUserModel();
+    }
+
+    public RecyclerView.AdapterDataObserver getAdapterDataObserver() {
         return adapterDataObserver;
     }
 

@@ -12,7 +12,7 @@ public final class Constants {
     public static final class Api {
 
         private Api() {
-            // last = 48
+            // last = 56
         }
 
         public static final String BASE_URL = "https://spoiledit.com/wp-json/wp/v2";
@@ -53,6 +53,9 @@ public final class Constants {
         public static final int MOVIES_THIS_WEEK = 22;
 
         public static final int MOVIES_DETAILS = 23;
+        public static final int KEYWORD_DETAILS = 54;
+        public static final int PERSON_DETAILS = 55;
+        public static final int COMPANY_DETAILS = 56;
 
         public static final int MOVIE_SPOILERS_FULL = 24;
         public static final int MOVIE_SPOILERS_BRIEF = 25;
@@ -85,11 +88,13 @@ public final class Constants {
         public static final int SEARCH_MOVIE_BY_PERSON = 50;
         public static final int SEARCH_MOVIE_BY_KEYWORD = 51;
         public static final int SEARCH_MOVIE_BY_COMPANIES = 52;
+        public static final int SEARCH_MOVIE_FROM_KEYWORD = 53;
 
         public static final String SEARCH_TITLE_ADDON = "&type=movie&pn=1";
         public static final String SEARCH_PERSON_ADDON = "&type=person&pn=1";
         public static final String SEARCH_KEYWORD_ADDON = "&type=keyword&pn=1";
         public static final String SEARCH_COMPANIES_ADDON = "&type=company&pn=1";
+        public static final String SEARCH_FROM_KEYWORD_ADDON = "&serachby=keyword&serachid=";
     }
 
     public static final class Broadcast {

@@ -127,7 +127,7 @@ public class MyMoviesAdapter extends RootSelectionAdapter {
                     .resize(80, 132)
                     .centerCrop()
                     .placeholder(R.drawable.ic_placeholder)
-//                    .error(context.getResources().getDrawable(R.drawable.popcorn))
+                    .error(R.drawable.ic_placeholder)
                     .into(viewHolder.ivPoster);
         }
     }
@@ -138,7 +138,7 @@ public class MyMoviesAdapter extends RootSelectionAdapter {
     }
 
     public class PopularMovieViewHolder extends RecyclerView.ViewHolder {
-        private ImageView ivPoster, ivRating1, ivRating2, ivRating3, ivRating4, ivRating5;
+        private ImageView ivPoster, ivRating1, ivRating2, ivRating3, ivRating4, ivRating5, ivRemove;
         private ContentLoadingProgressBar loadingBar;
         private TextView tvTitle, tvOverview;
 
@@ -153,10 +153,17 @@ public class MyMoviesAdapter extends RootSelectionAdapter {
             ivRating4 = itemView.findViewById(R.id.iv_rate_4);
             ivRating5 = itemView.findViewById(R.id.iv_rate_5);
 
+            ivRemove = itemView.findViewById(R.id.iv_remove);
+
             loadingBar = itemView.findViewById(R.id.pb_loading);
 
             tvTitle = itemView.findViewById(R.id.tv_title);
             tvOverview = itemView.findViewById(R.id.tv_overview);
+
+            ivRemove.setOnClickListener(v -> {
+                if (onItemDeletionListener != null)
+                    onItemDeletionListener.onItemDeleted(getAdapterPosition());
+            });
 
             itemView.setOnClickListener(v -> {
                 if (onItemSelectionListener != null) {

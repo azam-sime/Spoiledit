@@ -99,7 +99,6 @@ public class SignUpActivity extends RootActivity {
                 } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
                     toggleViews(false);
                     hideLoader();
-                    PreferenceUtils.saveLoginStatus(this, Status.Login.REQUIRE_SIGN_IN_AND_CREDS);
 //                    showSuccess(false, apiStatusModel.getMessage(), this::gotoNextScreen);
                     gotoNextScreen();
                 }
@@ -189,7 +188,6 @@ public class SignUpActivity extends RootActivity {
             startActivityForResult(intent, App.Intent.Result.IS_TC_AGREED);
 
         } else if (v.getId() == R.id.tv_sign_in) {
-            startActivity(new android.content.Intent(this, SignInActivity.class));
             finish();
         } else
             super.onClick(v);
@@ -199,7 +197,11 @@ public class SignUpActivity extends RootActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable android.content.Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == App.Intent.Result.IS_TC_AGREED) {
+        if (requestCode == App.Intent.Request.REGISTER) {
+            if (resultCode == RESULT_OK)
+                setResult(RESULT_OK);
+            finish();
+        } else if (requestCode == App.Intent.Result.IS_TC_AGREED) {
             cbTandC.setChecked(resultCode == RESULT_OK);
         }
     }
@@ -210,12 +212,12 @@ public class SignUpActivity extends RootActivity {
                 etEmail.getText().toString().trim(),
                 etPassword.getText().toString().trim()
         });
-        PreferenceUtils.saveLoginStatus(this, Status.Login.REQUIRE_SIGN_IN_AND_CREDS);
+
         android.content.Intent intent = new android.content.Intent(this, VerifyOtpActivity.class);
         intent.putExtra(App.Intent.Extra.OTP_FOR, App.Intent.Value.OTP_FOR_REGISTRATION);
         intent.putExtra(App.Intent.Extra.OTP_SENT_TO, App.Intent.Value.OTP_SENT_TO_MAIL);
         intent.putExtra(App.Intent.Extra.OTP_SENT_TO_ADDRESS, etEmail.getText().toString().trim());
-        startActivity(intent);
+        startActivityForResult(intent, App.Intent.Request.REGISTER);
         finish();
     }
 }

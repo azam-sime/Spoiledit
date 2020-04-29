@@ -10,10 +10,9 @@ public final class Status {
 
         }
 
-        public static final int REQUIRE_SIGN_UP = 0;
-        public static final int REQUIRE_SIGN_IN_AND_CREDS = 1;
-        public static final int REQUIRE_SIGN_IN_NOT_CREDS = 2;
-        public static final int REQUIRE_NOTHING = 3;
+        public static final int REQUIRE_NOTHING = 0;
+        public static final int REQUIRE_REGISTER = 1;
+        public static final int REQUIRE_LOGIN = 2;
     }
 
     public static final class Request {

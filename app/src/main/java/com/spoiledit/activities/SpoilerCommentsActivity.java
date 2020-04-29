@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +23,7 @@ import com.spoiledit.constants.Status;
 import com.spoiledit.manager.FileManager;
 import com.spoiledit.models.CommentModel;
 import com.spoiledit.models.MovieSpoilerModel;
+import com.spoiledit.utils.InputUtils;
 import com.spoiledit.utils.StringUtils;
 import com.spoiledit.utils.ViewUtils;
 import com.spoiledit.viewmodels.CommentsViewModel;
@@ -33,12 +35,14 @@ public class SpoilerCommentsActivity extends RootActivity {
     private CommentsViewModel commentsViewModel;
 
     private SwipeRefreshLayout swipeRefreshLayout;
-    private EditText etComment;
     private SpoilerCommentsAdapter commentsAdapter;
+
+    private EditText etComment;
+    private TextView tvThumbsUp, tvThumbsDown;
     private FileManager fileManager;
 
-    private boolean reply = false;
-    private int commentId = 0;
+//    private boolean reply = false;
+//    private int commentId = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,6 +64,8 @@ public class SpoilerCommentsActivity extends RootActivity {
 
         swipeRefreshLayout = findViewById(R.id.srl_comments);
         etComment = findViewById(R.id.et_message);
+        tvThumbsUp = findViewById(R.id.tv_thumbs_up);
+        tvThumbsDown = findViewById(R.id.tv_thumbs_down);
     }
 
     @Override
@@ -69,8 +75,9 @@ public class SpoilerCommentsActivity extends RootActivity {
         findViewById(R.id.iv_add_files).setOnClickListener(this);
         findViewById(R.id.iv_send).setOnClickListener(this);
         findViewById(R.id.tv_comment).setOnClickListener(this);
-        findViewById(R.id.tv_thumbs_up).setOnClickListener(this);
-        findViewById(R.id.tv_thumbs_down).setOnClickListener(this);
+
+        tvThumbsUp.setOnClickListener(this);
+        tvThumbsDown.setOnClickListener(this);
     }
 
     @Override
@@ -80,13 +87,26 @@ public class SpoilerCommentsActivity extends RootActivity {
         StringUtils.setText(findViewById(R.id.tv_username), spoilerModel.getDisplayName());
         StringUtils.setText(findViewById(R.id.tv_date), spoilerModel.getCratedOn());
         StringUtils.setText(findViewById(R.id.tv_spoiler), spoilerModel.getSpoiler());
-        StringUtils.setText(findViewById(R.id.tv_thumbs_up), "(" + spoilerModel.getThumbsUp() + ")");
-        StringUtils.setText(findViewById(R.id.tv_thumbs_down), "(" + spoilerModel.getThumbsDown() + ")");
+
+        StringUtils.setText(tvThumbsUp, "(" + spoilerModel.getThumbsUp() + ")");
+        StringUtils.setText(tvThumbsDown, "(" + spoilerModel.getThumbsDown() + ")");
+
+        tvThumbsUp.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                spoilerModel.getThumbsUpInt() == 0 ? R.drawable.thumbs_up_none : R.drawable.thumbs_up,
+                0, 0, 0
+        );
+
+        tvThumbsDown.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                spoilerModel.getThumbsDownInt() == 0 ? R.drawable.thumbs_down_none : R.drawable.thumbs_down,
+                0, 0, 0
+        );
 
         Picasso.get()
                 .load(spoilerModel.getAvatarUrl())
                 .resize(80, 80)
-                .centerCrop().error(getResources().getDrawable(R.drawable.popcorn))
+                .centerCrop()
+                .placeholder(R.drawable.ic_placeholder)
+                .error(R.drawable.ic_placeholder)
                 .into((RoundedImageView) findViewById(R.id.riv_user));
     }
 
@@ -98,18 +118,19 @@ public class SpoilerCommentsActivity extends RootActivity {
         commentsAdapter = new SpoilerCommentsAdapter(this, new SpoilerCommentsAdapter.OnCommentActionListener() {
             @Override
             public void onReplyComment(CommentModel commentModel) {
-                reply = true;
-                commentId = commentModel.getId();
+//                reply = true;
+//                commentId = commentModel.getId();
+                showInterrupt("Coming Soon", true);
             }
 
             @Override
             public void onLikeComment(CommentModel commentModel) {
-
+                showInterrupt("Coming Soon", true);
             }
 
             @Override
             public void onDislikeComment(CommentModel commentModel) {
-
+                showInterrupt("Coming Soon", true);
             }
         });
 
@@ -166,20 +187,26 @@ public class SpoilerCommentsActivity extends RootActivity {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.iv_add_files)
-            fileManager.showFileSources();
+            showInterrupt("Coming Soon", true);
         else if (v.getId() == R.id.tv_comment) {
-            reply = false;
-            commentId = 0;
-            etComment.setText("");
-        } else if (v.getId() == R.id.iv_send) {
+//            reply = false;
+//            commentId = 0;
+            etComment.requestFocus();
+            InputUtils.showKeyboard(etComment);
+
+        } else if (v.getId() == R.id.tv_thumbs_up)
+            showInterrupt("Coming Soon", true);
+        else if (v.getId() == R.id.tv_thumbs_down)
+            showInterrupt("Coming Soon", true);
+        else if (v.getId() == R.id.iv_send) {
             if (!StringUtils.isInvalid(etComment)) {
-                if (reply)
-                    commentsViewModel.replyComment(commentId, etComment.getText().toString().trim());
-                else
+//                if (reply)
+//                    commentsViewModel.replyComment(commentId, etComment.getText().toString().trim());
+//                else
                     commentsViewModel.addComment(etComment.getText().toString().trim());
 
-                reply = false;
-                commentId = 0;
+//                reply = false;
+//                commentId = 0;
                 etComment.setText("");
             }
         } else

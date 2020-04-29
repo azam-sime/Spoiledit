@@ -43,14 +43,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:text="Victor Smith"
+                    android:layout_marginBottom="@dimen/spacing_8"
                     android:textSize="22sp"
                     android:textColor="@color/colorWhite"
-                    android:id="@+id/tv_user_name"/>
+                    android:id="@+id/tv_user_name"
+                    tools:visibility="visible"/>
 
                 <TextView
+                    android:id="@+id/tv_edit_profile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_8"
                     android:text="@string/edit_profile"
                     android:textColor="@color/colorWhite"/>
             </LinearLayout>

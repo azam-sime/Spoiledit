@@ -15,6 +15,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.spoiledit.R;
 import com.spoiledit.listeners.OnItemSelectionListener;
 import com.spoiledit.models.MySpoilerModel;
+import com.spoiledit.utils.StringUtils;
 import com.spoiledit.utils.ViewUtils;
 import com.squareup.picasso.Picasso;
 
@@ -108,8 +109,20 @@ public class MySpoilersAdapter extends RootSelectionAdapter {
             viewHolder.tvUserName.setText(mySpoilerModel.getDisplayName());
             viewHolder.tvSpoiler.setText(mySpoilerModel.getSpoiler());
             viewHolder.tvDate.setText(mySpoilerModel.getCratedOn());
-            viewHolder.tvThumbsUp.setText("(" + mySpoilerModel.getThumbsUp() + ")");
-            viewHolder.tvThumbsDown.setText("(" + mySpoilerModel.getThumbsDown() + ")");
+
+            StringUtils.setText(viewHolder.tvThumbsUp, "(" + mySpoilerModel.getThumbsUp() + ")");
+            StringUtils.setText(viewHolder.tvThumbsDown, "(" + mySpoilerModel.getThumbsDown() + ")");
+
+            viewHolder.tvThumbsUp.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    mySpoilerModel.getThumbsUpInt() == 0 ? R.drawable.thumbs_up_none : R.drawable.thumbs_up,
+                    0, 0, 0
+            );
+
+            viewHolder.tvThumbsDown.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    mySpoilerModel.getThumbsDownInt() == 0 ? R.drawable.thumbs_down_none : R.drawable.thumbs_down,
+                    0, 0, 0
+            );
+
             viewHolder.itemView.setBackgroundColor(mySpoilerModel.isDarkBackground()
                     ? Color.parseColor("#F3F3F3") : Color.parseColor("#FFFFFF"));
 
@@ -117,7 +130,8 @@ public class MySpoilersAdapter extends RootSelectionAdapter {
                     .load(mySpoilerModel.getAvatarUrl())
                     .resize(60, 60)
                     .centerCrop()
-                    .error(context.getResources().getDrawable(R.drawable.popcorn))
+                    .placeholder(R.drawable.ic_placeholder)
+                    .error(R.drawable.ic_placeholder)
                     .into(viewHolder.rivUser);
         }
     }

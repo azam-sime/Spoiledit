@@ -15,6 +15,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.spoiledit.R;
 import com.spoiledit.listeners.OnItemSelectionListener;
 import com.spoiledit.models.SpoilerEndingModel;
+import com.spoiledit.utils.StringUtils;
 import com.spoiledit.utils.ViewUtils;
 import com.squareup.picasso.Picasso;
 
@@ -108,8 +109,20 @@ public class SpoilerEndingAdapter extends RootSelectionAdapter {
             viewHolder.tvUserName.setText(spoilerModel.getDisplayName());
             viewHolder.tvSpoiler.setText(spoilerModel.getSpoiler());
             viewHolder.tvDate.setText(spoilerModel.getCratedOn());
-            viewHolder.tvThumbsUp.setText("(" + spoilerModel.getThumbsUp() + ")");
-            viewHolder.tvThumbsDown.setText("(" + spoilerModel.getThumbsDown() + ")");
+
+            StringUtils.setText(viewHolder.tvThumbsUp, "(" + spoilerModel.getThumbsUp() + ")");
+            StringUtils.setText(viewHolder.tvThumbsDown, "(" + spoilerModel.getThumbsDown() + ")");
+
+            viewHolder.tvThumbsUp.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    spoilerModel.getThumbsUpInt() == 0 ? R.drawable.thumbs_up_none : R.drawable.thumbs_up,
+                    0, 0, 0
+            );
+
+            viewHolder.tvThumbsDown.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    spoilerModel.getThumbsDownInt() == 0 ? R.drawable.thumbs_down_none : R.drawable.thumbs_down,
+                    0, 0, 0
+            );
+
             viewHolder.itemView.setBackgroundColor(spoilerModel.isDarkBackground()
                     ? Color.parseColor("#F3F3F3") : Color.parseColor("#FFFFFF"));
 
@@ -117,7 +130,8 @@ public class SpoilerEndingAdapter extends RootSelectionAdapter {
                     .load(spoilerModel.getAvatarUrl())
                     .resize(60, 60)
                     .centerCrop()
-                    .error(context.getResources().getDrawable(R.drawable.popcorn))
+                    .placeholder(R.drawable.ic_placeholder)
+                    .error(R.drawable.ic_placeholder)
                     .into(viewHolder.rivUser);
         }
     }

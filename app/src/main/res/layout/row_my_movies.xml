@@ -25,7 +25,7 @@
                 android:layout_width="80dp"
                 android:layout_height="132dp"
                 android:contentDescription="@string/content_description"
-                android:src="@drawable/popcorn"
+                android:src="@drawable/ic_placeholder"
                 android:id="@+id/iv_poster"/>
         </com.google.android.material.card.MaterialCardView>
 
@@ -54,13 +54,12 @@
                     android:id="@+id/tv_title"/>
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/arrow_left"
+                    android:src="@drawable/ic_delete"
                     android:tint="@color/colorAccent"
-                    android:rotation="90"
                     android:id="@+id/iv_remove"/>
             </RelativeLayout>
 

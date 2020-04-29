@@ -4,8 +4,9 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.android.volley.VolleyError;
 import com.spoiledit.constants.Constants;
+import com.spoiledit.constants.Type;
 import com.spoiledit.constants.Urls;
-import com.spoiledit.models.SearchMovieModel;
+import com.spoiledit.models.SearchModel;
 import com.spoiledit.networks.VolleyProvider;
 import com.spoiledit.parsers.MovieParser;
 import com.spoiledit.parsers.SearchParser;
@@ -35,10 +36,11 @@ public class SearchRepo extends RootRepo {
     private String searchValue;
 
     private MutableLiveData<List<String>> searchValues;
-    private MutableLiveData<List<SearchMovieModel>> moviesByTitleMutable;
-    private MutableLiveData<List<SearchMovieModel>> moviesByPersonMutable;
-    private MutableLiveData<List<SearchMovieModel>> moviesByKeywordMutable;
-    private MutableLiveData<List<SearchMovieModel>> moviesByCompaniesMutable;
+    private MutableLiveData<List<SearchModel>> moviesByTitleMutable;
+    private MutableLiveData<List<SearchModel>> moviesByPersonMutable;
+    private MutableLiveData<List<SearchModel>> moviesByKeywordMutable;
+    private MutableLiveData<List<SearchModel>> moviesByCompaniesMutable;
+    private MutableLiveData<List<SearchModel>> moviesFromKeywordMutable;
 
     private SearchRepo(String searchValue) {
         init();
@@ -50,6 +52,7 @@ public class SearchRepo extends RootRepo {
         moviesByPersonMutable = new MutableLiveData<>();
         moviesByKeywordMutable = new MutableLiveData<>();
         moviesByCompaniesMutable = new MutableLiveData<>();
+        moviesFromKeywordMutable = new MutableLiveData<>();
     }
 
     public String getSearchValue() {
@@ -64,20 +67,24 @@ public class SearchRepo extends RootRepo {
         return searchValues;
     }
 
-    public MutableLiveData<List<SearchMovieModel>> getMoviesByTitleMutable() {
+    public MutableLiveData<List<SearchModel>> getMoviesByTitleMutable() {
         return moviesByTitleMutable;
     }
 
-    public MutableLiveData<List<SearchMovieModel>> getMoviesByPersonMutable() {
+    public MutableLiveData<List<SearchModel>> getMoviesByPersonMutable() {
         return moviesByPersonMutable;
     }
 
-    public MutableLiveData<List<SearchMovieModel>> getMoviesByKeywordMutable() {
+    public MutableLiveData<List<SearchModel>> getMoviesByKeywordMutable() {
         return moviesByKeywordMutable;
     }
 
-    public MutableLiveData<List<SearchMovieModel>> getMoviesByCompaniesMutable() {
+    public MutableLiveData<List<SearchModel>> getMoviesByCompaniesMutable() {
         return moviesByCompaniesMutable;
+    }
+
+    public MutableLiveData<List<SearchModel>> getMoviesFromKeywordMutable() {
+        return moviesFromKeywordMutable;
     }
 
     public void requestSearchAutoCompleteValues(String searchValue) {
@@ -85,14 +92,15 @@ public class SearchRepo extends RootRepo {
         try {
             apiRequestHit(api, "Requesting values...");
             getVolleyProvider().executePostRequest(
-                    Urls.SEARCH_AUTO_COMPLETE.getUrl(), getAutoCompleteParams(searchValue),
+                    Urls.SEARCH_AUTO_COMPLETE.getUrl(),
+                    getAutoCompleteParams(searchValue),
                     new VolleyProvider.OnResponseListener<String>() {
                         @Override
                         public void onSuccess(String response) {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
                                 if (isRequestSuccess(jsonObject)) {
-                                    searchValues.postValue(new SearchParser().execute(jsonObject).get());
+                                    searchValues.postValue(new SearchParser.QueryParser().execute(jsonObject).get());
                                     apiRequestSuccess(api, jsonObject.optString("message"));
                                 } else
                                     setRequestStatusFailed(api, jsonObject);
@@ -128,15 +136,18 @@ public class SearchRepo extends RootRepo {
         try {
             apiRequestHit(api, "Requesting movies by title...");
             getVolleyProvider().executeMultipartGetRequest(
-                    Urls.SEARCH_MOVIE.getUrl() + searchValue.replace(" ", "%20") + Constants.Api.SEARCH_TITLE_ADDON,
+                    Urls.SEARCH_MOVIE.getUrl()
+                            + searchValue.replace(" ", "%20")
+                            + Constants.Api.SEARCH_TITLE_ADDON,
                     new VolleyProvider.OnResponseListener<String>() {
                         @Override
                         public void onSuccess(String response) {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
                                 if (isRequestSuccess(jsonObject)) {
-                                    moviesByTitleMutable.postValue(new MovieParser.SearchParser()
-                                            .execute(jsonObject).get());
+                                    moviesByTitleMutable.postValue(new SearchParser(
+                                            Type.Search.MOVIES_BY_TITLE
+                                    ).execute(jsonObject).get());
                                     setDataStatus(api, jsonObject);
                                 } else
                                     setRequestStatusFailed(api, jsonObject);
@@ -166,15 +177,18 @@ public class SearchRepo extends RootRepo {
         try {
             apiRequestHit(api, "Requesting movies by person...");
             getVolleyProvider().executeMultipartGetRequest(
-                    Urls.SEARCH_MOVIE.getUrl() + searchValue.replace(" ", "%20") + Constants.Api.SEARCH_PERSON_ADDON,
+                    Urls.SEARCH_MOVIE.getUrl()
+                            + searchValue.replace(" ", "%20")
+                            + Constants.Api.SEARCH_PERSON_ADDON,
                     new VolleyProvider.OnResponseListener<String>() {
                         @Override
                         public void onSuccess(String response) {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
                                 if (isRequestSuccess(jsonObject)) {
-                                    moviesByPersonMutable.postValue(new MovieParser.SearchParser()
-                                            .execute(jsonObject).get());
+                                    moviesByPersonMutable.postValue(new SearchParser(
+                                            Type.Search.MOVIES_BY_PERSON
+                                    ).execute(jsonObject).get());
                                     setDataStatus(api, jsonObject);
                                 } else
                                     setRequestStatusFailed(api, jsonObject);
@@ -204,15 +218,18 @@ public class SearchRepo extends RootRepo {
         try {
             apiRequestHit(api, "Requesting movies by keyword...");
             getVolleyProvider().executeMultipartGetRequest(
-                    Urls.SEARCH_MOVIE.getUrl() + searchValue.replace(" ", "%20") + Constants.Api.SEARCH_KEYWORD_ADDON,
+                    Urls.SEARCH_MOVIE.getUrl()
+                            + searchValue.replace(" ", "%20")
+                            + Constants.Api.SEARCH_KEYWORD_ADDON,
                     new VolleyProvider.OnResponseListener<String>() {
                         @Override
                         public void onSuccess(String response) {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
                                 if (isRequestSuccess(jsonObject)) {
-                                    moviesByKeywordMutable.postValue(new MovieParser.SearchParser()
-                                            .execute(jsonObject).get());
+                                    moviesByKeywordMutable.postValue(new SearchParser(
+                                            Type.Search.MOVIES_BY_KEYWORD
+                                    ).execute(jsonObject).get());
                                     setDataStatus(api, jsonObject);
                                 } else
                                     setRequestStatusFailed(api, jsonObject);
@@ -242,15 +259,18 @@ public class SearchRepo extends RootRepo {
         try {
             apiRequestHit(api, "Requesting movies by companies...");
             getVolleyProvider().executeMultipartGetRequest(
-                    Urls.SEARCH_MOVIE.getUrl() + searchValue.replace(" ", "%20") + Constants.Api.SEARCH_COMPANIES_ADDON,
+                    Urls.SEARCH_MOVIE.getUrl()
+                            + searchValue.replace(" ", "%20")
+                            + Constants.Api.SEARCH_COMPANIES_ADDON,
                     new VolleyProvider.OnResponseListener<String>() {
                         @Override
                         public void onSuccess(String response) {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
                                 if (isRequestSuccess(jsonObject)) {
-                                    moviesByCompaniesMutable.postValue(new MovieParser.SearchParser()
-                                            .execute(jsonObject).get());
+                                    moviesByCompaniesMutable.postValue(new SearchParser(
+                                            Type.Search.MOVIES_BY_COMPANIES
+                                    ).execute(jsonObject).get());
                                     setDataStatus(api, jsonObject);
                                 } else
                                     setRequestStatusFailed(api, jsonObject);
@@ -275,7 +295,7 @@ public class SearchRepo extends RootRepo {
         }
     }
 
-    public void requestMovieDetails(int movieId) {
+    public void requestMovieDetails(int movieId, int fromTab) {
         int api = Constants.Api.MOVIES_DETAILS;
         try {
             apiRequestHit(api, "Requesting movie details...");
@@ -290,7 +310,7 @@ public class SearchRepo extends RootRepo {
                                     DetailsMovieRepo.initialise(
                                             new MovieParser.DetailsParser().execute(jsonObject).get()
                                     );
-                                    apiRequestSuccess(api, jsonObject.optString("message"));
+                                    apiRequestSuccess(fromTab, api, jsonObject.optString("message"));
                                 } else
                                     setRequestStatusFailed(api, jsonObject);
 
@@ -313,7 +333,56 @@ public class SearchRepo extends RootRepo {
             setExceptionOccured(api, e);
         }
     }
+
+    public void requestKeywordDetails(int keywordId) {
+        int api = Constants.Api.KEYWORD_DETAILS;
+        try {
+            apiRequestHit(api, "Requesting movies by keyword...");
+            getVolleyProvider().executeMultipartGetRequest(
+                    Urls.SEARCH_MOVIE.getUrl()
+                            + searchValue.replace(" ", "%20")
+                            + Constants.Api.SEARCH_KEYWORD_ADDON
+                            + Constants.Api.SEARCH_FROM_KEYWORD_ADDON
+                            + keywordId,
+                    new VolleyProvider.OnResponseListener<String>() {
+                        @Override
+                        public void onSuccess(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                if (isRequestSuccess(jsonObject)) {
+                                    moviesFromKeywordMutable.postValue(new SearchParser(
+                                            Type.Search.MOVIES_FROM_KEYWORD
+                                    ).execute(jsonObject).get());
+                                    setDataStatus(api, jsonObject);
+                                } else
+                                    setRequestStatusFailed(api, jsonObject);
+
+                            } catch (Exception e) {
+                                setExceptionOccured(api, e);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(VolleyError volleyError) {
+                            try {
+                                apiRequestFailure(api, getMessageFromVolleyAsJson(volleyError));
+                            } catch (Exception e) {
+                                setExceptionOccured(api, e);
+                            }
+                        }
+                    }, false, true);
+
+        } catch (Exception e) {
+            setExceptionOccured(api, e);
+        }
+    }
+
+    public void requestPersonDetails(int personId) {
+
+    }
+
+    public void requestCompanyDetails(int companyId) {
+
+    }
 }
-/*{"status":"200","page":"1","error":"false","data":{"page":1,"total_results":1,"total_pages":1,"results":[{"popularity":0.59999999999999997779553950749686919152736663818359375,"known_for_department":"Acting","gender":0,"id":2317671,"profile_path":null,"adult":false,"known_for":[],"name":"John Rabe"}]}}*/
-/*{"status":"200","page":"1","error":"false","data":{"page":1,"results":[{"name":"independence day","id":235503}],"total_pages":1,"total_results":1}}*/
-/*{"status":"200","page":"1","error":"false","data":{"page":1,"results":[{"id":62511,"logo_path":null,"name":"Independence Day Productions","origin_country":""}],"total_pages":1,"total_results":1}}*/
+

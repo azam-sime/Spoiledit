@@ -17,7 +17,8 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             app:riv_oval="true"
-            android:src="@drawable/popcorn"
+            android:src="@drawable/ic_placeholder"
+            android:scaleType="centerCrop"
             android:id="@+id/riv_user"/>
 
         <LinearLayout
@@ -63,7 +64,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/reply"
                     android:maxLines="2"
-                    android:drawableStart="@android:drawable/sym_action_chat"
+                    android:drawableStart="@drawable/comment"
                     android:drawablePadding="@dimen/spacing_8"
                     android:gravity="center_vertical"
                     android:background="?selectableItemBackgroundBorderless"

@@ -1,6 +1,7 @@
 package com.spoiledit.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -20,12 +21,14 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.spoiledit.R;
+import com.spoiledit.constants.App;
 import com.spoiledit.models.UserModel;
 import com.spoiledit.utils.AppUtils;
 import com.spoiledit.utils.DialogUtils;
 import com.spoiledit.utils.ExecutorUtils;
 import com.spoiledit.utils.InputUtils;
 import com.spoiledit.utils.NetworkUtils;
+import com.spoiledit.utils.PreferenceUtils;
 import com.spoiledit.utils.StringUtils;
 import com.spoiledit.utils.ViewUtils;
 
@@ -171,6 +174,10 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
         setupToolBar(null, false);
     }
 
+    public void setupPopcornIconOnly() {
+        setupToolBar(null, true);
+    }
+
     public void setupToolBar(String title, boolean showPopcorn) {
         if (tvToolbar != null)
             tvToolbar.setText(title == null ? "" : title);
@@ -185,7 +192,8 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
     }
 
     public void onPopcornClick() {
-
+        Intent intent = new Intent(this, SignInActivity.class);
+        startActivityForResult(intent, App.Intent.Request.LOGIN);
     }
 
     public MutableLiveData<Boolean> getNetworkMutable() {
@@ -317,6 +325,11 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+    public void showNotLoginError() {
+        showFailure(false, "You're not logged in. " +
+                "Please login to continue, if you have an account else register yourself.");
+    }
+
 
     public void hideLoader() {
         if (snackbar != null && snackbar.isShown())
@@ -354,6 +367,14 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
 
     public void onAdapterDataChanged() {
 
+    }
+
+    public UserModel getUserModel() {
+        return PreferenceUtils.getUserModel(this);
+    }
+
+    public boolean loggedIn() {
+        return PreferenceUtils.isLoggedIn(this);
     }
 
     @Override

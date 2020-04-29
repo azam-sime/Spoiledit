@@ -90,7 +90,7 @@ public class ProfileActivity extends RootActivity {
                 hideLoader();
 
                 if (apiStatusModel.getApi() == Constants.Api.USER_AVATAR_UPDATE) {
-                    PreferenceUtils.updateProfilePicPath(this, apiStatusModel.getMessage());
+                    PreferenceUtils.updateProfilePicture(this, apiStatusModel.getMessage());
                     setData();
                 }
             }

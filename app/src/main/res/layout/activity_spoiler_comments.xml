@@ -106,7 +106,7 @@
                         android:text="@string/comment"
                         android:maxLines="2"
                         android:fontFamily="@font/montserrat_medium"
-                        android:drawableStart="@android:drawable/sym_action_chat"
+                        android:drawableStart="@drawable/comment"
                         android:drawablePadding="@dimen/spacing_8"
                         android:gravity="center_vertical"
                         android:textSize="16sp"
@@ -189,7 +189,7 @@
             android:padding="@dimen/spacing_12"
             android:rotation="180"
             android:tint="#FFCD00"
-            android:src="@drawable/arrow_circle_right"
+            android:src="@drawable/round_add_white_24"
             android:background="@drawable/background_circle_fill_eef1f2"
             android:id="@+id/iv_add_files" />
 

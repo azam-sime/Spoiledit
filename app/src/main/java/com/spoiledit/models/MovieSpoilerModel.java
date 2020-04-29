@@ -2,6 +2,8 @@ package com.spoiledit.models;
 
 import android.os.Parcel;
 
+import com.spoiledit.utils.NumericUtils;
+
 public class MovieSpoilerModel extends RootSelectionModel {
     private String userLogin;
     private int mId;
@@ -185,12 +187,20 @@ public class MovieSpoilerModel extends RootSelectionModel {
         this.thumbsUp = thumbsUp;
     }
 
+    public int getThumbsUpInt() {
+        return NumericUtils.parseInt(thumbsUp);
+    }
+
     public String getThumbsDown() {
         return thumbsDown;
     }
 
     public void setThumbsDown(String thumbsDown) {
         this.thumbsDown = thumbsDown;
+    }
+
+    public int getThumbsDownInt() {
+        return NumericUtils.parseInt(thumbsDown);
     }
 
     public String getAvatarUrl() {

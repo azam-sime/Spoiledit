@@ -16,7 +16,7 @@ import com.spoiledit.adapters.ViewPagerAdapter;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
 import com.spoiledit.constants.Type;
-import com.spoiledit.fragments.SearchMovieFragment;
+import com.spoiledit.fragments.SearchFragment;
 import com.spoiledit.listeners.TextChangeListener;
 import com.spoiledit.repos.SearchRepo;
 import com.spoiledit.viewmodels.SearchViewModel;
@@ -33,7 +33,7 @@ public class SearchActivity extends RootActivity {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private SearchMovieFragment movieFragmentTitle, movieFragmentPerson, movieFragmentKeyword, movieFragmentCompanies;
+    private SearchFragment movieFragmentTitle, movieFragmentPerson, movieFragmentKeyword, movieFragmentCompanies;
 
     private MaterialCardView mcvSearchBar;
     private EditText etSearch;
@@ -51,7 +51,7 @@ public class SearchActivity extends RootActivity {
 
     @Override
     public void setUpToolBar() {
-
+        setupPopcornIconOnly();
     }
 
     @Override
@@ -96,10 +96,10 @@ public class SearchActivity extends RootActivity {
     public void setUpViewPager() {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        movieFragmentTitle = new SearchMovieFragment(Type.Search.MOVIES_BY_TITLE);
-        movieFragmentPerson = new SearchMovieFragment(Type.Search.MOVIES_BY_PERSON);
-        movieFragmentKeyword = new SearchMovieFragment(Type.Search.MOVIES_BY_KEYWORD);
-        movieFragmentCompanies = new SearchMovieFragment(Type.Search.MOVIES_BY_COMPANIES);
+        movieFragmentTitle = new SearchFragment(Type.Search.MOVIES_BY_TITLE);
+        movieFragmentPerson = new SearchFragment(Type.Search.MOVIES_BY_PERSON);
+        movieFragmentKeyword = new SearchFragment(Type.Search.MOVIES_BY_KEYWORD);
+        movieFragmentCompanies = new SearchFragment(Type.Search.MOVIES_BY_COMPANIES);
 
         viewPagerAdapter.addFragment(movieFragmentTitle, "Title");
         viewPagerAdapter.addFragment(movieFragmentPerson, "Person");

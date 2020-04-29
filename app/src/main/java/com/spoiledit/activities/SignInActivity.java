@@ -78,11 +78,9 @@ public class SignInActivity extends RootActivity implements ForgotPasswordFragme
 
     @Override
     public void setData() {
-        int loginStatus = PreferenceUtils.loginStatus(this);
         String[] credentials = PreferenceUtils.credentials(this);
 
-        if (loginStatus == Status.Login.REQUIRE_SIGN_IN_NOT_CREDS
-                && credentials[0] != null && credentials[1] != null) {
+        if (credentials[0] != null && credentials[1] != null) {
             etUsername.setText(credentials[0]);
             etPassword.setText(credentials[1]);
 
@@ -109,9 +107,9 @@ public class SignInActivity extends RootActivity implements ForgotPasswordFragme
                 } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
                     toggleViews(false);
                     hideLoader();
-                    PreferenceUtils.saveLoginStatus(this,
-                            cbRemember.isChecked() ? Status.Login.REQUIRE_NOTHING : Status.Login.REQUIRE_SIGN_IN_NOT_CREDS);
-                    startActivity(new Intent(this, DashboardActivity.class));
+                    PreferenceUtils.saveLoggedIn(this, true);
+
+                    setResult(RESULT_OK);
                     finish();
                 }
             }
@@ -158,8 +156,8 @@ public class SignInActivity extends RootActivity implements ForgotPasswordFragme
             return;
 
         } else if (v.getId() == R.id.tv_sign_up) {
-            startActivity(new Intent(this, SignUpActivity.class));
-            finish();
+            Intent intent = new Intent(this, SignUpActivity.class);
+            startActivityForResult(intent, App.Intent.Request.REGISTER);
 
             return;
         } else if (v.getId() == R.id.tv_forgot_password) {
@@ -183,5 +181,16 @@ public class SignInActivity extends RootActivity implements ForgotPasswordFragme
                 : App.Intent.Value.OTP_SENT_TO_PHONE);
         intent.putExtra(App.Intent.Extra.OTP_SENT_TO_ADDRESS, sentToAddress);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == App.Intent.Request.REGISTER) {
+            if (resultCode == RESULT_OK)
+                setResult(RESULT_OK);
+            finish();
+        }
     }
 }

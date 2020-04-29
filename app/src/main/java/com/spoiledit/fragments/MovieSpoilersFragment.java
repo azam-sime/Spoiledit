@@ -119,7 +119,10 @@ public class MovieSpoilersFragment extends RootFragment {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.fab_add_spoiler) {
+            if (loggedIn())
             startActivityForResult(new Intent(getContext(), AddSpoilerActivity.class), App.Intent.Request.ADD_SPOILER);
+            else
+                showNotLoginError();
         } else if (v.getId() == R.id.iv_back) {
             getActivity().onBackPressed();
         } else

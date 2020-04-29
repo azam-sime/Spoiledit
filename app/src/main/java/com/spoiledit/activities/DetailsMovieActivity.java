@@ -70,7 +70,10 @@ public class DetailsMovieActivity extends RootActivity {
                 return true;
 
             } else if (menuItem.getItemId() == R.id.menu_add_watchlist) {
-                detailsMovieViewModel.addToWatchList();
+                if (loggedIn())
+                    detailsMovieViewModel.addToWatchList();
+                else
+                    showNotLoginError();
                 return true;
 
             } else if (menuItem.getItemId() == R.id.menu_view_spoilers) {

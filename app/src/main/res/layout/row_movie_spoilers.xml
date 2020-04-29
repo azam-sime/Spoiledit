@@ -16,7 +16,8 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             app:riv_oval="true"
-            android:src="@drawable/popcorn"
+            android:src="@drawable/ic_placeholder"
+            android:scaleType="centerCrop"
             android:id="@+id/riv_user"/>
 
         <LinearLayout
