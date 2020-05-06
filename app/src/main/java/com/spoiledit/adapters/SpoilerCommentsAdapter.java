@@ -13,10 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.spoiledit.R;
 import com.spoiledit.models.CommentModel;
+import com.spoiledit.utils.DateUtils;
 import com.spoiledit.utils.StringUtils;
 import com.spoiledit.utils.ViewUtils;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,26 +107,34 @@ public class SpoilerCommentsAdapter extends RootSelectionAdapter {
             ViewUtils.changeProgressMode(commentModel.isSelected(), viewHolder.loadingBar);
 
             viewHolder.tvComment.setText(commentModel.getComment());
-            viewHolder.tvDate.setText(commentModel.getCommentDate());
+            try {
+                viewHolder.tvDate.setText(DateUtils.toPattern(commentModel.getCommentDate(),
+                        "MM/dd/yyyy",
+                        "dd MMM, yyyy"));
+            } catch (ParseException e) {
+                e.printStackTrace();
+                viewHolder.tvDate.setText(commentModel.getCommentDate());
+            }
 
-            StringUtils.setText(viewHolder.tvLikes, "(" + commentModel.getLikes() + ")");
-            StringUtils.setText(viewHolder.tvDislikes, "(" + commentModel.getDislikes() + ")");
-
-            viewHolder.tvLikes.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                    commentModel.getLikes() == 0 ? R.drawable.thumbs_up_none : R.drawable.thumbs_up,
-                    0, 0, 0
-            );
-
-            viewHolder.tvDislikes.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                    commentModel.getDislikes() == 0 ? R.drawable.thumbs_down_none : R.drawable.thumbs_down,
-                    0, 0, 0
-            );
+//            StringUtils.setText(viewHolder.tvLikes, "(" + commentModel.getLikes() + ")");
+//            StringUtils.setText(viewHolder.tvDislikes, "(" + commentModel.getDislikes() + ")");
+//
+//            viewHolder.tvLikes.setCompoundDrawablesRelativeWithIntrinsicBounds(
+//                    commentModel.getLikes() == 0 ? R.drawable.thumbs_up_none : R.drawable.thumbs_up,
+//                    0, 0, 0
+//            );
+//
+//            viewHolder.tvDislikes.setCompoundDrawablesRelativeWithIntrinsicBounds(
+//                    commentModel.getDislikes() == 0 ? R.drawable.thumbs_down_none : R.drawable.thumbs_down,
+//                    0, 0, 0
+//            );
 
             if (!StringUtils.isInvalid(commentModel.getAvatarUrl())) {
                 Picasso.get()
                         .load(commentModel.getAvatarUrl())
-                        .resize(40, 40)
-                        .centerCrop()
+//                    .resize(40, 40)
+//                    .centerCrop()
+                        .fit()
                         .placeholder(R.drawable.ic_placeholder)
                         .error(R.drawable.ic_placeholder)
                         .into(viewHolder.ivUser);
@@ -138,7 +148,7 @@ public class SpoilerCommentsAdapter extends RootSelectionAdapter {
     }
 
     public class CommentViewHolder extends RecyclerView.ViewHolder {
-        private ImageView ivUser;
+        private ImageView ivUser, ivReport;
         private ContentLoadingProgressBar loadingBar;
         private TextView tvComment, tvDate, tvReply, tvLikes, tvDislikes;
 
@@ -155,31 +165,41 @@ public class SpoilerCommentsAdapter extends RootSelectionAdapter {
             tvLikes = itemView.findViewById(R.id.tv_thumbs_up);
             tvDislikes = itemView.findViewById(R.id.tv_thumbs_down);
 
+            ivReport = itemView.findViewById(R.id.iv_report);
+
             tvReply.setOnClickListener(v -> {
                 if (onCommentActionListener != null) {
-                    onCommentActionListener.onReplyComment(commentModels.get(getAdapterPosition()));
+                    onCommentActionListener.onReplyComment(getAdapterPosition());
                 }
             });
 
             tvLikes.setOnClickListener(v -> {
                 if (onCommentActionListener != null) {
-                    onCommentActionListener.onLikeComment(commentModels.get(getAdapterPosition()));
+                    onCommentActionListener.onLikeComment(getAdapterPosition());
                 }
             });
 
             tvDislikes.setOnClickListener(v -> {
                 if (onCommentActionListener != null) {
-                    onCommentActionListener.onDislikeComment(commentModels.get(getAdapterPosition()));
+                    onCommentActionListener.onDislikeComment(getAdapterPosition());
+                }
+            });
+
+            ivReport.setOnClickListener(v -> {
+                if (onCommentActionListener != null) {
+                    onCommentActionListener.onReport(getAdapterPosition());
                 }
             });
         }
     }
 
     public interface OnCommentActionListener {
-        void onReplyComment(CommentModel commentModel);
+        void onReplyComment(int position);
 
-        void onLikeComment(CommentModel commentModel);
+        void onLikeComment(int position);
 
-        void onDislikeComment(CommentModel commentModel);
+        void onDislikeComment(int position);
+
+        void onReport(int position);
     }
 }

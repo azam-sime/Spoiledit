@@ -1,9 +1,11 @@
 package com.spoiledit.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +20,7 @@ import com.spoiledit.activities.DetailsSpoilersActivity;
 import com.spoiledit.adapters.SpoilerEndingAdapter;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
+import com.spoiledit.listeners.OnSpoilerActionClickListener;
 import com.spoiledit.utils.ViewUtils;
 import com.spoiledit.viewmodels.DetailsSpoilersViewModel;
 
@@ -56,17 +59,38 @@ public class SpoilersEndingFragment extends RootFragment {
         RecyclerView recyclerView = view.findViewById(R.id.rv_spoilers_ending);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        spoilerEndingAdapter = new SpoilerEndingAdapter(getContext(), (lastSelection, currentSelection) -> {
-            if (getActivity() instanceof DetailsMovieActivity) {
-                ((DetailsMovieActivity) getActivity()).gotoCommentsActivity(
-                        spoilerEndingAdapter.getItemAt(currentSelection));
-                spoilerEndingAdapter.removeLastSelection();
-            } else if (getActivity() instanceof DetailsSpoilersActivity) {
-                ((DetailsSpoilersActivity) getActivity()).gotoCommentsActivity(
-                        spoilerEndingAdapter.getItemAt(currentSelection));
-                spoilerEndingAdapter.removeLastSelection();
-            }
-        });
+        spoilerEndingAdapter = new SpoilerEndingAdapter(getContext(),
+                new OnSpoilerActionClickListener() {
+                    @Override
+                    public void onContentToggled(int position) {
+                        spoilerEndingAdapter.getItemAt(position).setTrimmed(
+                                !spoilerEndingAdapter.getItemAt(position).isTrimmed());
+                        spoilerEndingAdapter.notifyItemChanged(position);
+                    }
+
+                    @Override
+                    public void onThumbsUp(int position) {
+                        Toast.makeText(getContext(), "Coming Soon!", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onThumbsDown(int position) {
+                        Toast.makeText(getContext(), "Coming Soon!", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onSelection(int position) {
+                        if (getActivity() instanceof DetailsMovieActivity) {
+                            ((DetailsMovieActivity) getActivity()).gotoCommentsActivity(
+                                    spoilerEndingAdapter.getItemAt(position));
+                            spoilerEndingAdapter.removeLastSelection();
+                        } else if (getActivity() instanceof DetailsSpoilersActivity) {
+                            ((DetailsSpoilersActivity) getActivity()).gotoCommentsActivity(
+                                    spoilerEndingAdapter.getItemAt(position));
+                            spoilerEndingAdapter.removeLastSelection();
+                        }
+                    }
+                });
 
         recyclerView.setAdapter(spoilerEndingAdapter);
         ViewUtils.addFabOffset(getContext(), recyclerView);

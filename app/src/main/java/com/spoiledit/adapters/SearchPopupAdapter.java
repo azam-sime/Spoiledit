@@ -32,7 +32,8 @@ public class SearchPopupAdapter extends RecyclerView.Adapter<SearchPopupAdapter.
     @NonNull
     @Override
     public SearchViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new SearchViewHolder(LayoutInflater.from(context).inflate(R.layout.row_search_value, parent, false));
+        return new SearchViewHolder(LayoutInflater.from(context).inflate(R.layout.row_search_value,
+                parent, false));
     }
 
     @Override

@@ -53,7 +53,7 @@ public class MovieSpoilersFragment extends RootFragment {
 
     @Override
     public void setUpToolbar() {
-        setupBackIconOnly();
+        setupToolBar("Movie Spoilers", true);
     }
 
     @Override
@@ -113,6 +113,21 @@ public class MovieSpoilersFragment extends RootFragment {
                     endingFragment.onRefresh();
                 }
             }
+        });
+
+        detailsSpoilersViewModel.getSpoilerFullModelsMutable().observe(this, spoilerFullModels -> {
+            int size = spoilerFullModels == null ? 0 : spoilerFullModels.size();
+            tabLayout.getTabAt(0).setText("Full\nSpoiler (" + size + ")");
+        });
+
+        detailsSpoilersViewModel.getSpoilerBriefModelsMutable().observe(this, spoilerBriefModels -> {
+            int size = spoilerBriefModels == null ? 0 : spoilerBriefModels.size();
+            tabLayout.getTabAt(1).setText("Brief\nSummary (" + size + ")");
+        });
+
+        detailsSpoilersViewModel.getSpoilerEndingModelsMutable().observe(this, spoilerEndingModels -> {
+            int size = spoilerEndingModels == null ? 0 : spoilerEndingModels.size();
+            tabLayout.getTabAt(2).setText("Just\nEnding (" + size + ")");
         });
     }
 

@@ -3,7 +3,7 @@ package com.spoiledit.models;
 public class MySpoilerModel extends MovieSpoilerModel {
 
     public MySpoilerModel() {
-
+        setTrimmed(true);
     }
 
     @Override

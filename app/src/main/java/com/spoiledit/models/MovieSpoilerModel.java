@@ -21,8 +21,10 @@ public class MovieSpoilerModel extends RootSelectionModel {
     private String thumbsDown;
     private String avatarUrl;
     private boolean darkBackground;
+    private boolean trimmed;
 
     public MovieSpoilerModel() {
+
     }
 
     protected MovieSpoilerModel(Parcel in) {
@@ -43,6 +45,7 @@ public class MovieSpoilerModel extends RootSelectionModel {
         thumbsDown = in.readString();
         avatarUrl = in.readString();
         darkBackground = in.readByte() != 0;
+        trimmed = in.readByte() != 0;
     }
 
     @Override
@@ -64,6 +67,7 @@ public class MovieSpoilerModel extends RootSelectionModel {
         dest.writeString(thumbsDown);
         dest.writeString(avatarUrl);
         dest.writeByte((byte) (darkBackground ? 1 : 0));
+        dest.writeByte((byte) (trimmed ? 1 : 0));
     }
 
     @Override
@@ -219,6 +223,14 @@ public class MovieSpoilerModel extends RootSelectionModel {
         this.darkBackground = darkBackground;
     }
 
+    public boolean isTrimmed() {
+        return trimmed;
+    }
+
+    public void setTrimmed(boolean trimmed) {
+        this.trimmed = trimmed;
+    }
+
     @Override
     public String toString() {
         return "MovieSpoilerModel{" +
@@ -238,6 +250,7 @@ public class MovieSpoilerModel extends RootSelectionModel {
                 ", thumbsDown='" + thumbsDown + '\'' +
                 ", avatarUrl='" + avatarUrl + '\'' +
                 ", darkBackground='" + darkBackground + '\'' +
+                ", trimmed='" + trimmed + '\'' +
                 '}';
     }
 }

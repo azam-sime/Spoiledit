@@ -121,8 +121,9 @@ public class MoviesRecentAdapter extends RootSelectionAdapter {
 
             Picasso.get()
                     .load(Urls.MOVIE_IMAGES.getUrl() + recentModel.getPosterPath())
-                    .resize(80, 132)
-                    .centerCrop()
+//                    .resize(80, 132)
+//                    .centerCrop()
+                    .fit()
                     .placeholder(R.drawable.ic_placeholder)
                     .error(R.drawable.ic_placeholder)
                     .into(viewHolder.ivPoster);

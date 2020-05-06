@@ -33,7 +33,6 @@ public final class DialogUtils {
     }
 
 
-
     public static void showFailure(Activity activity, String message) {
         createCancelableNoActionDialog(activity, Type.Info.SORRY, message);
     }
@@ -41,7 +40,6 @@ public final class DialogUtils {
     public static void showFailure(Activity activity, String message, Runnable positive) {
         createNonCancelableSingleActionDialog(activity, Type.Info.SORRY, message, "Okay", positive);
     }
-
 
 
     public static void showSuccess(Activity activity, String message) {
@@ -53,7 +51,6 @@ public final class DialogUtils {
     }
 
 
-
     public static void showWarning(Activity activity, String message) {
         createCancelableNoActionDialog(activity, Type.Info.OOPS, message);
     }
@@ -61,7 +58,6 @@ public final class DialogUtils {
     public static void showWarning(Activity activity, String message, Runnable positive) {
         createNonCancelableSingleActionDialog(activity, Type.Info.OOPS, message, "Okay", positive);
     }
-
 
 
     public static void showConfirm(Activity activity, String message) {
@@ -73,37 +69,34 @@ public final class DialogUtils {
     }
 
 
-
-    private static void createCancelableNoActionDialog(Context context, int infoType, String infoMessage) {
+    public static void createCancelableNoActionDialog(Context context, int infoType, String infoMessage) {
         createCancelableDialog(context, infoType, infoMessage, null, null, null, null);
     }
 
-    private static void createCancelableSingleActionDialog(Context context, int infoType, String infoMessage,
-                                               String pText, Runnable positive) {
+    public static void createCancelableSingleActionDialog(Context context, int infoType, String infoMessage,
+                                                          String pText, Runnable positive) {
         createCancelableDialog(context, infoType, infoMessage, pText, positive, null, null);
     }
 
-    private static void createCancelableDialog(Context context, int infoType, String infoMessage,
-                                     String pText, Runnable positive, String nText, Runnable negative) {
+    public static void createCancelableDialog(Context context, int infoType, String infoMessage,
+                                              String pText, Runnable positive, String nText, Runnable negative) {
         createDialog(context, true, infoType, infoMessage, pText, positive, nText, negative);
     }
 
 
-
-    private static void createNonCancelableNoActionDialog(Context context, int infoType, String infoMessage) {
+    public static void createNonCancelableNoActionDialog(Context context, int infoType, String infoMessage) {
         createNonCancelableDialog(context, infoType, infoMessage, null, null, null, null);
     }
 
-    private static void createNonCancelableSingleActionDialog(Context context, int infoType, String infoMessage,
-                                                           String pText, Runnable positive) {
+    public static void createNonCancelableSingleActionDialog(Context context, int infoType, String infoMessage,
+                                                             String pText, Runnable positive) {
         createNonCancelableDialog(context, infoType, infoMessage, pText, positive, null, null);
     }
 
-    private static void createNonCancelableDialog(Context context, int infoType, String infoMessage,
-                                               String pText, Runnable positive, String nText, Runnable negative) {
+    public static void createNonCancelableDialog(Context context, int infoType, String infoMessage,
+                                                 String pText, Runnable positive, String nText, Runnable negative) {
         createDialog(context, false, infoType, infoMessage, pText, positive, nText, negative);
     }
-
 
 
     private static void createDialog(Context context, boolean cancelable, int infoType, String infoMessage,
@@ -111,7 +104,6 @@ public final class DialogUtils {
         createDialog(context, cancelable, infoType, infoMessage, R.drawable.popcorn,
                 pText, positive, nText, negative);
     }
-
 
 
     private static void createDialog(Context context, boolean cancelable, int infoType, String infoMessage,
@@ -133,39 +125,49 @@ public final class DialogUtils {
             switch (infoType) {
                 case Type.Info.OOPS: {
                     tvTitle.setText(context.getString(R.string.oops));
-                    pText = context.getString(R.string.ok);
+                    if (StringUtils.isInvalid(pText))
+                        pText = context.getString(R.string.ok);
                 }
                 break;
                 case Type.Info.SORRY: {
                     tvTitle.setText(context.getString(R.string.sorry));
-                    pText = context.getString(R.string.ok);
+                    if (StringUtils.isInvalid(pText))
+                        pText = context.getString(R.string.ok);
                 }
                 break;
                 case Type.Info.SMILES: {
                     tvTitle.setText(context.getString(R.string.smiles));
-                    pText = context.getString(R.string.ok);
+                    if (StringUtils.isInvalid(pText))
+                        pText = context.getString(R.string.ok);
                 }
                 break;
                 case Type.Info.HEY: {
                     tvTitle.setText(context.getString(R.string.hey));
-                    pText = context.getString(R.string.ok);
+                    if (StringUtils.isInvalid(pText))
+                        pText = context.getString(R.string.ok);
                 }
                 break;
                 case Type.Info.SURE: {
                     tvTitle.setText(context.getString(R.string.hey_you_sure));
-                    pText = context.getString(R.string.yes_im);
-                    nText = context.getString(R.string.no_cancel);
+                    if (StringUtils.isInvalid(pText))
+                        pText = context.getString(R.string.yes_im);
+                    if (StringUtils.isInvalid(nText))
+                        nText = context.getString(R.string.no_cancel);
                 }
                 break;
                 case Type.Info.LOGOUT: {
                     tvTitle.setText(context.getString(R.string.hey));
-                    pText = context.getString(R.string.logout);
-                    nText = context.getString(R.string.cancel);
+                    if (StringUtils.isInvalid(pText))
+                        pText = context.getString(R.string.logout);
+                    if (StringUtils.isInvalid(nText))
+                        nText = context.getString(R.string.cancel);
                 }
                 break;
                 case Type.Info.UPDATE: {
                     tvTitle.setText(context.getString(R.string.update_available));
-                    pText = context.getString(R.string.update);
+                    if (StringUtils.isInvalid(pText))
+                        pText = context.getString(R.string.update);
+                    infoMessage = context.getString(R.string.update_info);
                 }
                 break;
                 case Type.Info.CUSTOM: {

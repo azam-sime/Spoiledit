@@ -49,16 +49,25 @@
                 android:textSize="16sp"
                 android:id="@+id/tv_date"/>
 
-            <TextView
+            <com.spoiledit.widget.ExpandableTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_4"
                 android:layout_marginStart="@dimen/spacing_4"
-                tools:text="The surviving Resistance faces the First Order once again as the jurney."
-                android:maxLines="2"
+                android:text="The surviving Resistance faces the First Order once again as the journey. The surviving Resistance faces the First Order once again as the journey. The surviving Resistance faces the First Order once again as the journey. The surviving Resistance faces the First Order once again as the journey."
                 android:fontFamily="@font/montserrat_medium"
                 android:textColor="@color/colorBlack"
                 android:id="@+id/tv_spoiler"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/spacing_8"
+                android:layout_gravity="end"
+                android:text="Show More..."
+                android:textColor="#0000FF"
+                android:background="?selectableItemBackgroundBorderless"
+                android:id="@+id/tv_more_less"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

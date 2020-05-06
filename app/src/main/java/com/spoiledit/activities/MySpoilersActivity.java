@@ -1,6 +1,8 @@
 package com.spoiledit.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
@@ -12,6 +14,8 @@ import com.spoiledit.R;
 import com.spoiledit.adapters.MySpoilersAdapter;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
+import com.spoiledit.listeners.OnSpoilerActionClickListener;
+import com.spoiledit.repos.CommentsRepo;
 import com.spoiledit.repos.MyRepo;
 import com.spoiledit.utils.ViewUtils;
 import com.spoiledit.viewmodels.MySpoilersViewModel;
@@ -53,9 +57,31 @@ public class MySpoilersActivity extends RootActivity {
         RecyclerView recyclerView = findViewById(R.id.rv_my_spoilers);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        spoilersAdapter = new MySpoilersAdapter(this, (lastSelection, currentSelection) -> {
+        spoilersAdapter = new MySpoilersAdapter(this,
+                new OnSpoilerActionClickListener() {
+                    @Override
+                    public void onContentToggled(int position) {
+                        spoilersAdapter.getItemAt(position).setTrimmed(
+                                !spoilersAdapter.getItemAt(position).isTrimmed());
+                        spoilersAdapter.notifyItemChanged(position);
+                    }
 
-        });
+                    @Override
+                    public void onThumbsUp(int position) {
+                        Toast.makeText(MySpoilersActivity.this, "Coming Soon!", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onThumbsDown(int position) {
+                        Toast.makeText(MySpoilersActivity.this, "Coming Soon!", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onSelection(int position) {
+                        CommentsRepo.initialise(spoilersAdapter.getItemAt(position));
+                        startActivity(new Intent(MySpoilersActivity.this, SpoilerCommentsActivity.class));
+                    }
+                });
 
         recyclerView.setAdapter(spoilersAdapter);
         ViewUtils.addFabOffset(this, recyclerView);

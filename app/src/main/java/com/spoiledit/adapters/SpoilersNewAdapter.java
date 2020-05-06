@@ -111,11 +111,13 @@ public class SpoilersNewAdapter extends RootSelectionAdapter {
             viewHolder.tvCategory.setText(spoilersNewModel.getCategory());
             viewHolder.tvMidCredit.setText(spoilersNewModel.getMidCredit());
             viewHolder.tvPostCredit.setText(spoilersNewModel.getStringer());
+            viewHolder.tvSpoilerBy.setText(spoilersNewModel.getUsername());
 
             Picasso.get()
                     .load(spoilersNewModel.getPosterPath())
-                    .resize(80, 132)
-                    .centerCrop()
+//                    .resize(80, 132)
+//                    .centerCrop()
+                    .fit()
                     .placeholder(R.drawable.ic_placeholder)
                     .error(R.drawable.ic_placeholder)
                     .into(viewHolder.ivPoster);
@@ -130,7 +132,7 @@ public class SpoilersNewAdapter extends RootSelectionAdapter {
     public class SpoilerViewHolder extends RecyclerView.ViewHolder {
         private ImageView ivPoster;
         private ContentLoadingProgressBar loadingBar;
-        private TextView tvTitle, tvCategory, tvMidCredit, tvPostCredit;
+        private TextView tvTitle, tvCategory, tvMidCredit, tvPostCredit, tvSpoilerBy;
 
         public SpoilerViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -143,6 +145,7 @@ public class SpoilersNewAdapter extends RootSelectionAdapter {
             tvCategory = itemView.findViewById(R.id.tv_category);
             tvMidCredit = itemView.findViewById(R.id.tv_mid_credit);
             tvPostCredit = itemView.findViewById(R.id.tv_post_credit);
+            tvSpoilerBy = itemView.findViewById(R.id.tv_spoiler_by);
 
             itemView.findViewById(R.id.btn_goto_spoiler).setOnClickListener(v -> {
                 if (onItemSelectionListener != null) {

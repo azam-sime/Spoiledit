@@ -111,8 +111,10 @@ public class MovieDetailsFragment extends RootFragment {
 
         Picasso.get()
                 .load(Urls.MOVIE_IMAGES.getUrl() + detailsModel.getPosterPath())
-                .resize(ivPoster.getWidth(), 300)
-                .centerCrop()
+//                .resize(ivPoster.getWidth(), 400)
+//                .centerCrop()
+//                .onlyScaleDown()
+                .fit()
                 .error(getResources().getDrawable(R.drawable.popcorn))
                 .into(ivPoster);
 

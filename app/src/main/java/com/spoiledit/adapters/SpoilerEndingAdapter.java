@@ -14,11 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.spoiledit.R;
 import com.spoiledit.listeners.OnItemSelectionListener;
+import com.spoiledit.listeners.OnSpoilerActionClickListener;
 import com.spoiledit.models.SpoilerEndingModel;
+import com.spoiledit.utils.DateUtils;
 import com.spoiledit.utils.StringUtils;
 import com.spoiledit.utils.ViewUtils;
+import com.spoiledit.widget.ExpandableTextView;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,13 +31,13 @@ public class SpoilerEndingAdapter extends RootSelectionAdapter {
 
     private Context context;
     private List<SpoilerEndingModel> spoilerEndingModels;
-    private OnItemSelectionListener onItemSelectionListener;
+    private OnSpoilerActionClickListener onSpoilerActionClickListener;
     private int lastSelection;
 
-    public SpoilerEndingAdapter(Context context, OnItemSelectionListener onItemSelectionListener) {
+    public SpoilerEndingAdapter(Context context, OnSpoilerActionClickListener onSpoilerActionClickListener) {
         this.context = context;
         spoilerEndingModels = new ArrayList<>();
-        this.onItemSelectionListener = onItemSelectionListener;
+        this.onSpoilerActionClickListener = onSpoilerActionClickListener;
         lastSelection = -1;
     }
 
@@ -107,8 +111,18 @@ public class SpoilerEndingAdapter extends RootSelectionAdapter {
             ViewUtils.changeProgressMode(spoilerModel.isSelected(), viewHolder.loadingBar);
 
             viewHolder.tvUserName.setText(spoilerModel.getDisplayName());
-            viewHolder.tvSpoiler.setText(spoilerModel.getSpoiler());
-            viewHolder.tvDate.setText(spoilerModel.getCratedOn());
+            viewHolder.etvSpoiler.setText(spoilerModel.getSpoiler(), TextView.BufferType.SPANNABLE);
+            viewHolder.etvSpoiler.setTrim(spoilerModel.isTrimmed());
+            viewHolder.tvMoreLess.setText(spoilerModel.isTrimmed() ? "Show More...." : "Show Less....");
+            try {
+                viewHolder.tvDate.setText(
+                        DateUtils.toPattern(spoilerModel.getCratedOn(),
+                                "yyyy-MM-dd HH:mm:ss", "dd MMM, yyyy")
+                );
+            } catch (ParseException e) {
+                e.printStackTrace();
+                viewHolder.tvDate.setText(spoilerModel.getCratedOn());
+            }
 
             StringUtils.setText(viewHolder.tvThumbsUp, "(" + spoilerModel.getThumbsUp() + ")");
             StringUtils.setText(viewHolder.tvThumbsDown, "(" + spoilerModel.getThumbsDown() + ")");
@@ -128,8 +142,9 @@ public class SpoilerEndingAdapter extends RootSelectionAdapter {
 
             Picasso.get()
                     .load(spoilerModel.getAvatarUrl())
-                    .resize(60, 60)
-                    .centerCrop()
+//                    .resize(60, 60)
+//                    .centerCrop()
+                    .fit()
                     .placeholder(R.drawable.ic_placeholder)
                     .error(R.drawable.ic_placeholder)
                     .into(viewHolder.rivUser);
@@ -144,7 +159,8 @@ public class SpoilerEndingAdapter extends RootSelectionAdapter {
     public class SpoilerEndingViewHolder extends RecyclerView.ViewHolder {
         private RoundedImageView rivUser;
         private ContentLoadingProgressBar loadingBar;
-        private TextView tvUserName, tvSpoiler, tvDate, tvThumbsUp, tvThumbsDown;
+        private TextView tvUserName, tvDate, tvThumbsUp, tvThumbsDown, tvMoreLess;
+        private ExpandableTextView etvSpoiler;
 
         public SpoilerEndingViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -154,17 +170,34 @@ public class SpoilerEndingAdapter extends RootSelectionAdapter {
             rivUser = itemView.findViewById(R.id.riv_user);
 
             tvUserName = itemView.findViewById(R.id.tv_username);
-            tvSpoiler = itemView.findViewById(R.id.tv_spoiler);
+            etvSpoiler = itemView.findViewById(R.id.tv_spoiler);
             tvDate = itemView.findViewById(R.id.tv_date);
 
             tvThumbsUp = itemView.findViewById(R.id.tv_thumbs_up);
             tvThumbsDown = itemView.findViewById(R.id.tv_thumbs_down);
 
+            tvMoreLess = itemView.findViewById(R.id.tv_more_less);
+
+            tvMoreLess.setOnClickListener(v -> {
+                if (onSpoilerActionClickListener != null)
+                    onSpoilerActionClickListener.onContentToggled(getAdapterPosition());
+            });
+
+            tvThumbsUp.setOnClickListener(v -> {
+                if (onSpoilerActionClickListener != null)
+                    onSpoilerActionClickListener.onThumbsUp(getAdapterPosition());
+            });
+
+            tvThumbsDown.setOnClickListener(v -> {
+                if (onSpoilerActionClickListener != null)
+                    onSpoilerActionClickListener.onThumbsDown(getAdapterPosition());
+            });
+
             itemView.setOnClickListener(v -> {
-                if (onItemSelectionListener != null) {
+                if (onSpoilerActionClickListener != null) {
                     final int finalLastPosition = lastSelection;
                     notifySelection(getAdapterPosition());
-                    onItemSelectionListener.onItemSelected(finalLastPosition, getAdapterPosition());
+                    onSpoilerActionClickListener.onSelection(getAdapterPosition());
                 }
             });
         }

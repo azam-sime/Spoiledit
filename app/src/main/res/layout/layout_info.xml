@@ -59,6 +59,7 @@
 				style="@style/Widget.MaterialComponents.Button.TextButton"
 				android:text="@string/cancel"
 				android:textSize="12sp"
+				android:textStyle="bold"
 				android:id="@+id/btn_negative"/>
 
 			<com.google.android.material.button.MaterialButton

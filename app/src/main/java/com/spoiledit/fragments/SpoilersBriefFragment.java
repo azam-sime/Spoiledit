@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +19,7 @@ import com.spoiledit.activities.DetailsSpoilersActivity;
 import com.spoiledit.adapters.SpoilerBriefAdapter;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
+import com.spoiledit.listeners.OnSpoilerActionClickListener;
 import com.spoiledit.utils.ViewUtils;
 import com.spoiledit.viewmodels.DetailsSpoilersViewModel;
 
@@ -56,17 +58,38 @@ public class SpoilersBriefFragment extends RootFragment {
         RecyclerView recyclerView = view.findViewById(R.id.rv_spoilers_brief);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        spoilerBriefAdapter = new SpoilerBriefAdapter(getContext(), (lastSelection, currentSelection) -> {
-            if (getActivity() instanceof DetailsMovieActivity) {
-                ((DetailsMovieActivity) getActivity()).gotoCommentsActivity(
-                        spoilerBriefAdapter.getItemAt(currentSelection));
-                spoilerBriefAdapter.removeLastSelection();
-            } else if (getActivity() instanceof DetailsSpoilersActivity) {
-                ((DetailsSpoilersActivity) getActivity()).gotoCommentsActivity(
-                        spoilerBriefAdapter.getItemAt(currentSelection));
-                spoilerBriefAdapter.removeLastSelection();
-            }
-        });
+        spoilerBriefAdapter = new SpoilerBriefAdapter(getContext(),
+                new OnSpoilerActionClickListener() {
+                    @Override
+                    public void onContentToggled(int position) {
+                        spoilerBriefAdapter.getItemAt(position).setTrimmed(
+                                !spoilerBriefAdapter.getItemAt(position).isTrimmed());
+                        spoilerBriefAdapter.notifyItemChanged(position);
+                    }
+
+                    @Override
+                    public void onThumbsUp(int position) {
+                        Toast.makeText(getContext(), "Coming Soon!", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onThumbsDown(int position) {
+                        Toast.makeText(getContext(), "Coming Soon!", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onSelection(int position) {
+                        if (getActivity() instanceof DetailsMovieActivity) {
+                            ((DetailsMovieActivity) getActivity()).gotoCommentsActivity(
+                                    spoilerBriefAdapter.getItemAt(position));
+                            spoilerBriefAdapter.removeLastSelection();
+                        } else if (getActivity() instanceof DetailsSpoilersActivity) {
+                            ((DetailsSpoilersActivity) getActivity()).gotoCommentsActivity(
+                                    spoilerBriefAdapter.getItemAt(position));
+                            spoilerBriefAdapter.removeLastSelection();
+                        }
+                    }
+                });
 
         recyclerView.setAdapter(spoilerBriefAdapter);
         ViewUtils.addFabOffset(getContext(), recyclerView);

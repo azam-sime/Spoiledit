@@ -20,7 +20,9 @@ import com.spoiledit.activities.ProfileActivity;
 import com.spoiledit.activities.ProfileEditActivity;
 import com.spoiledit.activities.ProviderDetailsActivity;
 import com.spoiledit.constants.App;
+import com.spoiledit.constants.Type;
 import com.spoiledit.models.UserModel;
+import com.spoiledit.utils.DialogUtils;
 import com.spoiledit.utils.ViewUtils;
 import com.spoiledit.viewmodels.DashboardViewModel;
 
@@ -48,7 +50,7 @@ public class NavigationFragment extends RootFragment {
         tvUserLabel = view.findViewById(R.id.tv_user_label);
         tvUserName = view.findViewById(R.id.tv_user_name);
 
-        toggleUiElements();
+//        toggleUiElements();
     }
 
     @Override
@@ -104,7 +106,7 @@ public class NavigationFragment extends RootFragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == App.Intent.Request.LOGIN && resultCode == Activity.RESULT_OK) {
-            toggleUiElements();
+//            toggleUiElements();
             toggleUiData();
 
         } else if (requestCode == App.Intent.Request.USER_PROFILE_EDIT && resultCode == Activity.RESULT_OK)
@@ -114,24 +116,27 @@ public class NavigationFragment extends RootFragment {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.v_edit_profile || v.getId() == R.id.tv_edit_profile) {
-            if (loggedIn()) {
+            if (shouldGoto()) {
                 getActivity().startActivityForResult(
                         new android.content.Intent(getContext(), ProfileEditActivity.class),
                         App.Intent.Request.USER_PROFILE_EDIT);
-            } else
-                onPopcornClick();
+            }
 
         } else if (v.getId() == R.id.ll_my_account) {
-            getContext().startActivity(new android.content.Intent(getContext(), ProfileActivity.class));
+            if (shouldGoto())
+                getContext().startActivity(new android.content.Intent(getContext(), ProfileActivity.class));
 
         } else if (v.getId() == R.id.ll_my_spoilers) {
-            getContext().startActivity(new android.content.Intent(getContext(), MySpoilersActivity.class));
+            if (shouldGoto())
+                getContext().startActivity(new android.content.Intent(getContext(), MySpoilersActivity.class));
 
         } else if (v.getId() == R.id.ll_my_watchlist) {
-            getContext().startActivity(new android.content.Intent(getContext(), MyMoviesActivity.class));
+            if (shouldGoto())
+                getContext().startActivity(new android.content.Intent(getContext(), MyMoviesActivity.class));
 
         } else if (v.getId() == R.id.ll_change_password) {
-            getContext().startActivity(new android.content.Intent(getContext(), ChangePasswordActivity.class));
+            if (shouldGoto())
+                getContext().startActivity(new android.content.Intent(getContext(), ChangePasswordActivity.class));
 
         } else if (v.getId() == R.id.ll_tc) {
             android.content.Intent intent = new android.content.Intent(getContext(), ProviderDetailsActivity.class);
@@ -158,8 +163,20 @@ public class NavigationFragment extends RootFragment {
             getContext().startActivity(intent);
 
         } else if (v.getId() == R.id.ll_logout) {
-            dashboardViewModel.requestLogout();
+            if (shouldGoto())
+                dashboardViewModel.requestLogout();
 
+        }
+    }
+
+    private boolean shouldGoto() {
+        if (loggedIn()) {
+            return true;
+        } else {
+            DialogUtils.createNonCancelableDialog(getContext(), Type.Info.HEY,
+                    "You're not logged in. Please login or register yourself to enjoy this feature.",
+                    "Login", this::onPopcornClick, "Cancel", null);
+            return false;
         }
     }
 }

@@ -8,18 +8,19 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="wrap_content"
         android:visibility="visible">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
                 android:id="@+id/iv_poster"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="600dp"
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax"/>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -330,12 +331,11 @@
                 android:textSize="@dimen/text_16"
                 android:id="@+id/tv_genres_duration"/>
 
-            <ImageView
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0.5dp"
                 android:layout_marginTop="@dimen/spacing_16"
-                android:src="@drawable/drawable_dashed_line"
-                android:layerType="software"/>
+                android:background="#C7B299" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -371,17 +371,16 @@
                 android:textSize="@dimen/text_16"
                 android:id="@+id/tv_stars"/>
 
-            <ImageView
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0.5dp"
                 android:layout_marginTop="@dimen/spacing_16"
-                android:src="@drawable/drawable_dashed_line"
-                android:layerType="software"/>
+                android:background="#C7B299" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_8"
+                android:layout_marginTop="@dimen/spacing_16"
                 tools:text="J.J.Abrhams, D. D. Das"
                 android:textSize="@dimen/text_18"
                 android:id="@+id/tv_description"/>
@@ -400,7 +399,6 @@
         app:layout_anchorGravity="top|end"
         android:layout_margin="@dimen/spacing_16"
         app:backgroundTint="@color/colorAccent"
-        android:tint="@color/colorWhite"
         android:id="@+id/fab_play" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

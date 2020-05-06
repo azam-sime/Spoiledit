@@ -26,6 +26,7 @@ import com.spoiledit.adapters.ViewPager2Adapter;
 import com.spoiledit.adapters.ViewPagerAdapter;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
+import com.spoiledit.constants.Type;
 import com.spoiledit.fragments.MoviesFragment;
 import com.spoiledit.fragments.NavigationFragment;
 import com.spoiledit.fragments.SpoilersNewFragment;
@@ -33,6 +34,7 @@ import com.spoiledit.listeners.PagerChangeListener;
 import com.spoiledit.listeners.TextChangeListener;
 import com.spoiledit.repos.DashboardRepo;
 import com.spoiledit.repos.SearchRepo;
+import com.spoiledit.utils.DialogUtils;
 import com.spoiledit.utils.PreferenceUtils;
 import com.spoiledit.utils.ViewUtils;
 import com.spoiledit.viewmodels.DashboardViewModel;
@@ -112,7 +114,8 @@ public class DashboardActivity extends RootActivity {
                 timerSearch.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        runOnUiThread(() -> dashboardViewModel.requestSearchAutoCompleteValues(etSearch.getText().toString().trim()));
+                        runOnUiThread(() -> dashboardViewModel
+                                .requestSearchAutoCompleteValues(etSearch.getText().toString().trim()));
                     }
                 }, 1000);
             }
@@ -177,6 +180,12 @@ public class DashboardActivity extends RootActivity {
     @Override
     public void setData() {
         switchBetweenFragments(true);
+
+        if (!loggedIn()) {
+            DialogUtils.createNonCancelableDialog(this, Type.Info.HEY,
+                    "You're not logged in. Please login or register yourself to enjoy more features.",
+                    "Login", this::onPopcornClick, "Cancel", null);
+        }
     }
 
     private void switchBetweenFragments(boolean movies) {

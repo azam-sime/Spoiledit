@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,11 +25,15 @@ import com.spoiledit.constants.Status;
 import com.spoiledit.manager.FileManager;
 import com.spoiledit.models.CommentModel;
 import com.spoiledit.models.MovieSpoilerModel;
+import com.spoiledit.utils.DateUtils;
 import com.spoiledit.utils.InputUtils;
 import com.spoiledit.utils.StringUtils;
 import com.spoiledit.utils.ViewUtils;
 import com.spoiledit.viewmodels.CommentsViewModel;
+import com.spoiledit.widget.ExpandableTextView;
 import com.squareup.picasso.Picasso;
+
+import java.text.ParseException;
 
 public class SpoilerCommentsActivity extends RootActivity {
     public static final String TAG = SpoilerCommentsActivity.class.getCanonicalName();
@@ -37,8 +43,10 @@ public class SpoilerCommentsActivity extends RootActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     private SpoilerCommentsAdapter commentsAdapter;
 
+    private ImageView ivReport;
     private EditText etComment;
-    private TextView tvThumbsUp, tvThumbsDown;
+    private ExpandableTextView etvSpoiler;
+    private TextView tvThumbsUp, tvThumbsDown, tvMoreLess;
     private FileManager fileManager;
 
 //    private boolean reply = false;
@@ -63,6 +71,10 @@ public class SpoilerCommentsActivity extends RootActivity {
         fileManager = new FileManager(this, File.From.SPOILERS);
 
         swipeRefreshLayout = findViewById(R.id.srl_comments);
+
+        etvSpoiler = findViewById(R.id.tv_spoiler);
+        tvMoreLess = findViewById(R.id.tv_more_less);
+        ivReport = findViewById(R.id.iv_report);
         etComment = findViewById(R.id.et_message);
         tvThumbsUp = findViewById(R.id.tv_thumbs_up);
         tvThumbsDown = findViewById(R.id.tv_thumbs_down);
@@ -76,6 +88,9 @@ public class SpoilerCommentsActivity extends RootActivity {
         findViewById(R.id.iv_send).setOnClickListener(this);
         findViewById(R.id.tv_comment).setOnClickListener(this);
 
+        etvSpoiler.setOnClickListener(this);
+        tvMoreLess.setOnClickListener(this);
+        ivReport.setOnClickListener(this);
         tvThumbsUp.setOnClickListener(this);
         tvThumbsDown.setOnClickListener(this);
     }
@@ -85,8 +100,19 @@ public class SpoilerCommentsActivity extends RootActivity {
         MovieSpoilerModel spoilerModel = commentsViewModel.getMovieSpoilerModel();
 
         StringUtils.setText(findViewById(R.id.tv_username), spoilerModel.getDisplayName());
-        StringUtils.setText(findViewById(R.id.tv_date), spoilerModel.getCratedOn());
-        StringUtils.setText(findViewById(R.id.tv_spoiler), spoilerModel.getSpoiler());
+        try {
+            StringUtils.setText(findViewById(R.id.tv_date),
+                    DateUtils.toPattern(spoilerModel.getCratedOn(),
+                            "yyyy-MM-dd HH:mm:ss",
+                            "dd MMM, yyyy"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            StringUtils.setText(findViewById(R.id.tv_date), spoilerModel.getCratedOn());
+        }
+
+        etvSpoiler.setText(spoilerModel.getSpoiler(), TextView.BufferType.SPANNABLE);
+        etvSpoiler.setTrim(true);
+        tvMoreLess.setText("Show More....");
 
         StringUtils.setText(tvThumbsUp, "(" + spoilerModel.getThumbsUp() + ")");
         StringUtils.setText(tvThumbsDown, "(" + spoilerModel.getThumbsDown() + ")");
@@ -117,20 +143,23 @@ public class SpoilerCommentsActivity extends RootActivity {
 
         commentsAdapter = new SpoilerCommentsAdapter(this, new SpoilerCommentsAdapter.OnCommentActionListener() {
             @Override
-            public void onReplyComment(CommentModel commentModel) {
-//                reply = true;
-//                commentId = commentModel.getId();
-                showInterrupt("Coming Soon", true);
+            public void onReplyComment(int position) {
+                Toast.makeText(SpoilerCommentsActivity.this, "Coming Soon!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onLikeComment(CommentModel commentModel) {
-                showInterrupt("Coming Soon", true);
+            public void onLikeComment(int position) {
+                Toast.makeText(SpoilerCommentsActivity.this, "Coming Soon!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onDislikeComment(CommentModel commentModel) {
-                showInterrupt("Coming Soon", true);
+            public void onDislikeComment(int position) {
+                Toast.makeText(SpoilerCommentsActivity.this, "Coming Soon!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onReport(int position) {
+                Toast.makeText(SpoilerCommentsActivity.this, "Coming Soon!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -189,24 +218,23 @@ public class SpoilerCommentsActivity extends RootActivity {
         if (v.getId() == R.id.iv_add_files)
             showInterrupt("Coming Soon", true);
         else if (v.getId() == R.id.tv_comment) {
-//            reply = false;
-//            commentId = 0;
             etComment.requestFocus();
             InputUtils.showKeyboard(etComment);
-
-        } else if (v.getId() == R.id.tv_thumbs_up)
+        } else if (v.getId() == R.id.tv_spoiler) {
+            etvSpoiler.setTrim(!etvSpoiler.isTrim());
+            tvMoreLess.setText(etvSpoiler.isTrim() ? "Show More...." : "Show Less....");
+        } else if (v.getId() == R.id.tv_more_less) {
+            etvSpoiler.setTrim(!etvSpoiler.isTrim());
+            tvMoreLess.setText(etvSpoiler.isTrim() ? "Show More...." : "Show Less....");
+        } else if (v.getId() == R.id.iv_report)
+            Toast.makeText(this, "Coming Soon!", Toast.LENGTH_SHORT).show();
+        else if (v.getId() == R.id.tv_thumbs_up)
             showInterrupt("Coming Soon", true);
         else if (v.getId() == R.id.tv_thumbs_down)
             showInterrupt("Coming Soon", true);
         else if (v.getId() == R.id.iv_send) {
             if (!StringUtils.isInvalid(etComment)) {
-//                if (reply)
-//                    commentsViewModel.replyComment(commentId, etComment.getText().toString().trim());
-//                else
                     commentsViewModel.addComment(etComment.getText().toString().trim());
-
-//                reply = false;
-//                commentId = 0;
                 etComment.setText("");
             }
         } else

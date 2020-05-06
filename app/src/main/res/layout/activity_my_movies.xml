@@ -25,7 +25,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:listitem="@layout/row_movies"
+            tools:listitem="@layout/row_my_movies"
             android:id="@+id/rv_my_movies" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

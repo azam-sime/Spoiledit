@@ -32,66 +32,68 @@
                 android:layout_gravity="bottom"
                 app:layout_collapseMode="pin">
 
-                <com.google.android.material.appbar.MaterialToolbar
-                    android:layout_width="match_parent"
-                    android:layout_height="?actionBarSize"
-                    android:animateLayoutChanges="true"
-                    app:contentInsetStart="0dp" >
+<!--                <com.google.android.material.appbar.MaterialToolbar-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="?actionBarSize"-->
+<!--                    android:animateLayoutChanges="true"-->
+<!--                    app:contentInsetStart="0dp" >-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:orientation="horizontal">-->
 
-                        <ImageView
-                            android:layout_width="?actionBarSize"
-                            android:layout_height="?actionBarSize"
-                            android:contentDescription="@string/content_description"
-                            android:src="@drawable/arrow_left"
-                            android:padding="@dimen/spacing_20"
-                            android:id="@+id/iv_back" />
+<!--                        <ImageView-->
+<!--                            android:layout_width="?actionBarSize"-->
+<!--                            android:layout_height="?actionBarSize"-->
+<!--                            android:contentDescription="@string/content_description"-->
+<!--                            android:src="@drawable/arrow_left"-->
+<!--                            android:padding="@dimen/spacing_20"-->
+<!--                            android:id="@+id/iv_back" />-->
 
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="match_parent"
-                            android:layout_margin="@dimen/spacing_8"
-                            app:cardBackgroundColor="@color/colorWhite"
-                            app:cardCornerRadius="4dp"
-                            android:id="@+id/mcv_searchbar">
+<!--                        <com.google.android.material.card.MaterialCardView-->
+<!--                            android:layout_width="0dp"-->
+<!--                            android:layout_weight="1"-->
+<!--                            android:layout_height="match_parent"-->
+<!--                            android:layout_margin="@dimen/spacing_8"-->
+<!--                            app:cardBackgroundColor="@color/colorWhite"-->
+<!--                            app:cardCornerRadius="4dp"-->
+<!--                            android:id="@+id/mcv_searchbar">-->
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:padding="@dimen/spacing_8"
-                                android:gravity="center_vertical">
+<!--                            <LinearLayout-->
+<!--                                android:layout_width="match_parent"-->
+<!--                                android:layout_height="match_parent"-->
+<!--                                android:padding="@dimen/spacing_8"-->
+<!--                                android:gravity="center_vertical">-->
 
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:contentDescription="@string/content_description"
-                                    android:src="@drawable/search"
-                                    android:padding="@dimen/spacing_4"/>
+<!--                                <ImageView-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:contentDescription="@string/content_description"-->
+<!--                                    android:src="@drawable/search"-->
+<!--                                    android:padding="@dimen/spacing_4"/>-->
 
-                                <EditText
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:background="@android:color/transparent"
-                                    android:textSize="@dimen/text_14"
-                                    android:hint="@string/search"
-                                    android:id="@+id/et_search" />
-                            </LinearLayout>
-                        </com.google.android.material.card.MaterialCardView>
+<!--                                <EditText-->
+<!--                                    android:layout_width="match_parent"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:background="@android:color/transparent"-->
+<!--                                    android:textSize="@dimen/text_14"-->
+<!--                                    android:hint="@string/search"-->
+<!--                                    android:id="@+id/et_search" />-->
+<!--                            </LinearLayout>-->
+<!--                        </com.google.android.material.card.MaterialCardView>-->
 
-                        <ImageView
-                            android:layout_width="?actionBarSize"
-                            android:layout_height="?actionBarSize"
-                            android:contentDescription="@string/content_description"
-                            android:src="@drawable/popcorn"
-                            android:padding="@dimen/spacing_8"
-                            android:id="@+id/iv_popcorn" />
-                    </LinearLayout>
-                </com.google.android.material.appbar.MaterialToolbar>
+<!--                        <ImageView-->
+<!--                            android:layout_width="?actionBarSize"-->
+<!--                            android:layout_height="?actionBarSize"-->
+<!--                            android:contentDescription="@string/content_description"-->
+<!--                            android:src="@drawable/popcorn"-->
+<!--                            android:padding="@dimen/spacing_8"-->
+<!--                            android:id="@+id/iv_popcorn" />-->
+<!--                    </LinearLayout>-->
+<!--                </com.google.android.material.appbar.MaterialToolbar>-->
+
+                <include layout="@layout/toolbar" />
 
                 <com.google.android.material.tabs.TabLayout
                     android:layout_width="match_parent"
@@ -131,6 +133,9 @@
         android:textAllCaps="false"
         android:textColor="@color/colorWhite"
         android:textStyle="bold"
+        app:icon="@drawable/round_add_white_24"
+        app:iconGravity="textEnd"
+        app:iconTint="@color/colorWhite"
         app:backgroundTint="@color/colorAccent" />
 
     <include layout="@layout/layout_loading" />
