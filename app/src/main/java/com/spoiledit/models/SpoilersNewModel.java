@@ -5,16 +5,20 @@ import android.os.Parcel;
 public class SpoilersNewModel extends RootSelectionModel {
     private int mId;
     private String mName;
-    private int userId;
     private int selectType;
+    private String category;
     private String midCredit;
     private String stringer;
     private String spoiler;
+    private String dateFormat;
     private String cratedOn;
     private String posterPath;
-    private String category;
-    private String username;
-    private String dateFormat;
+    private int userId;
+    private String userName;
+    private String userImage;
+    private String userEmail;
+    private String userPhone;
+
 
     public SpoilersNewModel() {
     }
@@ -23,16 +27,16 @@ public class SpoilersNewModel extends RootSelectionModel {
         super(in);
         mId = in.readInt();
         mName = in.readString();
-        userId = in.readInt();
         selectType = in.readInt();
+        category = in.readString();
         midCredit = in.readString();
         stringer = in.readString();
         spoiler = in.readString();
+        dateFormat = in.readString();
         cratedOn = in.readString();
         posterPath = in.readString();
-        category = in.readString();
-        username = in.readString();
-        dateFormat = in.readString();
+        userId = in.readInt();
+        userName = in.readString();
     }
 
     @Override
@@ -40,16 +44,16 @@ public class SpoilersNewModel extends RootSelectionModel {
         super.writeToParcel(dest, flags);
         dest.writeInt(mId);
         dest.writeString(mName);
-        dest.writeInt(userId);
         dest.writeInt(selectType);
+        dest.writeString(category);
         dest.writeString(midCredit);
         dest.writeString(stringer);
         dest.writeString(spoiler);
+        dest.writeString(dateFormat);
         dest.writeString(cratedOn);
         dest.writeString(posterPath);
-        dest.writeString(category);
-        dest.writeString(username);
-        dest.writeString(dateFormat);
+        dest.writeInt(userId);
+        dest.writeString(userName);
     }
 
     @Override
@@ -85,20 +89,20 @@ public class SpoilersNewModel extends RootSelectionModel {
         this.mName = mName;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
     public int getSelectType() {
         return selectType;
     }
 
     public void setSelectType(int selectType) {
         this.selectType = selectType;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getMidCredit() {
@@ -125,6 +129,14 @@ public class SpoilersNewModel extends RootSelectionModel {
         this.spoiler = spoiler;
     }
 
+    public String getDateFormat() {
+        return dateFormat;
+    }
+
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
+    }
+
     public String getCratedOn() {
         return cratedOn;
     }
@@ -141,45 +153,70 @@ public class SpoilersNewModel extends RootSelectionModel {
         this.posterPath = posterPath;
     }
 
-    public String getCategory() {
-        return category;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public String getDateFormat() {
-        return dateFormat;
+    public String getUserImage() {
+        return userImage;
     }
 
-    public void setDateFormat(String dateFormat) {
-        this.dateFormat = dateFormat;
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
     }
 
     @Override
     public String toString() {
-        return "SpoilerModel{" +
+        return "SpoilersNewModel{" +
                 "mId=" + mId +
                 ", mName='" + mName + '\'' +
-                ", userId=" + userId +
                 ", selectType=" + selectType +
+                ", category='" + category + '\'' +
                 ", midCredit='" + midCredit + '\'' +
                 ", stringer='" + stringer + '\'' +
                 ", spoiler='" + spoiler + '\'' +
+                ", dateFormat='" + dateFormat + '\'' +
                 ", cratedOn='" + cratedOn + '\'' +
                 ", posterPath='" + posterPath + '\'' +
-                ", category='" + category + '\'' +
-                ", username='" + username + '\'' +
-                ", dateFormat='" + dateFormat + '\'' +
+                ", userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", userImage='" + userImage + '\'' +
+                ", userEmail='" + userEmail + '\'' +
+                ", userPhone='" + userPhone + '\'' +
                 '}';
+    }
+
+    public SpoilerUserModel toSpoilerUserModel() {
+        return new SpoilerUserModel(
+                userId, userName, userImage, userEmail, userPhone
+        );
     }
 }

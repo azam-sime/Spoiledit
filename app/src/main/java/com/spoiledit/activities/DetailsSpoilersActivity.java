@@ -28,12 +28,13 @@ public class DetailsSpoilersActivity extends RootActivity {
 
     @Override
     public void setUpToolBar() {
-
+        setupBackIconOnly();
     }
 
     @Override
     public void initUi() {
-        movieSpoilersFragment = (MovieSpoilersFragment) getSupportFragmentManager().findFragmentById(R.id.frag_movie_spoilers);
+        movieSpoilersFragment = (MovieSpoilersFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.frag_movie_spoilers);
     }
 
     @Override
@@ -43,7 +44,7 @@ public class DetailsSpoilersActivity extends RootActivity {
 
     public void gotoCommentsActivity(MovieSpoilerModel movieSpoilerModel) {
         CommentsRepo.initialise(movieSpoilerModel);
-        startActivity(new Intent(this, SpoilerCommentsActivity.class));
+        startActivity(new Intent(this, CommentsSpoilerActivity.class));
     }
 
     @Override
@@ -51,5 +52,10 @@ public class DetailsSpoilersActivity extends RootActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         movieSpoilersFragment.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

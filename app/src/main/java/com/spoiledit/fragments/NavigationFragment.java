@@ -168,15 +168,4 @@ public class NavigationFragment extends RootFragment {
 
         }
     }
-
-    private boolean shouldGoto() {
-        if (loggedIn()) {
-            return true;
-        } else {
-            DialogUtils.createNonCancelableDialog(getContext(), Type.Info.HEY,
-                    "You're not logged in. Please login or register yourself to enjoy this feature.",
-                    "Login", this::onPopcornClick, "Cancel", null);
-            return false;
-        }
-    }
 }

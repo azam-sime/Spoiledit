@@ -12,6 +12,7 @@ import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.spoiledit.R;
+import com.spoiledit.listeners.OnCommentActionListener;
 import com.spoiledit.models.CommentModel;
 import com.spoiledit.utils.DateUtils;
 import com.spoiledit.utils.StringUtils;
@@ -26,12 +27,14 @@ public class SpoilerCommentsAdapter extends RootSelectionAdapter {
     public static final String TAG = SpoilerCommentsAdapter.class.getCanonicalName();
 
     private Context context;
+    private boolean forComments;
     private List<CommentModel> commentModels;
     private OnCommentActionListener onCommentActionListener;
     private int lastSelection;
 
-    public SpoilerCommentsAdapter(Context context, OnCommentActionListener onCommentActionListener) {
+    public SpoilerCommentsAdapter(Context context, boolean forComments, OnCommentActionListener onCommentActionListener) {
         this.context = context;
+        this.forComments = forComments;
         commentModels = new ArrayList<>();
         this.onCommentActionListener = onCommentActionListener;
         lastSelection = -1;
@@ -129,9 +132,9 @@ public class SpoilerCommentsAdapter extends RootSelectionAdapter {
 //                    0, 0, 0
 //            );
 
-            if (!StringUtils.isInvalid(commentModel.getAvatarUrl())) {
+            if (!StringUtils.isInvalid(commentModel.getUserPhotoUrl())) {
                 Picasso.get()
-                        .load(commentModel.getAvatarUrl())
+                        .load(commentModel.getUserPhotoUrl())
 //                    .resize(40, 40)
 //                    .centerCrop()
                         .fit()
@@ -150,10 +153,12 @@ public class SpoilerCommentsAdapter extends RootSelectionAdapter {
     public class CommentViewHolder extends RecyclerView.ViewHolder {
         private ImageView ivUser, ivReport;
         private ContentLoadingProgressBar loadingBar;
-        private TextView tvComment, tvDate, tvReply, tvLikes, tvDislikes;
+        private TextView tvComment, tvDate, tvReply, tvThumbsUp, tvThumbsDown;
 
         public CommentViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            ViewUtils.toggleViewVisibility(forComments, itemView.findViewById(R.id.ll_action));
 
             ivUser = itemView.findViewById(R.id.riv_user);
 
@@ -162,10 +167,16 @@ public class SpoilerCommentsAdapter extends RootSelectionAdapter {
             tvComment = itemView.findViewById(R.id.tv_comment);
             tvDate = itemView.findViewById(R.id.tv_date);
             tvReply = itemView.findViewById(R.id.tv_reply);
-            tvLikes = itemView.findViewById(R.id.tv_thumbs_up);
-            tvDislikes = itemView.findViewById(R.id.tv_thumbs_down);
+            tvThumbsUp = itemView.findViewById(R.id.tv_thumbs_up);
+            tvThumbsDown = itemView.findViewById(R.id.tv_thumbs_down);
 
             ivReport = itemView.findViewById(R.id.iv_report);
+
+            ivUser.setOnClickListener(v -> {
+                if (onCommentActionListener != null) {
+                    onCommentActionListener.onUserClicked(getAdapterPosition());
+                }
+            });
 
             tvReply.setOnClickListener(v -> {
                 if (onCommentActionListener != null) {
@@ -173,15 +184,15 @@ public class SpoilerCommentsAdapter extends RootSelectionAdapter {
                 }
             });
 
-            tvLikes.setOnClickListener(v -> {
+            tvThumbsUp.setOnClickListener(v -> {
                 if (onCommentActionListener != null) {
-                    onCommentActionListener.onLikeComment(getAdapterPosition());
+                    onCommentActionListener.onThumbsUp(getAdapterPosition());
                 }
             });
 
-            tvDislikes.setOnClickListener(v -> {
+            tvThumbsDown.setOnClickListener(v -> {
                 if (onCommentActionListener != null) {
-                    onCommentActionListener.onDislikeComment(getAdapterPosition());
+                    onCommentActionListener.onThumbsDown(getAdapterPosition());
                 }
             });
 
@@ -193,13 +204,4 @@ public class SpoilerCommentsAdapter extends RootSelectionAdapter {
         }
     }
 
-    public interface OnCommentActionListener {
-        void onReplyComment(int position);
-
-        void onLikeComment(int position);
-
-        void onDislikeComment(int position);
-
-        void onReport(int position);
-    }
 }

@@ -7,8 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -17,6 +20,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.spoiledit.R;
 import com.spoiledit.constants.Type;
 import com.spoiledit.listeners.OnFileSourceChoiceListener;
+import com.spoiledit.listeners.OnReportActionListener;
 
 import java.util.Objects;
 
@@ -248,9 +252,63 @@ public final class DialogUtils {
         resizeDialogToMatchWindow(context, dialog);
     }
 
+    private static int reportType = -1;
+    public static void createReportDialog(Context context, String title, OnReportActionListener onReportActionListener) {
+        try {
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
+            View view = LayoutInflater.from(context).inflate(R.layout.layout_report, null);
+
+            builder.setView(view);
+            builder.setCancelable(false);
+
+            ((TextView) view.findViewById(R.id.tv_info_title)).setText(title);
+            EditText etExplanation = view.findViewById(R.id.et_report_explanation);
+
+            reportType = -1;
+            ((RadioGroup) view.findViewById(R.id.rg_report)).setOnCheckedChangeListener(
+                    (group, checkedId) -> {
+                        if (checkedId == R.id.rbtn_spam)
+                            reportType = 1;
+                        else if (checkedId == R.id.rbtn_wrong)
+                            reportType = 2;
+                        else if (checkedId == R.id.rbtn_other)
+                            reportType = 3;
+                    });
+
+            view.findViewById(R.id.iv_close).setOnClickListener(v -> {
+                responseInfoDialog.dismiss();
+            });
+            view.findViewById(R.id.btn_positive).setOnClickListener(v -> {
+                if (reportType == -1)
+                    showToast(context, "Please select report type!");
+                else if (reportType == 2 && StringUtils.isInvalid(etExplanation))
+                    showToast(context, "Please add explanation!");
+                else {
+                    responseInfoDialog.dismiss();
+                    if (onReportActionListener != null) {
+                        onReportActionListener.onContentReported(
+                                reportType, etExplanation.getText().toString().trim()
+                        );
+                    }
+                }
+            });
+
+            responseInfoDialog = builder.create();
+            responseInfoDialog.show();
+
+            resizeDialogToMatchWindow(context, responseInfoDialog);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void resizeDialogToMatchWindow(Context context, Dialog dialog) {
         int width = (int) (context.getResources().getDisplayMetrics().widthPixels * 1.00);
         int height = ViewGroup.LayoutParams.WRAP_CONTENT;
         Objects.requireNonNull(dialog.getWindow()).setLayout(width, height);
+    }
+
+    public static void showToast(Context context, String message) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 }

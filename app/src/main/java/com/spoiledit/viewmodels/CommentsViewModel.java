@@ -52,4 +52,28 @@ public class CommentsViewModel extends ViewModel {
     public void requestSpoilerDetails(int id) {
 
     }
+
+    public void reportSpoiler(int reportType, String reportExplanation) {
+        commentsRepo.reportSpoiler(reportType, reportExplanation);
+    }
+
+    public void reportComment(int commentId, int reportType, String reportExplanation) {
+        commentsRepo.reportComment(commentId, reportType, reportExplanation);
+    }
+
+    public void thumbsDownSpoiler(boolean add) {
+        commentsRepo.thumbsDownSpoiler(add);
+    }
+
+    public void thumbsUpSpoiler(boolean add) {
+        commentsRepo.thumbsUpSpoiler(add);
+    }
+
+    public void thumbsDownComment(int commentId, boolean add) {
+        commentsRepo.thumbsDownComment(commentId, add);
+    }
+
+    public void thumbsUpComment(int commentId, boolean add) {
+        commentsRepo.thumbsUpComment(commentId, add);
+    }
 }

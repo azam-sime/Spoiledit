@@ -49,6 +49,7 @@ public final class App {
             public static final int REGISTER = 1003;
             public static final int USER_PROFILE_EDIT = 1001;
             public static final int ADD_SPOILER = 1002;
+            public static final int IS_COMMENT_REPLIED = 1004;
 
             private Request() {
             }
@@ -63,6 +64,8 @@ public final class App {
 
             public static final String PROVIDER_DETAILS = Constants.APP_ID + ".tc_and_pp";
             public static final String PROVIDER_DETAILS_DISPLAY_ONLY = Constants.APP_ID + ".tc_and_pp_display_only";
+
+            public static final String USER_SPOILER = Constants.APP_ID + ".profile_other";
 
             private Extra() {
             }

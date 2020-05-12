@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.spoiledit.R;
-import com.spoiledit.listeners.OnItemSelectionListener;
 import com.spoiledit.listeners.OnSpoilerActionClickListener;
 import com.spoiledit.models.SpoilerBriefModel;
 import com.spoiledit.utils.DateUtils;
@@ -110,7 +109,7 @@ public class SpoilerBriefAdapter extends RootSelectionAdapter {
 
             ViewUtils.changeProgressMode(spoilerModel.isSelected(), viewHolder.loadingBar);
 
-            viewHolder.tvUserName.setText(spoilerModel.getDisplayName());
+            viewHolder.tvUserName.setText(spoilerModel.getUserName());
             viewHolder.etvSpoiler.setText(spoilerModel.getSpoiler(), TextView.BufferType.SPANNABLE);
             viewHolder.etvSpoiler.setTrim(spoilerModel.isTrimmed());
             viewHolder.tvMoreLess.setText(spoilerModel.isTrimmed() ? "Show More...." : "Show Less....");
@@ -141,7 +140,7 @@ public class SpoilerBriefAdapter extends RootSelectionAdapter {
                     ? Color.parseColor("#F3F3F3") : Color.parseColor("#FFFFFF"));
 
             Picasso.get()
-                    .load(spoilerModel.getAvatarUrl())
+                    .load(spoilerModel.getUserPhotoUrl())
 //                    .resize(60, 60)
 //                    .centerCrop()
                     .fit()
@@ -178,6 +177,11 @@ public class SpoilerBriefAdapter extends RootSelectionAdapter {
 
             tvMoreLess = itemView.findViewById(R.id.tv_more_less);
 
+            rivUser.setOnClickListener(v -> {
+                if (onSpoilerActionClickListener != null)
+                    onSpoilerActionClickListener.onUserClicked(getAdapterPosition());
+            });
+
             tvMoreLess.setOnClickListener(v -> {
                 if (onSpoilerActionClickListener != null)
                     onSpoilerActionClickListener.onContentToggled(getAdapterPosition());
@@ -197,7 +201,7 @@ public class SpoilerBriefAdapter extends RootSelectionAdapter {
                 if (onSpoilerActionClickListener != null) {
                     final int finalLastPosition = lastSelection;
                     notifySelection(getAdapterPosition());
-                    onSpoilerActionClickListener.onSelection(getAdapterPosition());
+                    onSpoilerActionClickListener.onItemSelected(finalLastPosition, getAdapterPosition());
                 }
             });
         }

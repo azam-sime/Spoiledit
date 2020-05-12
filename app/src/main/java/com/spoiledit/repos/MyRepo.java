@@ -108,10 +108,11 @@ public class MyRepo {
                                 try {
                                     JSONObject jsonObject = new JSONObject(response);
                                     if (isRequestSuccess(jsonObject)) {
-                                        List<MyMovieModel> myMovieModels = new MovieParser.MyMoviesParser().execute(jsonObject).get();
+                                        List<MyMovieModel> myMovieModels
+                                                = new MovieParser.MyMoviesParser().execute(jsonObject).get();
                                         myMoviesMutable.postValue(myMovieModels);
                                         if (myMovieModels.size() > 0)
-                                            apiRequestSuccess(api, jsonObject.optString("mssg"));
+                                            apiRequestSuccess(api, jsonObject.optString("msg"));
                                         else
                                             apiRequestFailure(api, jsonObject.optString("msg"));
                                     } else
@@ -140,6 +141,50 @@ public class MyRepo {
         private Map<String, String> getParams() {
             Map<String, String> params = new HashMap<>();
             params.put("action", "all");
+            params.put("user_id", String.valueOf(getUserModel().getId()));
+            return params;
+        }
+
+        public void removeFromWatchlist(int movieId) {
+            int api = Constants.Api.MY_WATCHLIST_REMOVE;
+            try {
+                apiRequestHit(api, "Removing from watchlist...");
+                getVolleyProvider().executePostRequest(
+                        Urls.MY_WATCHLIST_REMOVE.getUrl(), getRemoveParams(movieId),
+                        new VolleyProvider.OnResponseListener<String>() {
+                            @Override
+                            public void onSuccess(String response) {
+                                try {
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    if (isRequestSuccess(jsonObject))
+                                        apiRequestSuccess(api, jsonObject.optString("msg"));
+                                    else
+                                        setRequestStatusFailed(api, jsonObject);
+
+                                } catch (Exception e) {
+                                    setExceptionOccured(api, e);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(VolleyError volleyError) {
+                                try {
+                                    apiRequestFailure(api, getMessageFromVolleyAsJson(volleyError));
+                                } catch (Exception e) {
+                                    setExceptionOccured(api, e);
+                                }
+                            }
+                        }, false, true);
+
+            } catch (Exception e) {
+                setExceptionOccured(api, e);
+            }
+        }
+
+        private Map<String, String> getRemoveParams(int movieId) {
+            Map<String, String> params = new HashMap<>();
+            params.put("action", "delete");
+            params.put("m_id", String.valueOf(movieId));
             params.put("user_id", String.valueOf(getUserModel().getId()));
             return params;
         }

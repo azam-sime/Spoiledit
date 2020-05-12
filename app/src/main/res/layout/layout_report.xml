@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:orientation="vertical">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:layout_gravity="center"
+		android:padding="@dimen/spacing_16">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:gravity="center_vertical">
+
+			<TextView
+				android:layout_width="0dp"
+				android:layout_weight="1"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="@dimen/spacing_8"
+				tools:text="Comment Report"
+				android:textColor="@color/colorBlack"
+				android:textStyle="bold"
+				android:textSize="@dimen/text_20"
+				android:id="@+id/tv_info_title"/>
+
+			<ImageView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:padding="8dp"
+				android:src="@drawable/cross"
+				android:tint="@color/colorBlack"
+				android:id="@+id/iv_close"/>
+		</LinearLayout>
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="0.75dp"
+			android:layout_marginTop="@dimen/spacing_8"
+			android:background="@color/colorSeparator" />
+
+		<RadioGroup
+			android:id="@+id/rg_report"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+
+			<RadioButton
+				android:id="@+id/rbtn_spam"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/inappropriate_or_spam"/>
+
+			<RadioButton
+				android:id="@+id/rbtn_wrong"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/spoiler_is_wrong"/>
+
+			<RadioButton
+				android:id="@+id/rbtn_other"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="@string/other_add"/>
+		</RadioGroup>
+
+		<EditText
+			android:id="@+id/et_report_explanation"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/spacing_8"
+			android:padding="@dimen/spacing_4"
+			android:background="@drawable/background_curved_c7b299"
+			android:minLines="2"
+			android:maxLines="4" />
+
+		<View
+			android:layout_width="match_parent"
+			android:layout_height="0.75dp"
+			android:layout_marginTop="@dimen/spacing_8"
+			android:background="@color/colorSeparator" />
+
+		<com.google.android.material.button.MaterialButton
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="end"
+			app:backgroundTint="@color/colorBlack"
+			android:layout_marginTop="@dimen/spacing_8"
+			android:text="@string/add_report"
+			android:textSize="12sp"
+			android:textStyle="bold"
+			android:id="@+id/btn_positive"/>
+	</LinearLayout>
+</FrameLayout>

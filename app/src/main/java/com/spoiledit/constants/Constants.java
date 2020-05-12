@@ -12,7 +12,7 @@ public final class Constants {
     public static final class Api {
 
         private Api() {
-            // last = 56
+            // last = 67
         }
 
         public static final String BASE_URL = "https://spoiledit.com/wp-json/wp/v2";
@@ -66,6 +66,7 @@ public final class Constants {
         public static final int MOVIE_COMMENT_EDIT = 30;
         public static final int MOVIE_COMMENT_REPLY = 31;
         public static final int MOVIE_COMMENT_DELETE = 32;
+        public static final int MOVIE_COMMENT_REPORT_ADD = 57;
 
         public static final int SPOILERS_FIELDS = 33;
         public static final int SPOILERS_ADD = 34;
@@ -95,6 +96,17 @@ public final class Constants {
         public static final String SEARCH_KEYWORD_ADDON = "&type=keyword&pn=1";
         public static final String SEARCH_COMPANIES_ADDON = "&type=company&pn=1";
         public static final String SEARCH_FROM_KEYWORD_ADDON = "&serachby=keyword&serachid=";
+
+        public static final int THUMBS_UP_SPOILER = 58;
+        public static final int THUMBS_UP_SPOILER_ADD = 59;
+        public static final int THUMBS_UP_SPOILER_REMOVE = 60;
+        public static final int THUMBS_DOWN_SPOILER = 61;
+        public static final int THUMBS_DOWN_SPOILER_ADD = 62;
+        public static final int THUMBS_DOWN_SPOILER_REMOVE = 63;
+        public static final int THUMBS_UP_COMMENT_ADD = 64;
+        public static final int THUMBS_UP_COMMENT_REMOVE = 65;
+        public static final int THUMBS_DOWN_COMMENT_ADD = 66;
+        public static final int THUMBS_DOWN_COMMENT_REMOVE = 67;
     }
 
     public static final class Broadcast {

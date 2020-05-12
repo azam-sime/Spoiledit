@@ -66,7 +66,9 @@ public class MyMoviesActivity extends RootActivity {
                     moviesAdapter.getItemAt(currentSelection).getId()
             );
         }, position -> {
-            showInterrupt("Coming Soon", true);
+            myMoviesViewModel.removeFromWatchlist(
+                    moviesAdapter.getItemAt(position).getId()
+            );
         });
 
         recyclerView.setAdapter(moviesAdapter);
@@ -77,17 +79,26 @@ public class MyMoviesActivity extends RootActivity {
 
     @Override
     public void addObservers() {
-        hideLoader();
-
         myMoviesViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
             if (apiStatusModel.getApi() == Constants.Api.MY_WATCHLIST) {
                 if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
-                    if (!swipeRefreshLayout.isRefreshing())
-                        showLoader(apiStatusModel.getMessage());
+                    showLoader(!swipeRefreshLayout.isRefreshing(), apiStatusModel.getMessage());
+
                 } else {
                     hideLoader();
                     if (apiStatusModel.getStatus() == Status.Request.API_ERROR)
                         showFailure(false, apiStatusModel.getMessage());
+                }
+
+            } else if (apiStatusModel.getApi() == Constants.Api.MY_WATCHLIST_REMOVE) {
+                if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
+                    showLoader(apiStatusModel.getMessage());
+                } else {
+                    hideLoader();
+                    if (apiStatusModel.getStatus() == Status.Request.API_ERROR)
+                        showFailure(false, apiStatusModel.getMessage());
+                    else
+                        onRefresh();
                 }
 
             } else if (apiStatusModel.getApi() == Constants.Api.MOVIES_DETAILS) {
@@ -109,7 +120,6 @@ public class MyMoviesActivity extends RootActivity {
 
     @Override
     public void requestData() {
-        showLoader();
         myMoviesViewModel.requestMyMovies();
     }
 
@@ -122,7 +132,7 @@ public class MyMoviesActivity extends RootActivity {
 
     @Override
     public void onRefresh() {
-        requestData();
+        myMoviesViewModel.requestMyMovies();
     }
 
     @Override

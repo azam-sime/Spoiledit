@@ -51,4 +51,12 @@ public class DetailsSpoilersViewModel extends ViewModel {
     public void addSpoilers(CreateSpoilerModel createSpoilerModel) {
         detailsSpoilerRepo.addSpoiler(createSpoilerModel);
     }
+
+    public void thumbsUpSpoiler(int tab, int spoilerId, boolean add) {
+        detailsSpoilerRepo.thumbsUpSpoiler(tab, spoilerId, add);
+    }
+
+    public void thumbsDownSpoiler(int tab, int spoilerId, boolean add) {
+        detailsSpoilerRepo.thumbsDownSpoiler(tab, spoilerId, add);
+    }
 }

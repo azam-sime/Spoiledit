@@ -98,4 +98,8 @@
     <string name="reply">Reply</string>
     <string name="cookies_policy">Cookies Policy</string>
     <string name="by_colon">By:</string>
+    <string name="add_report">Add Report</string>
+    <string name="inappropriate_or_spam">Inappropriate or Spam</string>
+    <string name="spoiler_is_wrong">Spoiler is wrong</string>
+    <string name="other_add">Other(Add Explanation)</string>
 </resources>

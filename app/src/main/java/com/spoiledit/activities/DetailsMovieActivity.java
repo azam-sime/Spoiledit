@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
@@ -119,7 +118,7 @@ public class DetailsMovieActivity extends RootActivity {
 
     public void gotoCommentsActivity(MovieSpoilerModel movieSpoilerModel) {
         CommentsRepo.initialise(movieSpoilerModel);
-        startActivity(new Intent(this, SpoilerCommentsActivity.class));
+        startActivity(new Intent(this, CommentsSpoilerActivity.class));
     }
 
     public void scrollToViewSpoilers() {

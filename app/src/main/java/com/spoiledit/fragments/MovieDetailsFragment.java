@@ -114,8 +114,9 @@ public class MovieDetailsFragment extends RootFragment {
 //                .resize(ivPoster.getWidth(), 400)
 //                .centerCrop()
 //                .onlyScaleDown()
+                .placeholder(R.drawable.ic_placeholder)
                 .fit()
-                .error(getResources().getDrawable(R.drawable.popcorn))
+//                .error(getResources().getDrawable(R.drawable.popcorn))
                 .into(ivPoster);
 
         tvMidCreditScene.setText(detailsModel.getMidCreditScene());

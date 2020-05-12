@@ -9,6 +9,7 @@ import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.spoiledit.R;
 import com.spoiledit.constants.App;
+import com.spoiledit.constants.Type;
 import com.spoiledit.models.UserModel;
 import com.spoiledit.utils.AppUtils;
 import com.spoiledit.utils.DialogUtils;
@@ -47,6 +49,7 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
         }
     };
 
+    private RelativeLayout rlLoading;
     private ContentLoadingProgressBar progressBar;
     private Snackbar snanckbarNetwork, snackbar;
 
@@ -97,6 +100,7 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
         ivBack = findViewById(R.id.iv_back);
         ivPopcorn = findViewById(R.id.iv_popcorn);
 
+        rlLoading = findViewById(R.id.rl_loading);
         progressBar = findViewById(R.id.pb_loading);
         tvNoData = findViewById(R.id.tv_error);
 
@@ -209,15 +213,11 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
     }
 
     public void showLoader() {
-        showLoader(null);
+        showLoader(true, null);
     }
 
     public void showLoader(String message) {
-        if (!StringUtils.isInvalid(message))
-            showInterrupt(message, false);
-
-        if (progressBar != null)
-            progressBar.show();
+        showLoader(true, message);
     }
 
     public void showLoader(boolean showProgress, String message) {
@@ -226,6 +226,9 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
 
         if (showProgress && progressBar != null)
             progressBar.show();
+
+//        if (rlLoading != null)
+//            rlLoading.setBackgroundColor(getResources().getColor(R.color.colorBlack_alpha55));
     }
 
     public void showKeyboard(View view) {
@@ -337,6 +340,9 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
 
         if (progressBar != null && progressBar.isShown())
             progressBar.hide();
+
+//        if (rlLoading != null)
+//            rlLoading.setBackgroundColor(getResources().getColor(android.R.color.transparent));
     }
 
     public void gotoNextScreen() {
@@ -377,9 +383,26 @@ abstract public class RootActivity extends AppCompatActivity implements View.OnC
         return PreferenceUtils.isLoggedIn(this);
     }
 
+    public boolean verifyLoginWithInfo() {
+        if (loggedIn()) {
+            return true;
+        } else {
+            DialogUtils.createNonCancelableDialog(this, Type.Info.HEY,
+                    "You're not logged in. Please login or register yourself to enjoy this feature.",
+                    "Login", this::onPopcornClick, "Cancel", null);
+            return false;
+        }
+    }
+
     @Override
     protected void onStop() {
         super.onStop();
         connectivityManager.unregisterNetworkCallback(networkCallback);
+    }
+
+    @Override
+    public void onBackPressed() {
+        InputUtils.hideKeyboard(getCurrentFocus());
+        super.onBackPressed();
     }
 }

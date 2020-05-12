@@ -15,11 +15,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.spoiledit.R;
 import com.spoiledit.activities.DetailsSpoilersActivity;
+import com.spoiledit.activities.ProfileOtherActivity;
 import com.spoiledit.adapters.SpoilersNewAdapter;
+import com.spoiledit.constants.App;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
+import com.spoiledit.listeners.OnSpoilerUserClickListener;
 import com.spoiledit.repos.DetailsSpoilerRepo;
-import com.spoiledit.utils.LogUtils;
 import com.spoiledit.utils.ViewUtils;
 import com.spoiledit.viewmodels.DashboardViewModel;
 
@@ -58,11 +60,24 @@ public class SpoilersNewFragment extends RootFragment {
         RecyclerView recyclerView = view.findViewById(R.id.rv_spoilers);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        spoilersNewAdapter = new SpoilersNewAdapter(getContext(), (lastSelection, currentSelection) -> {
-            DetailsSpoilerRepo.initialise(spoilersNewAdapter.getItemAt(currentSelection).getmId());
-            startActivity(new Intent(getContext(), DetailsSpoilersActivity.class));
-            spoilersNewAdapter.removeLastSelection();
-        });
+        spoilersNewAdapter = new SpoilersNewAdapter(getContext(),
+                new OnSpoilerUserClickListener() {
+                    @Override
+                    public void onUserClicked(int position) {
+                        Intent intent = new Intent(getContext(), ProfileOtherActivity.class);
+                        intent.putExtra(App.Intent.Extra.USER_SPOILER,
+                                spoilersNewAdapter.getItemAt(position).toSpoilerUserModel());
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onItemSelected(int lastSelection, int currentSelection) {
+                        DetailsSpoilerRepo.initialise(
+                                spoilersNewAdapter.getItemAt(currentSelection).getmId());
+                        startActivity(new Intent(getContext(), DetailsSpoilersActivity.class));
+                        spoilersNewAdapter.removeLastSelection();
+                    }
+                });
 
         recyclerView.setAdapter(spoilersNewAdapter);
         ViewUtils.addFabOffset(getContext(), recyclerView);

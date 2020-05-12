@@ -30,6 +30,10 @@ public class MyMoviesViewModel extends ViewModel {
         myMoviesRepo.requestMyMovies();
     }
 
+    public void removeFromWatchlist(int movieId) {
+        myMoviesRepo.removeFromWatchlist(movieId);
+    }
+
     public void requestMovieDetails(int movieId) {
         myMoviesRepo.requestMovieDetails(movieId);
     }

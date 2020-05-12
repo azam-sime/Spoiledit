@@ -12,4 +12,6 @@
     <color name="colorEditTextIconS">#00DBB6</color>
     <color name="colorEditTextIconF">#FF0167</color>
     <color name="colorCheckBox">#FF0045</color>
+    <color name="colorBlack_alpha55">#55000000</color>
+    <color name="colorSeparator">#C7B299</color>
 </resources>

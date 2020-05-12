@@ -1,5 +1,6 @@
 package com.spoiledit.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,10 +17,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.spoiledit.R;
 import com.spoiledit.activities.DetailsMovieActivity;
 import com.spoiledit.activities.DetailsSpoilersActivity;
+import com.spoiledit.activities.ProfileOtherActivity;
 import com.spoiledit.adapters.SpoilerFullAdapter;
+import com.spoiledit.constants.App;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
 import com.spoiledit.listeners.OnSpoilerActionClickListener;
+import com.spoiledit.utils.DialogUtils;
 import com.spoiledit.utils.ViewUtils;
 import com.spoiledit.viewmodels.DetailsSpoilersViewModel;
 
@@ -61,6 +65,13 @@ public class SpoilersFullFragment extends RootFragment {
         spoilerFullAdapter = new SpoilerFullAdapter(getContext(),
                 new OnSpoilerActionClickListener() {
                     @Override
+                    public void onUserClicked(int position) {
+                        Intent intent = new Intent(getContext(), ProfileOtherActivity.class);
+                        intent.putExtra(App.Intent.Extra.USER_SPOILER, spoilerFullAdapter.getItemAt(position).toSpoilerUserModel());
+                        startActivity(intent);
+                    }
+
+                    @Override
                     public void onContentToggled(int position) {
                         spoilerFullAdapter.getItemAt(position).setTrimmed(
                                 !spoilerFullAdapter.getItemAt(position).isTrimmed());
@@ -69,16 +80,16 @@ public class SpoilersFullFragment extends RootFragment {
 
                     @Override
                     public void onThumbsUp(int position) {
-                        Toast.makeText(getContext(), "Coming Soon!", Toast.LENGTH_SHORT).show();
+                        detailsSpoilersViewModel.thumbsUpSpoiler(0, spoilerFullAdapter.getItemAt(position).getId(), true);
                     }
 
                     @Override
                     public void onThumbsDown(int position) {
-                        Toast.makeText(getContext(), "Coming Soon!", Toast.LENGTH_SHORT).show();
+                        detailsSpoilersViewModel.thumbsDownSpoiler(0, spoilerFullAdapter.getItemAt(position).getId(), true);
                     }
 
                     @Override
-                    public void onSelection(int position) {
+                    public void onItemSelected(int lastPosition, int position) {
                         if (getActivity() instanceof DetailsMovieActivity) {
                             ((DetailsMovieActivity) getActivity()).gotoCommentsActivity(
                                     spoilerFullAdapter.getItemAt(position));
@@ -102,15 +113,41 @@ public class SpoilersFullFragment extends RootFragment {
         detailsSpoilersViewModel.getApiStatusModelMutable().observe(this, apiStatusModel -> {
             if (apiStatusModel.getApi() == Constants.Api.MOVIE_SPOILERS_FULL) {
                 if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
-                    showLoader(apiStatusModel.getMessage());
-
-                } else if (apiStatusModel.getStatus() == Status.Request.API_SUCCESS) {
-                    hideLoader();
+                    showLoader(!swipeRefreshLayout.isRefreshing(), apiStatusModel.getMessage());
 
                 } else {
                     hideLoader();
-                    setError(apiStatusModel.getMessage());
-                    showFailure(false, apiStatusModel.getMessage());
+                    swipeRefreshLayout.setRefreshing(false);
+                    if (apiStatusModel.getStatus() == Status.Request.API_ERROR) {
+                        setError(apiStatusModel.getMessage());
+                        showFailure(false, apiStatusModel.getMessage());
+                    }
+                }
+            } else if (apiStatusModel.getFromScreen() == 0
+                    && (apiStatusModel.getApi() == Constants.Api.THUMBS_UP_SPOILER_ADD
+                    || apiStatusModel.getApi() == Constants.Api.THUMBS_UP_SPOILER_REMOVE)) {
+                if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
+                    showLoader(apiStatusModel.getMessage());
+
+                } else {
+                    hideLoader();
+                    if (apiStatusModel.getStatus() == Status.Request.API_ERROR)
+                        DialogUtils.showToast(getContext(), apiStatusModel.getMessage());
+                    else
+                        requestData();
+                }
+            } else if (apiStatusModel.getFromScreen() == 0
+                    && (apiStatusModel.getApi() == Constants.Api.THUMBS_DOWN_SPOILER_ADD
+                    || apiStatusModel.getApi() == Constants.Api.THUMBS_DOWN_SPOILER_REMOVE)) {
+                if (apiStatusModel.getStatus() == Status.Request.API_HIT) {
+                    showLoader(apiStatusModel.getMessage());
+
+                } else {
+                    hideLoader();
+                    if (apiStatusModel.getStatus() == Status.Request.API_ERROR)
+                        DialogUtils.showToast(getContext(), apiStatusModel.getMessage());
+                    else
+                        requestData();
                 }
             }
         });

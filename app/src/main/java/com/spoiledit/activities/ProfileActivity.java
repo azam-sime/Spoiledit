@@ -28,7 +28,7 @@ public class ProfileActivity extends RootActivity {
 
     private ProfileViewModel profileViewModel;
 
-    private TextView tvUserName, tvUserEmail, tvUserPhone, tvUserDob, tvUserAddress;
+    private TextView tvUserName, tvUserEmail, tvUserPhone;
     private ImageView ivUserPhoto, ivAddPhoto;
     private View vWishlist, vSpoilers;
 
@@ -56,8 +56,6 @@ public class ProfileActivity extends RootActivity {
         tvUserName = findViewById(R.id.tv_name);
         tvUserEmail = findViewById(R.id.tv_email_address);
         tvUserPhone = findViewById(R.id.tv_phone_number);
-        tvUserDob = findViewById(R.id.tv_dob);
-        tvUserAddress = findViewById(R.id.tv_address);
 
         ivUserPhoto = findViewById(R.id.riv_user);
         ivAddPhoto = findViewById(R.id.iv_add_photo);
@@ -104,8 +102,6 @@ public class ProfileActivity extends RootActivity {
         tvUserName.setText(profileModel.getDisplayName());
         StringUtils.setText(tvUserEmail, profileModel.getEmail(), "N/A");
         StringUtils.setText(tvUserPhone, profileModel.getPhone(), "N/A");
-        StringUtils.setText(tvUserDob, null, "N/A");
-        StringUtils.setText(tvUserAddress, null, "N/A");
 
         loadProfileImage(profileModel.getUrl());
     }

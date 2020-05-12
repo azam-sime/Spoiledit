@@ -16,6 +16,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.spoiledit.R;
 import com.spoiledit.activities.RootActivity;
+import com.spoiledit.constants.Type;
 import com.spoiledit.models.UserModel;
 import com.spoiledit.utils.AppUtils;
 import com.spoiledit.utils.DialogUtils;
@@ -145,15 +146,22 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
     }
 
     public void showLoader() {
-        showLoader(null);
+        showLoader(true, null);
     }
 
     public void showLoader(String message) {
+        showLoader(true, message);
+    }
+
+    public void showLoader(boolean showProgress, String message) {
         if (!StringUtils.isInvalid(message))
             showInterrupt(message, false);
 
-        if (progressBar != null)
+        if (showProgress && progressBar != null)
             progressBar.show();
+
+//        if (rlLoading != null)
+//            rlLoading.setBackgroundColor(getResources().getColor(R.color.colorBlack_alpha55));
     }
 
     public void showKeyboard(View view) {
@@ -298,6 +306,17 @@ public abstract class RootFragment extends Fragment implements View.OnClickListe
 
     public boolean loggedIn() {
         return ((RootActivity) getActivity()).loggedIn();
+    }
+
+    public boolean shouldGoto() {
+        if (loggedIn()) {
+            return true;
+        } else {
+            DialogUtils.createNonCancelableDialog(getContext(), Type.Info.HEY,
+                    "You're not logged in. Please login or register yourself to enjoy this feature.",
+                    "Login", this::onPopcornClick, "Cancel", null);
+            return false;
+        }
     }
 
     public UserModel getUserModel() {

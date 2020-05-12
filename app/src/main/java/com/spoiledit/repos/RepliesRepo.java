@@ -5,13 +5,9 @@ import androidx.lifecycle.MutableLiveData;
 import com.android.volley.VolleyError;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Urls;
-import com.spoiledit.models.CreateSpoilerModel;
-import com.spoiledit.models.SpoilerBriefModel;
-import com.spoiledit.models.SpoilerEndingModel;
-import com.spoiledit.models.SpoilerFullModel;
+import com.spoiledit.models.CommentModel;
+import com.spoiledit.models.MovieSpoilerModel;
 import com.spoiledit.networks.VolleyProvider;
-import com.spoiledit.parsers.SpoilerParser;
-import com.spoiledit.utils.NetworkUtils;
 
 import org.json.JSONObject;
 
@@ -19,192 +15,63 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DetailsSpoilerRepo extends RootRepo {
-    public static final String TAG = DetailsSpoilerRepo.class.getCanonicalName();
+public class RepliesRepo extends RootRepo {
+    public static final String TAG = RepliesRepo.class.getCanonicalName();
 
-    public static DetailsSpoilerRepo instance;
+    public static RepliesRepo instance;
 
-    public static synchronized void initialise(int movieId) {
+    public static synchronized void initialise(MovieSpoilerModel movieDetailsModel, CommentModel commentModel) {
         synchronized (TAG) {
-            instance = new DetailsSpoilerRepo(movieId);
+            instance = new RepliesRepo(movieDetailsModel, commentModel);
         }
     }
 
-    public static DetailsSpoilerRepo getInstance() {
+    public static RepliesRepo getInstance() {
         return instance;
     }
 
-    private int movieId;
-    private MutableLiveData<List<SpoilerFullModel>> spoilerFullModelsMutable;
-    private MutableLiveData<List<SpoilerBriefModel>> spoilerBriefModelsMutable;
-    private MutableLiveData<List<SpoilerEndingModel>> spoilerEndingModelsMutable;
+    private MovieSpoilerModel movieSpoilerModel;
+    private CommentModel commentModel;
+    private MutableLiveData<List<CommentModel>> repliesModelMutable;
 
-    private DetailsSpoilerRepo(int movieId) {
+    public RepliesRepo(MovieSpoilerModel movieSpoilerModel, CommentModel commentModel) {
         init();
-
-        this.movieId = movieId;
-
-        spoilerFullModelsMutable = new MutableLiveData<>();
-        spoilerBriefModelsMutable = new MutableLiveData<>();
-        spoilerEndingModelsMutable = new MutableLiveData<>();
+        this.movieSpoilerModel = movieSpoilerModel;
+        this.commentModel = commentModel;
+        repliesModelMutable = new MutableLiveData<>();
     }
 
-    public MutableLiveData<List<SpoilerFullModel>> getSpoilerFullModelsMutable() {
-        return spoilerFullModelsMutable;
+    public MutableLiveData<List<CommentModel>> getRepliesModelMutable() {
+        return repliesModelMutable;
     }
 
-    public MutableLiveData<List<SpoilerBriefModel>> getSpoilerBriefModelsMutable() {
-        return spoilerBriefModelsMutable;
+    public MovieSpoilerModel getMovieSpoilerModel() {
+        return movieSpoilerModel;
     }
 
-    public MutableLiveData<List<SpoilerEndingModel>> getSpoilerEndingModelsMutable() {
-        return spoilerEndingModelsMutable;
+    public CommentModel getCommentModel() {
+        return commentModel;
     }
 
-    public void requestSpoilerFull() {
-        int api = Constants.Api.MOVIE_SPOILERS_FULL;
+    public void requestReplies() {
+        repliesModelMutable.postValue(commentModel.getReplyModels());
+
+        /*Map<String, String> map = new HashMap<>();
+        map.put("m_id", String.valueOf(movieSpoilerModel.getmId()));
+        map.put("sp_id", String.valueOf(movieSpoilerModel.getId()));
+
+        int api = Constants.Api.MOVIE_COMMENTS;
         try {
-            apiRequestHit(api, "Requesting full spoilers...");
+            apiRequestHit(api, "Requesting comments...");
             getVolleyProvider().executePostRequest(
-                    Urls.MOVIE_SPOILERS_FULL.getUrl(), getSpoilersParams(),
+                    Urls.MOVIE_COMMENTS.getUrl(), map,
                     new VolleyProvider.OnResponseListener<String>() {
                         @Override
                         public void onSuccess(String response) {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
                                 if (isRequestSuccess(jsonObject)) {
-                                    spoilerFullModelsMutable.postValue(new SpoilerParser.FullsParser()
-                                            .execute(jsonObject).get());
-                                    apiRequestSuccess(api, jsonObject.optString("result_data"));
-                                } else
-                                    setRequestStatusFailed(api, jsonObject);
-
-                            } catch (Exception e) {
-                                setExceptionOccured(api, e);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(VolleyError volleyError) {
-                            try {
-                                apiRequestFailure(api, getMessageFromVolleyAsJson(volleyError));
-                            } catch (Exception e) {
-                                setExceptionOccured(api, e);
-                            }
-                        }
-                    }, false, true);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            apiRequestFailure(api, NetworkUtils.getErrorString(e));
-        }
-    }
-
-    public void requestSpoilerBrief() {
-        int api = Constants.Api.MOVIE_SPOILERS_BRIEF;
-        try {
-            apiRequestHit(api, "Requesting brief spoilers...");
-            getVolleyProvider().executePostRequest(
-                    Urls.MOVIE_SPOILERS_BRIEF.getUrl(), getSpoilersParams(),
-                    new VolleyProvider.OnResponseListener<String>() {
-                        @Override
-                        public void onSuccess(String response) {
-                            try {
-                                JSONObject jsonObject = new JSONObject(response);
-                                if (isRequestSuccess(jsonObject)) {
-                                    spoilerBriefModelsMutable.postValue(new SpoilerParser.BriefsParser()
-                                            .execute(jsonObject).get());
-                                    apiRequestSuccess(api, jsonObject.optString("result_data"));
-                                } else
-                                    setRequestStatusFailed(api, jsonObject);
-
-                            } catch (Exception e) {
-                                setExceptionOccured(api, e);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(VolleyError volleyError) {
-                            try {
-                                apiRequestFailure(api, getMessageFromVolleyAsJson(volleyError));
-                            } catch (Exception e) {
-                                setExceptionOccured(api, e);
-                            }
-                        }
-                    }, false, true);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            apiRequestFailure(api, NetworkUtils.getErrorString(e));
-        }
-    }
-
-    public void requestSpoilerEnding() {
-        int api = Constants.Api.MOVIE_SPOILERS_ENDING;
-        try {
-            apiRequestHit(api, "Requesting ending spoilers...");
-            getVolleyProvider().executePostRequest(
-                    Urls.MOVIE_SPOILERS_ENDING.getUrl(), getSpoilersParams(),
-                    new VolleyProvider.OnResponseListener<String>() {
-                        @Override
-                        public void onSuccess(String response) {
-                            try {
-                                JSONObject jsonObject = new JSONObject(response);
-                                if (isRequestSuccess(jsonObject)) {
-                                    spoilerEndingModelsMutable.postValue(new SpoilerParser.EndingsParser()
-                                            .execute(jsonObject).get());
-                                    apiRequestSuccess(api, jsonObject.optString("result_data"));
-                                } else
-                                    setRequestStatusFailed(api, jsonObject);
-
-                            } catch (Exception e) {
-                                setExceptionOccured(api, e);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(VolleyError volleyError) {
-                            try {
-                                apiRequestFailure(api, getMessageFromVolleyAsJson(volleyError));
-                            } catch (Exception e) {
-                                setExceptionOccured(api, e);
-                            }
-                        }
-                    }, false, true);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            apiRequestFailure(api, NetworkUtils.getErrorString(e));
-        }
-    }
-
-    private Map<String, String> getSpoilersParams() {
-        Map<String, String> map = new HashMap<>();
-        map.put("m_id", String.valueOf(movieId));
-
-        return map;
-    }
-
-    public void addSpoiler(CreateSpoilerModel createSpoilerModel) {
-        Map<String, String> map = new HashMap<>();
-        map.put("select_type", createSpoilerModel.getSpType());
-        map.put("mid_credit", createSpoilerModel.getMidCredit());
-        map.put("stringer", createSpoilerModel.getStringer());
-        map.put("spoiler", createSpoilerModel.getSpoiler());
-        map.put("m_id", String.valueOf(movieId));
-        map.put("user_id", String.valueOf(getUserModel().getId()));
-
-        int api = Constants.Api.SPOILERS_ADD;
-        try {
-            apiRequestHit(api, "Requesting spoiler update...");
-            getVolleyProvider().executePostRequest(
-                    Urls.SPOILERS_ADD.getUrl(), map,
-                    new VolleyProvider.OnResponseListener<String>() {
-                        @Override
-                        public void onSuccess(String response) {
-                            try {
-                                JSONObject jsonObject = new JSONObject(response);
-                                if (isRequestSuccess(jsonObject)) {
+                                    commentsModelMutable.postValue(new CommentParser().execute(jsonObject).get());
                                     apiRequestSuccess(api, jsonObject.optString("message"));
                                 } else
                                     setRequestStatusFailed(api, jsonObject);
@@ -222,32 +89,31 @@ public class DetailsSpoilerRepo extends RootRepo {
                                 setExceptionOccured(api, e);
                             }
                         }
-                    }, false, false);
+                    }, false, true);
 
         } catch (Exception e) {
             setExceptionOccured(api, e);
-        }
+        }*/
     }
 
-    public void thumbsUpSpoiler(int tab, int spoilerId, boolean add) {
-        Urls urls = add ? Urls.THUMBS_UP_SPOILER_ADD : Urls.THUMBS_UP_SPOILER_REMOVE;
-
+    public void editReply(int replyId, String newComment) {
         Map<String, String> map = new HashMap<>();
-        map.put("m_id", String.valueOf(movieId));
-        map.put("user_id", String.valueOf(getUserModel().getId()));
-        map.put("sp_id", String.valueOf(spoilerId));
+        map.put("parent_comment_id", String.valueOf(commentModel.getId()));
+        map.put("comment_id", String.valueOf(replyId));
+        map.put("comment", newComment);
 
-        int api = urls.getApiId();
+        int api = Constants.Api.MOVIE_COMMENT_EDIT;
         try {
-            apiRequestHit(api, add ? "Adding thumbs up..." : "Removing thumbs up...");
-            getVolleyProvider().executePostRequest(urls.getUrl(), map,
+            apiRequestHit(api, "Editing comment...");
+            getVolleyProvider().executePostRequest(
+                    Urls.MOVIE_COMMENT_EDIT.getUrl(), map,
                     new VolleyProvider.OnResponseListener<String>() {
                         @Override
                         public void onSuccess(String response) {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
                                 if (isRequestSuccess(jsonObject)) {
-                                    apiRequestSuccess(tab, api, jsonObject.optString("msg"));
+                                    apiRequestSuccess(api, jsonObject.optString(""));
                                 } else
                                     setRequestStatusFailed(api, jsonObject);
 
@@ -271,13 +137,187 @@ public class DetailsSpoilerRepo extends RootRepo {
         }
     }
 
-    public void thumbsDownSpoiler(int tab, int spoilerId, boolean add) {
-        Urls urls = add ? Urls.THUMBS_DOWN_SPOILER_ADD : Urls.THUMBS_DOWN_SPOILER_REMOVE;
+    public void removeReply(int replyId) {
+        Map<String, String> map = new HashMap<>();
+        map.put("parent_comment_id", String.valueOf(commentModel.getId()));
+        map.put("comment_id", String.valueOf(replyId));
+
+        int api = Constants.Api.MOVIE_COMMENT_DELETE;
+        try {
+            apiRequestHit(api, "Deleting comment...");
+            getVolleyProvider().executePostRequest(
+                    Urls.MOVIE_COMMENT_DELETE.getUrl(), map,
+                    new VolleyProvider.OnResponseListener<String>() {
+                        @Override
+                        public void onSuccess(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                if (isRequestSuccess(jsonObject)) {
+                                    apiRequestSuccess(api, jsonObject.optString(""));
+                                } else
+                                    setRequestStatusFailed(api, jsonObject);
+
+                            } catch (Exception e) {
+                                setExceptionOccured(api, e);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(VolleyError volleyError) {
+                            try {
+                                apiRequestFailure(api, getMessageFromVolleyAsJson(volleyError));
+                            } catch (Exception e) {
+                                setExceptionOccured(api, e);
+                            }
+                        }
+                    }, false, true);
+
+        } catch (Exception e) {
+            setExceptionOccured(api, e);
+        }
+    }
+
+    public void addReply(String reply) {
+        Map<String, String> map = new HashMap<>();
+        map.put("user_id", String.valueOf(getUserModel().getId()));
+        map.put("m_id", String.valueOf(movieSpoilerModel.getmId()));
+        map.put("sp_id", String.valueOf(movieSpoilerModel.getId()));
+        map.put("comment_id", String.valueOf(commentModel.getId()));
+        map.put("comment", reply);
+
+        int api = Constants.Api.MOVIE_COMMENT_REPLY;
+        try {
+            apiRequestHit(api, "Replying comment...");
+            getVolleyProvider().executePostRequest(
+                    Urls.MOVIE_COMMENT_REPLY.getUrl(), map,
+                    new VolleyProvider.OnResponseListener<String>() {
+                        @Override
+                        public void onSuccess(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                if (isRequestSuccess(jsonObject)) {
+                                    apiRequestSuccess(api, jsonObject.optString(""));
+                                } else
+                                    setRequestStatusFailed(api, jsonObject);
+
+                            } catch (Exception e) {
+                                setExceptionOccured(api, e);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(VolleyError volleyError) {
+                            try {
+                                apiRequestFailure(api, getMessageFromVolleyAsJson(volleyError));
+                            } catch (Exception e) {
+                                setExceptionOccured(api, e);
+                            }
+                        }
+                    }, false, true);
+
+        } catch (Exception e) {
+            setExceptionOccured(api, e);
+        }
+    }
+
+    public void reportComment(int reportType, String reportExplanation) {
+        Map<String, String> map = new HashMap<>();
+        map.put("m_id", String.valueOf(movieSpoilerModel.getmId()));
+        map.put("user_id", String.valueOf(getUserModel().getId()));
+        map.put("spoiler_id", String.valueOf(movieSpoilerModel.getId()));
+        map.put("report_id", String.valueOf(reportType));
+        map.put("parent_comment_id", String.valueOf(commentModel.getParentCommentId()));
+        map.put("comment_id", String.valueOf(commentModel.getId()));
+        map.put("message", reportExplanation);
+
+        int api = Constants.Api.MOVIE_COMMENT_REPORT_ADD;
+        try {
+            apiRequestHit(api, "Reporting comment...");
+            getVolleyProvider().executePostRequest(
+                    Urls.MOVIE_COMMENT_REPORT_ADD.getUrl(), map,
+                    new VolleyProvider.OnResponseListener<String>() {
+                        @Override
+                        public void onSuccess(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                if (isRequestSuccess(jsonObject)) {
+                                    apiRequestSuccess(api, jsonObject.optString(""));
+                                } else
+                                    setRequestStatusFailed(api, jsonObject);
+
+                            } catch (Exception e) {
+                                setExceptionOccured(api, e);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(VolleyError volleyError) {
+                            try {
+                                apiRequestFailure(api, getMessageFromVolleyAsJson(volleyError));
+                            } catch (Exception e) {
+                                setExceptionOccured(api, e);
+                            }
+                        }
+                    }, false, true);
+
+        } catch (Exception e) {
+            setExceptionOccured(api, e);
+        }
+    }
+
+    public void thumbsDownComment(boolean add) {
+        Urls urls = add ? Urls.THUMBS_DOWN_COMMENT_ADD : Urls.THUMBS_DOWN_COMMENT_REMOVE;
 
         Map<String, String> map = new HashMap<>();
-        map.put("m_id", String.valueOf(movieId));
+        map.put("m_id", String.valueOf(movieSpoilerModel.getmId()));
         map.put("user_id", String.valueOf(getUserModel().getId()));
-        map.put("sp_id", String.valueOf(spoilerId));
+        map.put("sp_id", String.valueOf(movieSpoilerModel.getId()));
+        map.put("parent_comment_id", String.valueOf(commentModel.getParentCommentId()));
+        map.put("comment_id", String.valueOf(commentModel.getId()));
+
+        int api = urls.getApiId();
+        try {
+            apiRequestHit(api, add ? "Adding thumbs down..." : "Removing thumbs down...");
+            getVolleyProvider().executePostRequest(urls.getUrl(), map,
+                    new VolleyProvider.OnResponseListener<String>() {
+                        @Override
+                        public void onSuccess(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                if (isRequestSuccess(jsonObject)) {
+                                    apiRequestSuccess(api, jsonObject.optString("msg"));
+                                } else
+                                    setRequestStatusFailed(api, jsonObject);
+
+                            } catch (Exception e) {
+                                setExceptionOccured(api, e);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(VolleyError volleyError) {
+                            try {
+                                apiRequestFailure(api, getMessageFromVolleyAsJson(volleyError));
+                            } catch (Exception e) {
+                                setExceptionOccured(api, e);
+                            }
+                        }
+                    }, false, true);
+
+        } catch (Exception e) {
+            setExceptionOccured(api, e);
+        }
+    }
+
+    public void thumbsUpComment(boolean add) {
+        Urls urls = add ? Urls.THUMBS_UP_COMMENT_ADD : Urls.THUMBS_UP_COMMENT_REMOVE;
+
+        Map<String, String> map = new HashMap<>();
+        map.put("m_id", String.valueOf(movieSpoilerModel.getmId()));
+        map.put("user_id", String.valueOf(getUserModel().getId()));
+        map.put("sp_id", String.valueOf(movieSpoilerModel.getId()));
+        map.put("parent_comment_id", String.valueOf(commentModel.getParentCommentId()));
+        map.put("comment_id", String.valueOf(commentModel.getId()));
 
         int api = urls.getApiId();
         try {
@@ -289,7 +329,7 @@ public class DetailsSpoilerRepo extends RootRepo {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
                                 if (isRequestSuccess(jsonObject)) {
-                                    apiRequestSuccess(tab, api, jsonObject.optString("msg"));
+                                    apiRequestSuccess(api, jsonObject.optString("msg"));
                                 } else
                                     setRequestStatusFailed(api, jsonObject);
 

@@ -252,4 +252,261 @@ public class CommentsRepo extends RootRepo {
             setExceptionOccured(api, e);
         }
     }
+
+    public void reportSpoiler(int reportType, String reportExplanation) {
+        Map<String, String> map = new HashMap<>();
+        map.put("m_id", String.valueOf(movieSpoilerModel.getmId()));
+        map.put("user_id", String.valueOf(getUserModel().getId()));
+        map.put("spoiler_id", String.valueOf(movieSpoilerModel.getId()));
+        map.put("report_id", String.valueOf(reportType));
+        map.put("message", reportExplanation);
+
+        int api = Constants.Api.SPOILERS_REPORT_ADD;
+        try {
+            apiRequestHit(api, "Reporting spoiler...");
+            getVolleyProvider().executePostRequest(
+                    Urls.SPOILERS_REPORT_ADD.getUrl(), map,
+                    new VolleyProvider.OnResponseListener<String>() {
+                        @Override
+                        public void onSuccess(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                if (isRequestSuccess(jsonObject)) {
+                                    apiRequestSuccess(api, jsonObject.optString(""));
+                                } else
+                                    setRequestStatusFailed(api, jsonObject);
+
+                            } catch (Exception e) {
+                                setExceptionOccured(api, e);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(VolleyError volleyError) {
+                            try {
+                                apiRequestFailure(api, getMessageFromVolleyAsJson(volleyError));
+                            } catch (Exception e) {
+                                setExceptionOccured(api, e);
+                            }
+                        }
+                    }, false, true);
+
+        } catch (Exception e) {
+            setExceptionOccured(api, e);
+        }
+    }
+
+    public void reportComment(int commentId, int reportType, String reportExplanation) {
+        Map<String, String> map = new HashMap<>();
+        map.put("m_id", String.valueOf(movieSpoilerModel.getmId()));
+        map.put("user_id", String.valueOf(getUserModel().getId()));
+        map.put("spoiler_id", String.valueOf(movieSpoilerModel.getId()));
+        map.put("report_id", String.valueOf(reportType));
+        map.put("comment_id", String.valueOf(commentId));
+        map.put("message", reportExplanation);
+
+        int api = Constants.Api.MOVIE_COMMENT_REPORT_ADD;
+        try {
+            apiRequestHit(api, "Reporting comment...");
+            getVolleyProvider().executePostRequest(
+                    Urls.MOVIE_COMMENT_REPORT_ADD.getUrl(), map,
+                    new VolleyProvider.OnResponseListener<String>() {
+                        @Override
+                        public void onSuccess(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                if (isRequestSuccess(jsonObject)) {
+                                    apiRequestSuccess(api, jsonObject.optString(""));
+                                } else
+                                    setRequestStatusFailed(api, jsonObject);
+
+                            } catch (Exception e) {
+                                setExceptionOccured(api, e);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(VolleyError volleyError) {
+                            try {
+                                apiRequestFailure(api, getMessageFromVolleyAsJson(volleyError));
+                            } catch (Exception e) {
+                                setExceptionOccured(api, e);
+                            }
+                        }
+                    }, false, true);
+
+        } catch (Exception e) {
+            setExceptionOccured(api, e);
+        }
+    }
+
+    public void thumbsDownSpoiler(boolean add) {
+        Urls urls = add ? Urls.THUMBS_DOWN_SPOILER_ADD : Urls.THUMBS_DOWN_SPOILER_REMOVE;
+
+        Map<String, String> map = new HashMap<>();
+        map.put("m_id", String.valueOf(movieSpoilerModel.getmId()));
+        map.put("user_id", String.valueOf(getUserModel().getId()));
+        map.put("sp_id", String.valueOf(movieSpoilerModel.getId()));
+
+        int api = urls.getApiId();
+        try {
+            apiRequestHit(api, add ? "Adding thumbs up..." : "Removing thumbs up...");
+            getVolleyProvider().executePostRequest(urls.getUrl(), map,
+                    new VolleyProvider.OnResponseListener<String>() {
+                        @Override
+                        public void onSuccess(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                if (isRequestSuccess(jsonObject)) {
+                                    apiRequestSuccess(api, jsonObject.optString("msg"));
+                                } else
+                                    setRequestStatusFailed(api, jsonObject);
+
+                            } catch (Exception e) {
+                                setExceptionOccured(api, e);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(VolleyError volleyError) {
+                            try {
+                                apiRequestFailure(api, getMessageFromVolleyAsJson(volleyError));
+                            } catch (Exception e) {
+                                setExceptionOccured(api, e);
+                            }
+                        }
+                    }, false, true);
+
+        } catch (Exception e) {
+            setExceptionOccured(api, e);
+        }
+    }
+
+    public void thumbsUpSpoiler(boolean add) {
+        Urls urls = add ? Urls.THUMBS_UP_SPOILER_ADD : Urls.THUMBS_UP_SPOILER_REMOVE;
+
+        Map<String, String> map = new HashMap<>();
+        map.put("m_id", String.valueOf(movieSpoilerModel.getmId()));
+        map.put("user_id", String.valueOf(getUserModel().getId()));
+        map.put("sp_id", String.valueOf(movieSpoilerModel.getId()));
+
+        int api = urls.getApiId();
+        try {
+            apiRequestHit(api, add ? "Adding thumbs up..." : "Removing thumbs up...");
+            getVolleyProvider().executePostRequest(urls.getUrl(), map,
+                    new VolleyProvider.OnResponseListener<String>() {
+                        @Override
+                        public void onSuccess(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                if (isRequestSuccess(jsonObject)) {
+                                    apiRequestSuccess(api, jsonObject.optString("msg"));
+                                } else
+                                    setRequestStatusFailed(api, jsonObject);
+
+                            } catch (Exception e) {
+                                setExceptionOccured(api, e);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(VolleyError volleyError) {
+                            try {
+                                apiRequestFailure(api, getMessageFromVolleyAsJson(volleyError));
+                            } catch (Exception e) {
+                                setExceptionOccured(api, e);
+                            }
+                        }
+                    }, false, true);
+
+        } catch (Exception e) {
+            setExceptionOccured(api, e);
+        }
+    }
+
+    public void thumbsDownComment(int commentId, boolean add) {
+        Urls urls = add ? Urls.THUMBS_DOWN_COMMENT_ADD : Urls.THUMBS_DOWN_COMMENT_REMOVE;
+
+        Map<String, String> map = new HashMap<>();
+        map.put("m_id", String.valueOf(movieSpoilerModel.getmId()));
+        map.put("user_id", String.valueOf(getUserModel().getId()));
+        map.put("sp_id", String.valueOf(movieSpoilerModel.getId()));
+        map.put("comment_id", String.valueOf(commentId));
+
+        int api = urls.getApiId();
+        try {
+            apiRequestHit(api, add ? "Adding thumbs down..." : "Removing thumbs down...");
+            getVolleyProvider().executePostRequest(urls.getUrl(), map,
+                    new VolleyProvider.OnResponseListener<String>() {
+                        @Override
+                        public void onSuccess(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                if (isRequestSuccess(jsonObject)) {
+                                    apiRequestSuccess(api, jsonObject.optString("msg"));
+                                } else
+                                    setRequestStatusFailed(api, jsonObject);
+
+                            } catch (Exception e) {
+                                setExceptionOccured(api, e);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(VolleyError volleyError) {
+                            try {
+                                apiRequestFailure(api, getMessageFromVolleyAsJson(volleyError));
+                            } catch (Exception e) {
+                                setExceptionOccured(api, e);
+                            }
+                        }
+                    }, false, true);
+
+        } catch (Exception e) {
+            setExceptionOccured(api, e);
+        }
+    }
+
+    public void thumbsUpComment(int commentId, boolean add) {
+        Urls urls = add ? Urls.THUMBS_UP_COMMENT_ADD : Urls.THUMBS_UP_COMMENT_REMOVE;
+
+        Map<String, String> map = new HashMap<>();
+        map.put("m_id", String.valueOf(movieSpoilerModel.getmId()));
+        map.put("user_id", String.valueOf(getUserModel().getId()));
+        map.put("sp_id", String.valueOf(movieSpoilerModel.getId()));
+        map.put("comment_id", String.valueOf(commentId));
+
+        int api = urls.getApiId();
+        try {
+            apiRequestHit(api, add ? "Adding thumbs up..." : "Removing thumbs up...");
+            getVolleyProvider().executePostRequest(urls.getUrl(), map,
+                    new VolleyProvider.OnResponseListener<String>() {
+                        @Override
+                        public void onSuccess(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                if (isRequestSuccess(jsonObject)) {
+                                    apiRequestSuccess(api, jsonObject.optString("msg"));
+                                } else
+                                    setRequestStatusFailed(api, jsonObject);
+
+                            } catch (Exception e) {
+                                setExceptionOccured(api, e);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(VolleyError volleyError) {
+                            try {
+                                apiRequestFailure(api, getMessageFromVolleyAsJson(volleyError));
+                            } catch (Exception e) {
+                                setExceptionOccured(api, e);
+                            }
+                        }
+                    }, false, true);
+
+        } catch (Exception e) {
+            setExceptionOccured(api, e);
+        }
+    }
 }

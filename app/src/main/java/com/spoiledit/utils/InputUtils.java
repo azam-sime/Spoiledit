@@ -18,7 +18,7 @@ public final class InputUtils {
     }
 
     public static void hideKeyboard(View view) {
-        if (view.hasFocus()) {
+        if (view != null && view.hasFocus()) {
             InputMethodManager inputMethodManager = (InputMethodManager)
                     view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             if (inputMethodManager != null)

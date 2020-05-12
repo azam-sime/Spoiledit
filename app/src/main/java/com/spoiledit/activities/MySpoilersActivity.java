@@ -12,6 +12,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.spoiledit.R;
 import com.spoiledit.adapters.MySpoilersAdapter;
+import com.spoiledit.constants.App;
 import com.spoiledit.constants.Constants;
 import com.spoiledit.constants.Status;
 import com.spoiledit.listeners.OnSpoilerActionClickListener;
@@ -60,6 +61,13 @@ public class MySpoilersActivity extends RootActivity {
         spoilersAdapter = new MySpoilersAdapter(this,
                 new OnSpoilerActionClickListener() {
                     @Override
+                    public void onUserClicked(int position) {
+                        Intent intent = new Intent(MySpoilersActivity.this, ProfileOtherActivity.class);
+                        intent.putExtra(App.Intent.Extra.USER_SPOILER, spoilersAdapter.getItemAt(position).toSpoilerUserModel());
+                        startActivity(intent);
+                    }
+
+                    @Override
                     public void onContentToggled(int position) {
                         spoilersAdapter.getItemAt(position).setTrimmed(
                                 !spoilersAdapter.getItemAt(position).isTrimmed());
@@ -68,18 +76,21 @@ public class MySpoilersActivity extends RootActivity {
 
                     @Override
                     public void onThumbsUp(int position) {
-                        Toast.makeText(MySpoilersActivity.this, "Coming Soon!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MySpoilersActivity.this, "Coming Soon!",
+                                Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onThumbsDown(int position) {
-                        Toast.makeText(MySpoilersActivity.this, "Coming Soon!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MySpoilersActivity.this, "Coming Soon!",
+                                Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
-                    public void onSelection(int position) {
+                    public void onItemSelected(int lastPosition, int position) {
                         CommentsRepo.initialise(spoilersAdapter.getItemAt(position));
-                        startActivity(new Intent(MySpoilersActivity.this, SpoilerCommentsActivity.class));
+                        startActivity(new Intent(MySpoilersActivity.this,
+                                CommentsSpoilerActivity.class));
                     }
                 });
 

@@ -49,21 +49,32 @@ public enum Urls {
     , MOVIE_COMMENT_EDIT(Constants.Api.MOVIE_COMMENT_EDIT, Constants.Api.MOVIE_URL + "edit-comments", Request.Method.POST)
     , MOVIE_COMMENT_REPLY(Constants.Api.MOVIE_COMMENT_REPLY, Constants.Api.MOVIE_URL + "add-reply-comments", Request.Method.POST)
     , MOVIE_COMMENT_DELETE(Constants.Api.MOVIE_COMMENT_DELETE, Constants.Api.MOVIE_URL + "delete-comments", Request.Method.POST)
+    , MOVIE_COMMENT_REPORT_ADD(Constants.Api.MOVIE_COMMENT_REPORT_ADD, Constants.Api.BASE_URL + "/add-report-spoiler-comment", Request.Method.POST)
 
     , SPOILERS_FIELDS(Constants.Api.SPOILERS_FIELDS, Constants.Api.BASE_URL + "/spoiler-fields", Request.Method.GET)
     , SPOILERS_ADD(Constants.Api.SPOILERS_ADD, Constants.Api.BASE_URL + "/add-spoiler", Request.Method.POST)
     , SPOILERS_EDIT(Constants.Api.SPOILERS_EDIT, Constants.Api.BASE_URL + "/edit-spoiler", Request.Method.POST)
     , SPOILERS_UPDATE(Constants.Api.SPOILERS_UPDATE, Constants.Api.BASE_URL + "/update-spoiler", Request.Method.POST)
-
     , SPOILERS_REPORT_FIELDS(Constants.Api.SPOILERS_REPORT_FIELDS, Constants.Api.BASE_URL + "/spoiler-report-fields", Request.Method.GET)
-    , SPOILERS_REPORT_ADD(Constants.Api.SPOILERS_REPORT_ADD, Constants.Api.BASE_URL + "/add-spoiler-report", Request.Method.POST)
+    , SPOILERS_REPORT_ADD(Constants.Api.SPOILERS_REPORT_ADD, Constants.Api.BASE_URL + "/add-report-spoiler", Request.Method.POST)
 
     , MY_SPOILERS(Constants.Api.MY_SPOILERS, Constants.Api.BASE_URL + "/my-spoiler", Request.Method.POST)
     , MY_SPOILER_EDIT(Constants.Api.MY_SPOILER_EDIT, Constants.Api.BASE_URL + "/edit-spoiler", Request.Method.POST)
     , MY_SPOILER_DELETE(Constants.Api.MY_SPOILER_DELETE, Constants.Api.BASE_URL + "/delete-my-spoiler", Request.Method.POST)
     , MY_WATCHLIST(Constants.Api.MY_WATCHLIST, Constants.Api.BASE_URL + "/my-watchlist", Request.Method.POST)
-    , MY_WATCHLIST_ADD(Constants.Api.MY_WATCHLIST_ADD, Constants.Api.BASE_URL + "/add-my-watchlist", Request.Method.POST)
-    , MY_WATCHLIST_REMOVE(Constants.Api.MY_WATCHLIST_REMOVE, Constants.Api.BASE_URL + "/delete-my-watchlist", Request.Method.POST)
+    , MY_WATCHLIST_ADD(Constants.Api.MY_WATCHLIST_ADD, Constants.Api.BASE_URL + /*"/add-my-watchlist"*/ "/my-watchlist", Request.Method.POST)
+    , MY_WATCHLIST_REMOVE(Constants.Api.MY_WATCHLIST_REMOVE, Constants.Api.BASE_URL + /*"/delete-my-watchlist"*/ "/my-watchlist", Request.Method.POST)
+
+    , THUMBS_UP_SPOILER(Constants.Api.THUMBS_UP_SPOILER, Constants.Api.BASE_URL + "/spoiler-thumbs-up", Request.Method.POST)
+    , THUMBS_UP_SPOILER_ADD(Constants.Api.THUMBS_UP_SPOILER_ADD, Constants.Api.BASE_URL + "/spoiler-thumbs-up-add", Request.Method.POST)
+    , THUMBS_UP_SPOILER_REMOVE(Constants.Api.THUMBS_UP_SPOILER_REMOVE, Constants.Api.BASE_URL + "/spoiler-thumbs-up-remove", Request.Method.POST)
+    , THUMBS_DOWN_SPOILER(Constants.Api.THUMBS_DOWN_SPOILER, Constants.Api.BASE_URL + "/spoiler-thumbs-down", Request.Method.POST)
+    , THUMBS_DOWN_SPOILER_ADD(Constants.Api.THUMBS_DOWN_SPOILER_ADD, Constants.Api.BASE_URL + "/spoiler-thumbs-down-add", Request.Method.POST)
+    , THUMBS_DOWN_SPOILER_REMOVE(Constants.Api.THUMBS_DOWN_SPOILER_REMOVE, Constants.Api.BASE_URL + "/spoiler-thumbs-down-remove", Request.Method.POST)
+    , THUMBS_UP_COMMENT_ADD(Constants.Api.THUMBS_UP_COMMENT_ADD, Constants.Api.BASE_URL + "/comment-thumbs-up-add", Request.Method.POST)
+    , THUMBS_UP_COMMENT_REMOVE(Constants.Api.THUMBS_UP_COMMENT_REMOVE, Constants.Api.BASE_URL + "/comment-thumbs-up-remove", Request.Method.POST)
+    , THUMBS_DOWN_COMMENT_ADD(Constants.Api.THUMBS_DOWN_COMMENT_ADD, Constants.Api.BASE_URL + "/comment-thumbs-down-add", Request.Method.POST)
+    , THUMBS_DOWN_COMMENT_REMOVE(Constants.Api.THUMBS_DOWN_COMMENT_REMOVE, Constants.Api.BASE_URL + "/comment-thumbs-down-remove", Request.Method.POST)
     ;
 
     private int apiId;

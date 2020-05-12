@@ -5,21 +5,22 @@ import android.os.Parcel;
 import com.spoiledit.utils.NumericUtils;
 
 public class MovieSpoilerModel extends RootSelectionModel {
-    private String userLogin;
     private int mId;
     private String mName;
-    private int userId;
     private int selectType;
     private String midCredit;
     private String stringer;
     private String spoiler;
     private String cratedOn;
-    private String displayName;
     private String date;
     private String description;
     private String thumbsUp;
     private String thumbsDown;
-    private String avatarUrl;
+    private int userId;
+    private String userName;
+    private String userPhotoUrl;
+    private String userMail;
+    private String userPhone;
     private boolean darkBackground;
     private boolean trimmed;
 
@@ -31,19 +32,20 @@ public class MovieSpoilerModel extends RootSelectionModel {
         super(in);
         mId = in.readInt();
         mName = in.readString();
-        userId = in.readInt();
         selectType = in.readInt();
         midCredit = in.readString();
         stringer = in.readString();
         spoiler = in.readString();
         cratedOn = in.readString();
-        userLogin = in.readString();
-        displayName = in.readString();
         date = in.readString();
         description = in.readString();
         thumbsUp = in.readString();
         thumbsDown = in.readString();
-        avatarUrl = in.readString();
+        userId = in.readInt();
+        userName = in.readString();
+        userPhotoUrl = in.readString();
+        userMail = in.readString();
+        userPhone = in.readString();
         darkBackground = in.readByte() != 0;
         trimmed = in.readByte() != 0;
     }
@@ -53,19 +55,20 @@ public class MovieSpoilerModel extends RootSelectionModel {
         super.writeToParcel(dest, flags);
         dest.writeInt(mId);
         dest.writeString(mName);
-        dest.writeInt(userId);
         dest.writeInt(selectType);
         dest.writeString(midCredit);
         dest.writeString(stringer);
         dest.writeString(spoiler);
         dest.writeString(cratedOn);
-        dest.writeString(userLogin);
-        dest.writeString(displayName);
         dest.writeString(date);
         dest.writeString(description);
         dest.writeString(thumbsUp);
         dest.writeString(thumbsDown);
-        dest.writeString(avatarUrl);
+        dest.writeInt(userId);
+        dest.writeString(userName);
+        dest.writeString(userPhotoUrl);
+        dest.writeString(userMail);
+        dest.writeString(userPhone);
         dest.writeByte((byte) (darkBackground ? 1 : 0));
         dest.writeByte((byte) (trimmed ? 1 : 0));
     }
@@ -101,14 +104,6 @@ public class MovieSpoilerModel extends RootSelectionModel {
 
     public void setmName(String mName) {
         this.mName = mName;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     public int getSelectType() {
@@ -151,22 +146,6 @@ public class MovieSpoilerModel extends RootSelectionModel {
         this.cratedOn = cratedOn;
     }
 
-    public String getUserLogin() {
-        return userLogin;
-    }
-
-    public void setUserLogin(String userLogin) {
-        this.userLogin = userLogin;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
     public String getDate() {
         return date;
     }
@@ -191,6 +170,11 @@ public class MovieSpoilerModel extends RootSelectionModel {
         this.thumbsUp = thumbsUp;
     }
 
+    public void changeThumbsUp(boolean add) {
+        if (add || getThumbsDownInt() > 0)
+            setThumbsUp(String.valueOf(add ? getThumbsUpInt() + 1 : getThumbsUpInt() - 1));
+    }
+
     public int getThumbsUpInt() {
         return NumericUtils.parseInt(thumbsUp);
     }
@@ -203,16 +187,53 @@ public class MovieSpoilerModel extends RootSelectionModel {
         this.thumbsDown = thumbsDown;
     }
 
+    public void changeThumbsDown(boolean add) {
+        if (add || getThumbsDownInt() > 0)
+            setThumbsUp(String.valueOf(add ? getThumbsDownInt() + 1 : getThumbsDownInt() - 1));
+    }
+
     public int getThumbsDownInt() {
         return NumericUtils.parseInt(thumbsDown);
     }
 
-    public String getAvatarUrl() {
-        return avatarUrl;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserPhotoUrl() {
+        return userPhotoUrl;
+    }
+
+    public void setUserPhotoUrl(String userPhotoUrl) {
+        this.userPhotoUrl = userPhotoUrl;
+    }
+
+    public String getUserMail() {
+        return userMail;
+    }
+
+    public void setUserMail(String userMail) {
+        this.userMail = userMail;
+    }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
     }
 
     public boolean isDarkBackground() {
@@ -234,23 +255,30 @@ public class MovieSpoilerModel extends RootSelectionModel {
     @Override
     public String toString() {
         return "MovieSpoilerModel{" +
-                "userLogin='" + userLogin + '\'' +
-                ", mId=" + mId +
+                "mId=" + mId +
                 ", mName='" + mName + '\'' +
-                ", userId=" + userId +
                 ", selectType=" + selectType +
                 ", midCredit='" + midCredit + '\'' +
                 ", stringer='" + stringer + '\'' +
                 ", spoiler='" + spoiler + '\'' +
                 ", cratedOn='" + cratedOn + '\'' +
-                ", displayName='" + displayName + '\'' +
                 ", date='" + date + '\'' +
                 ", description='" + description + '\'' +
                 ", thumbsUp='" + thumbsUp + '\'' +
                 ", thumbsDown='" + thumbsDown + '\'' +
-                ", avatarUrl='" + avatarUrl + '\'' +
-                ", darkBackground='" + darkBackground + '\'' +
-                ", trimmed='" + trimmed + '\'' +
+                ", userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", userPhotoUrl='" + userPhotoUrl + '\'' +
+                ", userMail='" + userMail + '\'' +
+                ", userPhone='" + userPhone + '\'' +
+                ", darkBackground=" + darkBackground +
+                ", trimmed=" + trimmed +
                 '}';
+    }
+
+    public SpoilerUserModel toSpoilerUserModel() {
+        return new SpoilerUserModel(
+                userId, userName, userPhotoUrl, userMail, userPhone
+        );
     }
 }

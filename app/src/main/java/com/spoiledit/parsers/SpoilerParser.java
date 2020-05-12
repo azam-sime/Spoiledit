@@ -2,7 +2,6 @@ package com.spoiledit.parsers;
 
 import android.os.AsyncTask;
 
-import com.spoiledit.models.MovieSpoilerModel;
 import com.spoiledit.models.MySpoilerModel;
 import com.spoiledit.models.SpoilerBriefModel;
 import com.spoiledit.models.SpoilerEndingModel;
@@ -38,16 +37,19 @@ public class SpoilerParser {
                         spoilersNewModel.setId(spoilerObject.optInt("id"));
                         spoilersNewModel.setmId(spoilerObject.optInt("m_id"));
                         spoilersNewModel.setmName(spoilerObject.optString("m_name"));
-                        spoilersNewModel.setUserId(spoilerObject.optInt("user_id"));
                         spoilersNewModel.setSelectType(spoilerObject.optInt("select_type"));
+                        spoilersNewModel.setCategory(spoilerObject.optString("category"));
                         spoilersNewModel.setMidCredit(spoilerObject.optString("mid_credit"));
                         spoilersNewModel.setStringer(spoilerObject.optString("stringer"));
                         spoilersNewModel.setSpoiler(spoilerObject.optString("spoiler"));
-                        spoilersNewModel.setCratedOn(spoilerObject.optString("created_on"));
-                        spoilersNewModel.setCategory(spoilerObject.optString("category"));
-                        spoilersNewModel.setUsername(spoilerObject.optString("username"));
                         spoilersNewModel.setDateFormat(spoilerObject.optString("date_format"));
+                        spoilersNewModel.setCratedOn(spoilerObject.optString("created_on"));
                         spoilersNewModel.setPosterPath(spoilerObject.optString("poster_path"));
+                        spoilersNewModel.setUserId(spoilerObject.optInt("user_id"));
+                        spoilersNewModel.setUserName(spoilerObject.optString("username"));
+                        spoilersNewModel.setUserImage(spoilerObject.optString("user-image"));
+                        spoilersNewModel.setUserEmail(spoilerObject.optString("email"));
+                        spoilersNewModel.setUserPhone(spoilerObject.optString("phone"));
 
                         spoilersNewModels.add(spoilersNewModel);
                     }
@@ -77,22 +79,23 @@ public class SpoilerParser {
                         JSONObject spoilerObject = dataArray.optJSONObject(i);
                         MySpoilerModel mySpoilerModel = new MySpoilerModel();
 
-                        mySpoilerModel.setUserLogin(spoilerObject.optString("user_login"));
                         mySpoilerModel.setId(spoilerObject.optInt("id"));
                         mySpoilerModel.setmId(spoilerObject.optInt("m_id"));
                         mySpoilerModel.setmName(spoilerObject.optString("m_name"));
-                        mySpoilerModel.setUserId(spoilerObject.optInt("user_id"));
                         mySpoilerModel.setSelectType(spoilerObject.optInt("select_type"));
                         mySpoilerModel.setMidCredit(spoilerObject.optString("mid_credit"));
                         mySpoilerModel.setStringer(spoilerObject.optString("stringer"));
                         mySpoilerModel.setSpoiler(spoilerObject.optString("spoiler"));
                         mySpoilerModel.setCratedOn(spoilerObject.optString("created_on"));
-                        mySpoilerModel.setDisplayName(spoilerObject.optString("display_name"));
                         mySpoilerModel.setDate(spoilerObject.optString("date"));
                         mySpoilerModel.setDescription(spoilerObject.optString("desciption"));
                         mySpoilerModel.setThumbsUp(spoilerObject.optString("thumbs_up"));
                         mySpoilerModel.setThumbsDown(spoilerObject.optString("thumbs_down"));
-                        mySpoilerModel.setAvatarUrl(spoilerObject.optString("avatar_url"));
+                        mySpoilerModel.setUserId(spoilerObject.optInt("user_id"));
+                        mySpoilerModel.setUserName(spoilerObject.optString("display_name"));
+                        mySpoilerModel.setUserPhotoUrl(spoilerObject.optString("avatar_url"));
+                        mySpoilerModel.setUserMail(spoilerObject.optString("user_login"));
+//                        mySpoilerModel.setUserPhone(spoilerObject.optString("phone"));
                         mySpoilerModel.setDarkBackground(i % 2 == 1);
 
                         mySpoilerModels.add(mySpoilerModel);
@@ -123,22 +126,24 @@ public class SpoilerParser {
                         JSONObject spoilerObject = dataArray.optJSONObject(i);
                         SpoilerFullModel fullModel = new SpoilerFullModel();
 
-                        fullModel.setUserLogin(spoilerObject.optString("user_login"));
+
                         fullModel.setId(spoilerObject.optInt("id"));
                         fullModel.setmId(spoilerObject.optInt("m_id"));
                         fullModel.setmName(spoilerObject.optString("m_name"));
-                        fullModel.setUserId(spoilerObject.optInt("user_id"));
                         fullModel.setSelectType(spoilerObject.optInt("select_type"));
                         fullModel.setMidCredit(spoilerObject.optString("mid_credit"));
                         fullModel.setStringer(spoilerObject.optString("stringer"));
                         fullModel.setSpoiler(spoilerObject.optString("spoiler"));
                         fullModel.setCratedOn(spoilerObject.optString("created_on"));
-                        fullModel.setDisplayName(spoilerObject.optString("display_name"));
                         fullModel.setDate(spoilerObject.optString("date"));
                         fullModel.setDescription(spoilerObject.optString("desciption"));
                         fullModel.setThumbsUp(spoilerObject.optString("thumbs_up"));
                         fullModel.setThumbsDown(spoilerObject.optString("thumbs_down"));
-                        fullModel.setAvatarUrl(spoilerObject.optString("avatar_url"));
+                        fullModel.setUserId(spoilerObject.optInt("user_id"));
+                        fullModel.setUserName(spoilerObject.optString("display_name"));
+                        fullModel.setUserPhotoUrl(spoilerObject.optString("avatar_url"));
+                        fullModel.setUserMail(spoilerObject.optString("user_login"));
+//                        fullModel.setUserPhone(spoilerObject.optString("phone"));
                         fullModel.setDarkBackground(i % 2 == 1);
 
                         spoilerFullModels.add(fullModel);
@@ -169,22 +174,23 @@ public class SpoilerParser {
                         JSONObject spoilerObject = dataArray.optJSONObject(i);
                         SpoilerBriefModel briefModel = new SpoilerBriefModel();
 
-                        briefModel.setUserLogin(spoilerObject.optString("user_login"));
                         briefModel.setId(spoilerObject.optInt("id"));
                         briefModel.setmId(spoilerObject.optInt("m_id"));
                         briefModel.setmName(spoilerObject.optString("m_name"));
-                        briefModel.setUserId(spoilerObject.optInt("user_id"));
                         briefModel.setSelectType(spoilerObject.optInt("select_type"));
                         briefModel.setMidCredit(spoilerObject.optString("mid_credit"));
                         briefModel.setStringer(spoilerObject.optString("stringer"));
                         briefModel.setSpoiler(spoilerObject.optString("spoiler"));
                         briefModel.setCratedOn(spoilerObject.optString("created_on"));
-                        briefModel.setDisplayName(spoilerObject.optString("display_name"));
                         briefModel.setDate(spoilerObject.optString("date"));
                         briefModel.setDescription(spoilerObject.optString("desciption"));
                         briefModel.setThumbsUp(spoilerObject.optString("thumbs_up"));
                         briefModel.setThumbsDown(spoilerObject.optString("thumbs_down"));
-                        briefModel.setAvatarUrl(spoilerObject.optString("avatar_url"));
+                        briefModel.setUserId(spoilerObject.optInt("user_id"));
+                        briefModel.setUserName(spoilerObject.optString("display_name"));
+                        briefModel.setUserPhotoUrl(spoilerObject.optString("avatar_url"));
+                        briefModel.setUserMail(spoilerObject.optString("user_login"));
+//                        briefModel.setUserPhone(spoilerObject.optString("phone"));
                         briefModel.setDarkBackground(i % 2 == 0);
 
                         spoilerBriefModels.add(briefModel);
@@ -218,22 +224,23 @@ public class SpoilerParser {
                             JSONObject spoilerObject = dataArray.optJSONObject(i);
                             SpoilerEndingModel endingModel = new SpoilerEndingModel();
 
-                            endingModel.setUserLogin(spoilerObject.optString("user_login"));
                             endingModel.setId(spoilerObject.optInt("id"));
                             endingModel.setmId(spoilerObject.optInt("m_id"));
                             endingModel.setmName(spoilerObject.optString("m_name"));
-                            endingModel.setUserId(spoilerObject.optInt("user_id"));
                             endingModel.setSelectType(spoilerObject.optInt("select_type"));
                             endingModel.setMidCredit(spoilerObject.optString("mid_credit"));
                             endingModel.setStringer(spoilerObject.optString("stringer"));
                             endingModel.setSpoiler(spoilerObject.optString("spoiler"));
                             endingModel.setCratedOn(spoilerObject.optString("created_on"));
-                            endingModel.setDisplayName(spoilerObject.optString("display_name"));
                             endingModel.setDate(spoilerObject.optString("date"));
                             endingModel.setDescription(spoilerObject.optString("desciption"));
                             endingModel.setThumbsUp(spoilerObject.optString("thumbs_up"));
                             endingModel.setThumbsDown(spoilerObject.optString("thumbs_down"));
-                            endingModel.setAvatarUrl(spoilerObject.optString("avatar_url"));
+                            endingModel.setUserId(spoilerObject.optInt("user_id"));
+                            endingModel.setUserName(spoilerObject.optString("display_name"));
+                            endingModel.setUserPhotoUrl(spoilerObject.optString("avatar_url"));
+                            endingModel.setUserMail(spoilerObject.optString("user_login"));
+//                        endingModel.setUserPhone(spoilerObject.optString("phone"));
                             endingModel.setDarkBackground(i % 2 == 0);
 
                             spoilerEndingModels.add(endingModel);

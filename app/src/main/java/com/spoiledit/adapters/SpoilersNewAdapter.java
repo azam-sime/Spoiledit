@@ -12,12 +12,9 @@ import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.spoiledit.R;
-import com.spoiledit.constants.Urls;
-import com.spoiledit.listeners.OnItemSelectionListener;
+import com.spoiledit.listeners.OnSpoilerUserClickListener;
 import com.spoiledit.models.SpoilersNewModel;
-import com.spoiledit.utils.LogUtils;
 import com.spoiledit.utils.ViewUtils;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -28,13 +25,13 @@ public class SpoilersNewAdapter extends RootSelectionAdapter {
 
     private Context context;
     private List<SpoilersNewModel> spoilersNewModels;
-    private OnItemSelectionListener onItemSelectionListener;
+    private OnSpoilerUserClickListener onSpoilerUserClickListener;
     private int lastSelection;
 
-    public SpoilersNewAdapter(Context context, OnItemSelectionListener onItemSelectionListener) {
+    public SpoilersNewAdapter(Context context, OnSpoilerUserClickListener onSpoilerUserClickListener) {
         this.context = context;
         spoilersNewModels = new ArrayList<>();
-        this.onItemSelectionListener = onItemSelectionListener;
+        this.onSpoilerUserClickListener = onSpoilerUserClickListener;
         lastSelection = -1;
     }
 
@@ -111,7 +108,7 @@ public class SpoilersNewAdapter extends RootSelectionAdapter {
             viewHolder.tvCategory.setText(spoilersNewModel.getCategory());
             viewHolder.tvMidCredit.setText(spoilersNewModel.getMidCredit());
             viewHolder.tvPostCredit.setText(spoilersNewModel.getStringer());
-            viewHolder.tvSpoilerBy.setText(spoilersNewModel.getUsername());
+            viewHolder.tvSpoilerBy.setText(spoilersNewModel.getUserName());
 
             Picasso.get()
                     .load(spoilersNewModel.getPosterPath())
@@ -147,11 +144,17 @@ public class SpoilersNewAdapter extends RootSelectionAdapter {
             tvPostCredit = itemView.findViewById(R.id.tv_post_credit);
             tvSpoilerBy = itemView.findViewById(R.id.tv_spoiler_by);
 
+            itemView.findViewById(R.id.ll_spoiler_by).setOnClickListener(v -> {
+                if (onSpoilerUserClickListener != null) {
+                    onSpoilerUserClickListener.onUserClicked(getAdapterPosition());
+                }
+            });
+
             itemView.findViewById(R.id.btn_goto_spoiler).setOnClickListener(v -> {
-                if (onItemSelectionListener != null) {
+                if (onSpoilerUserClickListener != null) {
                     final int finalLastPosition = lastSelection;
                     notifySelection(getAdapterPosition());
-                    onItemSelectionListener.onItemSelected(finalLastPosition, getAdapterPosition());
+                    onSpoilerUserClickListener.onItemSelected(finalLastPosition, getAdapterPosition());
                 }
             });
         }
